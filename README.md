@@ -11,6 +11,14 @@ Scientific code repositories contain valuable metadata which can be used to enri
 * [ ] HTML in web page
 * [ ] Freetext content in README and other files
 
+## Installation
+
+To install the dev version from github:
+
+```shell
+pip install git+https://github.com/SDSC-ORD/gimie.git#egg=gimie
+```
+
 ## Usage
 
 As a command line tool:
@@ -43,5 +51,5 @@ pip install -e .
 Or [poetry](https://python-poetry.org/), to work in an isolated virtual environment:
 ```shell
 git clone https://github.com/SDSC-ORD/gimie && cd gimie
-poetry install --with test
+poetry install
 ```
