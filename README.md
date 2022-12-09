@@ -1,25 +1,38 @@
-# Extrameta
+# Gimie
 
-A python library and command line tool to extract structured metadata from git repositories.
+Gimie (GIt Meta Information Extractor) is a python library and command line tool to extract structured metadata from git repositories.
 
 ## Context
-Scientific code repositories contain valuable metadata which can be used to enrich existing catalogues, platforms or databases. This tool aims to easily extract structured metadata from a generic git repositories. The following sources of information will be used:
+Scientific code repositories contain valuable metadata which can be used to enrich existing catalogues, platforms or databases. This tool aims to easily extract structured metadata from a generic git repositories. The following sources of information are used:
 
 * [ ] Git metadata
 * [ ] Filenames
 * [ ] License
 * [ ] HTML in web page
-* [ ] Freetext content in README
+* [ ] Freetext content in README and other files
+
+## Usage
+
+As a command line tool:
+```shell
+gimie https://github.com/numpy/numpy
+```
+As a python library:
+
+```python
+import gimie
+repo = gimie.Repo("https://github.com/numpy/nump)
+```
 
 ## Outputs
 
-The default output is JSON-ld, a JSON serialization of the [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework) data model.
+The default output is JSON-ld, a JSON serialization of the [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework) data model. We follow the schema recommended by [codemeta](https://codemeta.github.io/).
 
 ## Contributing
 
 All contributions are welcome. New functions and classes should have associated tests and docstrings following the [numpy style guide](https://numpydoc.readthedocs.io/en/latest/format.html).
 
-The code formatting standard we use is [black](https://github.com/psf/black), with --line-length=79 to follow PEP8 recommendations. We use [pytest](https://docs.pytest.org/en/7.2.x/) as our testing framework. This project uses [pyproject.toml](https://pip.pypa.io/en/stable/reference/build-system/pyproject-toml/) to define package information, requirements and tooling configuration.
+The code formatting standard we use is [black](https://github.com/psf/black), with `--line-length=79` to follow [PEP8](https://peps.python.org/pep-0008/) recommendations. We use [pytest](https://docs.pytest.org/en/7.2.x/) as our testing framework. This project uses [pyproject.toml](https://pip.pypa.io/en/stable/reference/build-system/pyproject-toml/) to define package information, requirements and tooling configuration.
 
 For local development, you can clone the repository and install the package in editable mode, either using [pip](https://pip.pypa.io/en/stable/):
 
