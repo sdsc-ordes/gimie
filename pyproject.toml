@@ -4,8 +4,9 @@
 name = "gimie"
 version = "0.1.0"
 description = "Extract structured metadata from git repositories."
-authors = ["cmdoret <cyril.mattheydoret@gmail.com>"]
+authors = ["Swiss Data Science Center <contact@datascience.ch>"]
 license = "GPLv3"
+homepage = "https://github.com/SDSC-ORD/gimie"
 keywords = ["metadata", "git", "extraction", "linked-data"]
 readme = "README.md"
 classifiers = [
