@@ -1,4 +1,4 @@
-# extrameta
+# Extrameta
 
 A python library and command line tool to extract structured metadata from git repositories.
 
@@ -14,3 +14,21 @@ Scientific code repositories contain valuable metadata which can be used to enri
 ## Outputs
 
 The default output is JSON-ld, a JSON serialization of the [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework) data model.
+
+## Contributing
+
+All contributions are welcome. New functions and classes should have associated tests and docstrings following the [numpy style guide](https://numpydoc.readthedocs.io/en/latest/format.html).
+
+The code formatting standard we use is [black](https://github.com/psf/black), with --line-length=79 to follow PEP8 recommendations. We use [pytest](https://docs.pytest.org/en/7.2.x/) as our testing framework. This project uses [pyproject.toml](https://pip.pypa.io/en/stable/reference/build-system/pyproject-toml/) to define package information, requirements and tooling configuration.
+
+For local development, you can clone the repository and install the package in editable mode, either using [pip](https://pip.pypa.io/en/stable/):
+
+```shell
+git clone https://github.com/SDSC-ORD/gimie && cd gimie
+pip install -e .
+```
+Or [poetry](https://python-poetry.org/), to work in an isolated virtual environment:
+```shell
+git clone https://github.com/SDSC-ORD/gimie && cd gimie
+poetry install --with test
+```
