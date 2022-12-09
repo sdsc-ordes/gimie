@@ -8,6 +8,16 @@ TEST_GIT_URLS = [
 ]
 
 @pytest.mark.parametrize("url", TEST_GIT_URLS)
-def test_simple_git_repo(url):
-    """Extract git metadata only."""
+def test_git_remote(url):
+    """Returns correct git metadata from target URL."""
     ...
+
+def test_git_local():
+    """Returns correct git metadata from local repo path."""
+    ...
+
+def test_invalid_url():
+    """Fails gracefully on invalid URL."""
+    invalid_url = "https://github.com/SDSC-ORD/not-exist"
+    ...
+
