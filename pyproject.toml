@@ -1,13 +1,29 @@
+# Package description
+
 [tool.poetry]
 name = "gimie"
 version = "0.1.0"
 description = "Extract structured metadata from git repositories."
 authors = ["cmdoret <cyril.mattheydoret@gmail.com>"]
 license = "GPLv3"
+keywords = ["metadata", "git", "extraction", "linked-data"]
 readme = "README.md"
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+]
+
+# Dependency management
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 extruct = "^0.14.0"
 PyDriller = "^2.3"
 
@@ -18,3 +34,13 @@ black = "^22.10.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+# Tooling configuration
+
+[tool.black]
+line-length = 79
+target-version = ["py38", "py39"]
+
+[tool.pytest.ini_options]
+addopts = "--doctest-modules"
+testpaths = ["gimie", "tests"]
