@@ -1,0 +1,552 @@
+# baseURI: http://epfl.ch/imaging
+
+@prefix sdsc: <https://sdsc.ch/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+@prefix sd: <https://w3id.org/okn/o/sd#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+sdsc:SubmissionWithManyMistakes  a sdsc:submission ;
+    schema:hasFunding [rdf:type sd:FundingInformation, schema:Grant] ;
+    sdsc:softwareName "Amandine's Software" ;
+    schema:maintainer [  schema:givenName "er" ; #the predicate "maintainers" indicates a plural, why? predicate and objects should always be singlular: The cardinality should be captured as a triple, not in the URI.
+                    schema:familyName "erer" ;
+                    schema:email "amandine@coteries.com" ;
+                    schema:affiliation "erer" ] ;
+    sdsc:fairLevel 1 ;
+    sdsc:downloadLink <https://www.google.com/> ;
+    sdsc:operatingSystems "null" ;
+    sdsc:softwareCategories "filters:Plug-in" ;
+    sdsc:softwareCategories "filters:Desktop application" ;
+    sdsc:softwareCategories "filters:Command-line tool" ;
+    sdsc:firebaseUserId "ypchdkcnp8PzDmiDidzHxB1WHGO2" ;
+    sdsc:illustrativeImage <https://firebasestorage.googleapis.com/v0/b/swiss-data-website-dev-76736.appspot.com/o/softwareImage%2Fypchdkcnp8PzDmiDidzHxB1WHGO2%2Famandine%40coteries.com_97caddae-4cb1-489c-b940-65e7f23984b2?alt=media&token=ada3d80b-0eec-4d7e-971a-8a2c88f527a0> ;
+    sdsc:imagingModality "filters:computerTomography" ;
+    sdsc:programmingLanuages "filters:JSP" ;
+    sdsc:programmingLanuages "filters:REXX" ;
+    sdsc:programmingLanuages "filters:CWL" ;
+    schema:isAccessibleForFree false ;
+    sdsc:illustrativeImageLicense "licenses:Academic Free License v3.0" ;
+    sdsc:status "published" ;
+    sdsc:updatedAt [sdsc:seconds 1667225592 ;
+                sdsc:nanoseconds 22000000 ;] ;
+    sdsc:softwareTasks "filters:Annotation" ;
+    sdsc:softwareTasks "filters:Labelling" ;
+    sdsc:shortDescription "hello" ;
+    sdsc:bookmarkCount 0 ; #this is a property that should be filled in by the software, not by the user. Removed it
+    sdsc:optionalDescriptiveImageLicense "null" ;
+    sdsc:publications [sdsc:citation "10.1038/s41593-018-0209-y" ] ;
+    sdsc:additionalIllustrativeImageLicense "licenses:Affero General Public License v1.0 or later" ;
+    sdsc:authors    [sdsc:lastName "erer" ;
+                 sdsc:affiliation "erer" ;
+                 sdsc:firstName "er" ;
+                 sdsc:identifier "0304003043" ] ;
+    sdsc:usesDeepLearning false ;
+    sd:hasInput "filters:1D" ; #take the "has" out, or add the has everywhere, but don;t be inconsistent
+    sd:hasInput  "filters:5D" ;
+    sd:hasInput  "filters:6D" ;
+    sd:hasInput  "filters:3D" ;
+    sdsc:optionalTechnicalImage "null" ;
+    sdsc:softwareProducers [sdsc:teamOrLab "My Lab" ;
+                        sdsc:website <https://www.google.com/> ;
+                        schema:Organization "EPFL" ] ;
+    sdsc:optionalDescriptiveImageLicense "licenses:AMD's plpa_map.c License" ;
+    sdsc:additionalIllustrativeImage <https://firebasestorage.googleapis.com/v0/b/swiss-data-website-dev-76736.appspot.com/o/softwareImage%2Fypchdkcnp8PzDmiDidzHxB1WHGO2%2Famandine%40coteries.com_0a70fcbb-c9c1-41c3-828e-9e9a8d6463d4?alt=media&token=e2276709-e5b2-4606-b4a4-364d78ed3390> ;
+    sdsc:id "Mdcrq2TGF0fiv4GEwPea" ;
+    .
+
+sdsc:ValidSubmission   a sdsc:submission ;
+    sdsc:programmingLanguage
+        sdsc:CWL  ,
+        sdsc:JSP ;
+    sdsc:fairLevel  "1"^^xsd:integer ;
+    sdsc:description "my description outlining what the submission is broadly about in human lanuage"^^xsd:string ;
+    sdsc:homePageUrl <https://www.myhomepage.com/> ;
+    sdsc:status  "published"^^xsd:string ;
+    sd:hasInput sdsc:1D , sdsc:5D ;
+    sdsc:imagingModality sdsc:computerTomography ;
+    sdsc:externalDocumentation "Description of where the documentation can be found"^^xsd:string ;
+    sdsc:softwareCategory
+        sdsc:PlugIn ;
+    sdsc:softwareName  "Amandine"^^xsd:string  ;
+    sdsc:softwareVersion "1.23.3"^^xsd:string ;
+    sdsc:downloadLink  <https://www.google.com/>  ;
+    sdsc:softwareTasks
+        sdsc:Labelling,
+        sdsc:Tracking,
+        sdsc:Classification ;
+    schema:isAccessibleForFree  "false"^^xsd:boolean  ;
+    sdsc:firebaseUserId  "ypchdkcnp8PzDmiDidzHxB1WHGO2"^^xsd:string  ;
+    sdsc:illustrativeImageLicense  sdsc:AcademicFreeLicense  ;
+    sdsc:shortDescription  "we"^^xsd:string  ;
+    sdsc:softwareLicense  "ArtisticLicense1Perl"^^xsd:string  ;
+    sdsc:hostingPlatform "Firebase"^^xsd:string ;
+    sdsc:supportedOperatingSystem sdsc:windows ;
+    sdsc:author  [a sdsc:author ;
+            sdsc:identifier  "0000-0000-0000-0000"^^xsd:string ;
+            schema:givenName  "Flavien"^^xsd:string ;
+            schema:affiliation  "Coteries"^^xsd:string ;
+            schema:familyName  "Bonvin"^^xsd:string ;] ;
+    sdsc:updatedAt  [
+        sdsc:seconds  "1667394930"^^xsd:integer  ;
+        sdsc:nanoseconds  "967000000"^^xsd:integer ] ;
+    sdsc:softwareProducers  [
+            sdsc:organisationName  "EPFL"^^xsd:string  ;
+            sdsc:website  <https://www.google.com/>  ;
+            sdsc:teamOrLab  "My Lab"^^xsd:string ;]  ;
+    sdsc:illustrativeImage  <https://firebasestorage.googleapis.com/v0/b/swiss-data-website-dev-76736.appspot.com/o/softwareImage%2Fypchdkcnp8PzDmiDidzHxB1WHGO2%2Famandine%40coteries.com_07e62437-74f4-4c60-9656-9106da98be3f?alt=media&token=65af100d-e511-4b73-9bfc-c48d570512d8>  ;
+    sdsc:publication  [
+            sdsc:citation  "10.1038/s41593-018-0209-y"^^xsd:string]  ;
+    schema:maintainer  [
+            schema:email  "amandine@coteries.com"^^xsd:string  ;
+            schema:familyName  "erer"^^xsd:string  ;
+            schema:affiliation  "erer"^^xsd:string  ;
+            schema:givenName  "er"^^xsd:string]  ;
+    sdsc:bookmarkCount  "4"^^xsd:integer  ;
+    sdsc:softwareOutputs "a file is output"^^xsd:string ;
+    sdsc:usesDeepLearning  "false"^^xsd:boolean  ;
+    sdsc:id  "TP6mLjJwrMSobnYuf6Lu"^^xsd:string  ;
+    .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# baseURI: http://epfl.ch/imaging
+
+@prefix sdsc: <https://sdsc.ch/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+@prefix sd: <https://w3id.org/okn/o/sd#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+sdsc:submission a rdfs:Class ;
+  skos:prefLable "Submission"@en ;
+  skos:defintion "A filled in form as submitted on the Imaging Plaza website"@en.
+
+<http://epfl.ch/imaging>
+  rdf:type owl:Ontology ;
+.
+schema:affiliation
+  rdf:type rdf:Property ;
+  skos:prefLabel "affiliation"@en ;
+.
+schema:email
+  rdf:type rdf:Property ;
+  skos:prefLabel "email"@en ;
+.
+schema:familyName
+  rdf:type rdf:Property ;
+  skos:prefLabel "familyName"@en ;
+.
+schema:givenName
+  rdf:type rdf:Property ;
+  skos:prefLabel "givenName"@en ;
+.
+schema:isAccessibleForFree
+  rdf:type rdf:Property ;
+  skos:prefLabel "isAccessibleForFree"@en ;
+.
+schema:maintainer
+  rdf:type rdf:Property ;
+  skos:prefLabel "maintainer"@en ;
+.
+schema:softwareVersion
+  rdf:type rdf:Property ;
+  skos:prefLabel "softwareVersion"@en ;
+.
+<https://epfl.ch/example/1D>
+  rdf:type sdsc:hasInputClass ;
+.
+<https://epfl.ch/example/3D>
+  rdf:type sdsc:hasInputClass ;
+.
+<https://epfl.ch/example/5D>
+  rdf:type sdsc:hasInputClass ;
+.
+<https://epfl.ch/example/6D>
+  rdf:type sdsc:hasInputClass ;
+.
+sdsc:AcademicFreeLicense
+  rdf:type sdsc:IllustrativeImageLicenseClass ;
+  skos:prefLabel "Academic Free License"@en ;
+.
+sdsc:Annotation
+  rdf:type sdsc:softwareTasksClass ;
+  skos:prefLabel "Annotation"@en ;
+.
+sdsc:CWL
+  rdf:type sdsc:ProgrammingLanguageClass ;
+  skos:altLabel "Common Workflow Language"@en ;
+  skos:prefLabel "CWL"@en ;
+.
+sdsc:CommandLineTool
+  rdf:type sdsc:softwareCategoryClass ;
+  skos:prefLabel "Command-line tool"@en ;
+.
+sdsc:DesktopApplication
+  rdf:type sdsc:softwareCategoryClass ;
+  skos:prefLabel "Desktop Application"@en ;
+.
+
+sdsc:IllustrativeImageLicenseClass
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf sdsc:EnumerationClass ;
+  skos:prefLabel "Illustrative Image License Enumeration Class" ;
+.
+sdsc:InputClass
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf sdsc:EnumerationClass ;
+  skos:prefLabel "Input Enumeration Class"@en ;
+.
+sdsc:JSP
+  rdf:type sdsc:ProgrammingLanguageClass ;
+  skos:altLabel "Java Server Pages"@en ;
+  skos:prefLabel "JSP"@en ;
+.
+sdsc:Labelling
+  rdf:type sdsc:softwareTasksClass ;
+  skos:prefLabel "Labelling"@en ;
+.
+sdsc:OperatingSystem
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf sdsc:EnumerationType ;
+  skos:prefLabel "OperatingSystem"@en ;
+.
+sdsc:PlugIn
+  rdf:type sdsc:softwareCategoryClass ;
+  skos:prefLabel "Plug-in"@en ;
+.
+sdsc:ProgrammingLanguageClass
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf sdsc:EnumerationClass ;
+  skos:prefLabel "Programming Language Enumeration Class"@en ;
+.
+sdsc:REXX
+  rdf:type sdsc:ProgrammingLanguageClass ;
+  skos:altLabel "REstructured eXtended eXecutor"@en ;
+  skos:prefLabel "REXX"@en ;
+.
+sdsc:additionalIllustrativeImage
+  rdf:type rdf:Property ;
+  skos:prefLabel "additionalIllustrativeImage"@en ;
+.
+sdsc:additionalIllustrativeImageLicense
+  rdf:type rdf:Property ;
+  skos:prefLabel "additionalIllustrativeImageLicense"@en ;
+.
+
+sdsc:additionalSoftwareLicense
+  rdf:type rdf:Property ;
+  skos:prefLabel "additionalSoftwareLicense"@en ;
+.
+
+sdsc:algorithmParameters
+  rdf:type rdf:Property ;
+  skos:prefLabel "algorithmParameters"@en ;
+.
+
+sdsc:author
+  rdf:type rdf:Property ;
+  skos:prefLabel "author"@en ;
+.
+
+sdsc:citation
+  rdf:type rdf:Property ;
+  skos:prefLabel "citation"@en ;
+.
+
+sdsc:computerTomography
+  rdf:type sdsc:imagingModalityClass ;
+  skos:prefLabel "Computer Tomography"@en ;
+.
+sdsc:container
+  rdf:type rdf:Property ;
+  skos:prefLabel "containers"@en ;
+.
+
+sdsc:deepLearningFramework
+  rdf:type rdf:Property ;
+  skos:prefLabel "deepLearningFramework"@en ;
+.
+
+sdsc:description
+  rdf:type rdf:Property ;
+  skos:prefLabel "description"@en ;
+.
+
+sdsc:downloadLink
+  rdf:type rdf:Property ;
+  skos:prefLabel "downloadLink"@en ;
+.
+
+sdsc:externalDocumentation
+  rdf:type rdf:Property ;
+  skos:prefLabel "externalDocumentation"@en ;
+.
+
+sdsc:fairLevel
+  rdf:type rdf:Property ;
+  skos:prefLabel "fairLevel"@en ;
+.
+
+sdsc:firebaseUserId
+  rdf:type rdf:Property ;
+  skos:prefLabel "firebaseUserId"@en ;
+.
+
+sdsc:homePageUrl
+  rdf:type rdf:Property ;
+  skos:prefLabel "homePageUrl"@en ;
+.
+
+sdsc:hostingPlatform
+  rdf:type rdf:Property ;
+  skos:prefLabel "hostingPlatform"@en ;
+.
+
+sdsc:id
+  rdf:type rdf:Property ;
+  skos:prefLabel "id"@en ;
+.
+
+sdsc:identifier
+  rdf:type rdf:Property ;
+  skos:prefLabel "identifier"@en ;
+.
+
+sdsc:illustrativeImage
+  rdf:type rdf:Property ;
+  skos:prefLabel "illustrativeImage"@en ;
+.
+sdsc:illustrativeImageLicense
+  rdf:type rdf:Property ;
+  skos:prefLabel "illustrativeImageLicense"@en ;
+.
+
+sdsc:imagingModality
+  rdf:type rdf:Property ;
+  skos:prefLabel "imagingModality"@en ;
+.
+sdsc:imagingModalityClass
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf sdsc:EnumerationType ;
+  skos:prefLabel "Imaging Modality Enumeration Class"@en ;
+.
+
+sdsc:keyword
+  rdf:type rdf:Property ;
+  skos:prefLabel "keyword"@en ;
+.
+
+sdsc:linux
+  rdf:type sdsc:OperatingSystem ;
+.
+sdsc:macOS
+  rdf:type sdsc:OperatingSystem ;
+.
+
+sdsc:memoryRequirements
+  rdf:type rdf:Property ;
+  skos:prefLabel "memoryRequirements"@en ;
+.
+
+sdsc:minimalGpu
+  rdf:type rdf:Property ;
+  skos:prefLabel "minimalGpu"@en ;
+.
+
+sdsc:minimalUsableDataset
+  rdf:type rdf:Property ;
+  skos:prefLabel "minimalUsableDataset"@en ;
+.
+
+sdsc:nanoseconds
+  rdf:type rdf:Property ;
+  skos:prefLabel "nanoseconds"@en ;
+.
+
+sdsc:optionalDescriptiveImage
+  rdf:type rdf:Property ;
+  skos:prefLabel "optionalDescriptiveImage"@en ;
+.
+sdsc:optionalDescriptiveImageLicense
+  rdf:type rdf:Property ;
+  skos:prefLabel "optionalDescriptiveImageLicense"@en ;
+.
+
+sdsc:optionalFunctionalityImage
+  rdf:type rdf:Property ;
+  skos:prefLabel "optionalFunctionalityImage"@en ;
+.
+sdsc:optionalFunctionalityImageLicense
+  rdf:type rdf:Property ;
+  skos:prefLabel "optionalFunctionalityImageLicense"@en ;
+.
+
+sdsc:optionalLink
+  rdf:type rdf:Property ;
+  skos:prefLabel "optionalLink"@en ;
+.
+
+sdsc:optionalTechnicalImage
+  rdf:type rdf:Property ;
+  skos:prefLabel "optionalTechnicalImage"@en ;
+.
+sdsc:optionalTechnicalImageLicense
+  rdf:type rdf:Property ;
+  skos:prefLabel "optionalTechnicalImageLicense"@en ;
+.
+
+sdsc:organisationName
+  rdf:type rdf:Property ;
+  skos:prefLabel "organisationName"@en ;
+.
+
+sdsc:programmingLanguage
+  rdf:type rdf:Property ;
+  skos:prefLabel "programmingLanguage"@en ;
+.
+
+sdsc:publication
+  rdf:type rdf:Property ;
+  skos:prefLabel "publication"@en ;
+.
+
+sdsc:relatedWork
+  rdf:type rdf:Property ;
+  skos:prefLabel "relatedWorks"@en ;
+.
+
+sdsc:runnableExamples
+  rdf:type rdf:Property ;
+  skos:prefLabel "runnableExamples"@en ;
+.
+
+sdsc:seconds
+  rdf:type rdf:Property ;
+  skos:prefLabel "seconds"@en ;
+.
+
+sdsc:shortDescription
+  rdf:type rdf:Property ;
+  skos:prefLabel "shortDescription"@en ;
+.
+
+sdsc:softwareCategory
+  rdf:type rdf:Property ;
+  skos:prefLabel "softwareCategory"@en ;
+.
+sdsc:softwareCategoryClass
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf sdsc:EnumerationType ;
+  skos:prefLabel "Software Category EnumerationClass" ;
+.
+
+sdsc:softwareLicense
+  rdf:type rdf:Property ;
+  skos:prefLabel "softwareLicense"@en ;
+.
+
+sdsc:softwareName
+  rdf:type rdf:Property ;
+  skos:prefLabel "softwareName"@en ;
+.
+
+sdsc:softwareOutputs
+  rdf:type rdf:Property ;
+  skos:prefLabel "softwareOutputs"@en ;
+.
+
+sdsc:softwareProducer
+  rdf:type rdf:Property ;
+  skos:prefLabel "softwareProducers"@en ;
+.
+
+sdsc:softwareTasks
+  rdf:type rdf:Property ;
+  skos:prefLabel "softwareTasks"@en ;
+.
+sdsc:softwareTasksClass
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf sdsc:EnumerationType ;
+  skos:prefLabel "Software Tasks Enumeration Class"@en ;
+.
+
+sdsc:status
+  rdf:type rdf:Property ;
+  skos:prefLabel "status"@en ;
+.
+
+sdsc:supportedOperatingSystem
+  rdf:type rdf:Property ;
+  skos:prefLabel "supportedOperatingSystem"@en ;
+.
+
+sdsc:teamOrLab
+  rdf:type rdf:Property ;
+  skos:prefLabel "teamOrLab"@en ;
+.
+
+sdsc:updatedAt
+  rdf:type rdf:Property ;
+  skos:prefLabel "updatedAt"@en ;
+.
+
+sdsc:userGuideline
+  rdf:type rdf:Property ;
+  skos:prefLabel "userGuideline"@en ;
+.
+
+sdsc:usesDeepLearning
+  rdf:type rdf:Property ;
+  skos:prefLabel "usesDeepLearning"@en ;
+.
+
+sdsc:website
+  rdf:type rdf:Property ;
+  skos:prefLabel "website"@en ;
+.
+
+sdsc:windows
+  rdf:type sdsc:OperatingSystem ;
+.
+sd:hasFunding
+  rdf:type rdf:Property ;
+  skos:prefLabel "hasFunding"@en ;
+.
+sd:hasInput
+  rdf:type rdf:Property ;
+  skos:prefLabel "hasInput"@en ;
+.

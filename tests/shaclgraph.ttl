@@ -1,0 +1,878 @@
+# baseURI: http://epfl.ch/imaging
+
+@prefix sdsc: <https://sdsc.ch/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+@prefix sd: <https://w3id.org/okn/o/sd#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+
+
+sdsc:submission a rdfs:Class ;
+  skos:prefLable "Submission"@en ;
+  skos:defintion "A filled in form as submitted on the Imaging Plaza website"@en.
+
+<http://epfl.ch/imaging>
+  rdf:type owl:Ontology ;
+  owl:imports schema:, skos:, sh: ;
+.
+schema:affiliation
+  rdf:type rdf:Property ;
+  skos:prefLabel "affiliation"@en ;
+.
+schema:email
+  rdf:type rdf:Property ;
+  skos:prefLabel "email"@en ;
+.
+schema:familyName
+  rdf:type rdf:Property ;
+  skos:prefLabel "familyName"@en ;
+.
+schema:givenName
+  rdf:type rdf:Property ;
+  skos:prefLabel "givenName"@en ;
+.
+schema:isAccessibleForFree
+  rdf:type rdf:Property ;
+  skos:prefLabel "isAccessibleForFree"@en ;
+.
+schema:maintainer
+  rdf:type rdf:Property ;
+  skos:prefLabel "maintainer"@en ;
+.
+schema:softwareVersion
+  rdf:type rdf:Property ;
+  skos:prefLabel "softwareVersion"@en ;
+.
+<https://epfl.ch/example/1D>
+  rdf:type sdsc:hasInputClass ;
+.
+<https://epfl.ch/example/3D>
+  rdf:type sdsc:hasInputClass ;
+.
+<https://epfl.ch/example/5D>
+  rdf:type sdsc:hasInputClass ;
+.
+<https://epfl.ch/example/6D>
+  rdf:type sdsc:hasInputClass ;
+.
+sdsc:AcademicFreeLicense
+  rdf:type sdsc:IllustrativeImageLicenseClass ;
+  skos:prefLabel "Academic Free License"@en ;
+.
+sdsc:Annotation
+  rdf:type sdsc:softwareTasksClass ;
+  skos:prefLabel "Annotation"@en ;
+.
+sdsc:CWL
+  rdf:type sdsc:ProgrammingLanguageClass ;
+  skos:altLabel "Common Workflow Language"@en ;
+  skos:prefLabel "CWL"@en ;
+.
+sdsc:CommandLineTool
+  rdf:type sdsc:softwareCategoryClass ;
+  skos:prefLabel "Command-line tool"@en ;
+.
+sdsc:DesktopApplication
+  rdf:type sdsc:softwareCategoryClass ;
+  skos:prefLabel "Desktop Application"@en ;
+.
+
+sdsc:IllustrativeImageLicenseClass
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf sdsc:EnumerationClass ;
+  skos:prefLabel "Illustrative Image License Enumeration Class" ;
+.
+sdsc:InputClass
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf sdsc:EnumerationClass ;
+  skos:prefLabel "Input Enumeration Class"@en ;
+.
+sdsc:JSP
+  rdf:type sdsc:ProgrammingLanguageClass ;
+  skos:altLabel "Java Server Pages"@en ;
+  skos:prefLabel "JSP"@en ;
+.
+sdsc:Labelling
+  rdf:type sdsc:softwareTasksClass ;
+  skos:prefLabel "Labelling"@en ;
+.
+sdsc:OperatingSystem
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf sdsc:EnumerationType ;
+  skos:prefLabel "OperatingSystem"@en ;
+.
+sdsc:PlugIn
+  rdf:type sdsc:softwareCategoryClass ;
+  skos:prefLabel "Plug-in"@en ;
+.
+sdsc:ProgrammingLanguageClass
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf sdsc:EnumerationClass ;
+  skos:prefLabel "Programming Language Enumeration Class"@en ;
+.
+sdsc:REXX
+  rdf:type sdsc:ProgrammingLanguageClass ;
+  skos:altLabel "REstructured eXtended eXecutor"@en ;
+  skos:prefLabel "REXX"@en ;
+.
+sdsc:additionalIllustrativeImage
+  rdf:type rdf:Property ;
+  skos:prefLabel "additionalIllustrativeImage"@en ;
+.
+sdsc:additionalIllustrativeImageLicense
+  rdf:type rdf:Property ;
+  skos:prefLabel "additionalIllustrativeImageLicense"@en ;
+.
+
+sdsc:additionalSoftwareLicense
+  rdf:type rdf:Property ;
+  skos:prefLabel "additionalSoftwareLicense"@en ;
+.
+
+sdsc:algorithmParameters
+  rdf:type rdf:Property ;
+  skos:prefLabel "algorithmParameters"@en ;
+.
+
+sdsc:author
+  rdf:type rdf:Property ;
+  skos:prefLabel "author"@en ;
+.
+
+sdsc:citation
+  rdf:type rdf:Property ;
+  skos:prefLabel "citation"@en ;
+.
+
+sdsc:computerTomography
+  rdf:type sdsc:imagingModalityClass ;
+  skos:prefLabel "Computer Tomography"@en ;
+.
+sdsc:container
+  rdf:type rdf:Property ;
+  skos:prefLabel "containers"@en ;
+.
+
+sdsc:deepLearningFramework
+  rdf:type rdf:Property ;
+  skos:prefLabel "deepLearningFramework"@en ;
+.
+
+sdsc:description
+  rdf:type rdf:Property ;
+  skos:prefLabel "description"@en ;
+.
+
+sdsc:downloadLink
+  rdf:type rdf:Property ;
+  skos:prefLabel "downloadLink"@en ;
+.
+
+sdsc:externalDocumentation
+  rdf:type rdf:Property ;
+  skos:prefLabel "externalDocumentation"@en ;
+.
+
+sdsc:fairLevel
+  rdf:type rdf:Property ;
+  skos:prefLabel "fairLevel"@en ;
+.
+
+sdsc:firebaseUserId
+  rdf:type rdf:Property ;
+  skos:prefLabel "firebaseUserId"@en ;
+.
+
+sdsc:homePageUrl
+  rdf:type rdf:Property ;
+  skos:prefLabel "homePageUrl"@en ;
+.
+
+sdsc:hostingPlatform
+  rdf:type rdf:Property ;
+  skos:prefLabel "hostingPlatform"@en ;
+.
+
+sdsc:id
+  rdf:type rdf:Property ;
+  skos:prefLabel "id"@en ;
+.
+
+sdsc:identifier
+  rdf:type rdf:Property ;
+  skos:prefLabel "identifier"@en ;
+.
+
+sdsc:illustrativeImage
+  rdf:type rdf:Property ;
+  skos:prefLabel "illustrativeImage"@en ;
+.
+sdsc:illustrativeImageLicense
+  rdf:type rdf:Property ;
+  skos:prefLabel "illustrativeImageLicense"@en ;
+.
+
+sdsc:imagingModality
+  rdf:type rdf:Property ;
+  skos:prefLabel "imagingModality"@en ;
+.
+sdsc:imagingModalityClass
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf sdsc:EnumerationType ;
+  skos:prefLabel "Imaging Modality Enumeration Class"@en ;
+.
+
+sdsc:keyword
+  rdf:type rdf:Property ;
+  skos:prefLabel "keyword"@en ;
+.
+
+sdsc:linux
+  rdf:type sdsc:OperatingSystem ;
+.
+sdsc:macOS
+  rdf:type sdsc:OperatingSystem ;
+.
+
+sdsc:memoryRequirements
+  rdf:type rdf:Property ;
+  skos:prefLabel "memoryRequirements"@en ;
+.
+
+sdsc:minimalGpu
+  rdf:type rdf:Property ;
+  skos:prefLabel "minimalGpu"@en ;
+.
+
+sdsc:minimalUsableDataset
+  rdf:type rdf:Property ;
+  skos:prefLabel "minimalUsableDataset"@en ;
+.
+
+sdsc:nanoseconds
+  rdf:type rdf:Property ;
+  skos:prefLabel "nanoseconds"@en ;
+.
+
+sdsc:optionalDescriptiveImage
+  rdf:type rdf:Property ;
+  skos:prefLabel "optionalDescriptiveImage"@en ;
+.
+sdsc:optionalDescriptiveImageLicense
+  rdf:type rdf:Property ;
+  skos:prefLabel "optionalDescriptiveImageLicense"@en ;
+.
+
+sdsc:optionalFunctionalityImage
+  rdf:type rdf:Property ;
+  skos:prefLabel "optionalFunctionalityImage"@en ;
+.
+sdsc:optionalFunctionalityImageLicense
+  rdf:type rdf:Property ;
+  skos:prefLabel "optionalFunctionalityImageLicense"@en ;
+.
+
+sdsc:optionalLink
+  rdf:type rdf:Property ;
+  skos:prefLabel "optionalLink"@en ;
+.
+
+sdsc:optionalTechnicalImage
+  rdf:type rdf:Property ;
+  skos:prefLabel "optionalTechnicalImage"@en ;
+.
+sdsc:optionalTechnicalImageLicense
+  rdf:type rdf:Property ;
+  skos:prefLabel "optionalTechnicalImageLicense"@en ;
+.
+
+sdsc:organisationName
+  rdf:type rdf:Property ;
+  skos:prefLabel "organisationName"@en ;
+.
+
+sdsc:programmingLanguage
+  rdf:type rdf:Property ;
+  skos:prefLabel "programmingLanguage"@en ;
+.
+
+sdsc:publication
+  rdf:type rdf:Property ;
+  skos:prefLabel "publication"@en ;
+.
+
+sdsc:relatedWork
+  rdf:type rdf:Property ;
+  skos:prefLabel "relatedWorks"@en ;
+.
+
+sdsc:runnableExamples
+  rdf:type rdf:Property ;
+  skos:prefLabel "runnableExamples"@en ;
+.
+
+sdsc:seconds
+  rdf:type rdf:Property ;
+  skos:prefLabel "seconds"@en ;
+.
+
+sdsc:shortDescription
+  rdf:type rdf:Property ;
+  skos:prefLabel "shortDescription"@en ;
+.
+
+sdsc:softwareCategory
+  rdf:type rdf:Property ;
+  skos:prefLabel "softwareCategory"@en ;
+.
+sdsc:softwareCategoryClass
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf sdsc:EnumerationType ;
+  skos:prefLabel "Software Category EnumerationClass" ;
+.
+
+sdsc:softwareLicense
+  rdf:type rdf:Property ;
+  skos:prefLabel "softwareLicense"@en ;
+.
+
+sdsc:softwareName
+  rdf:type rdf:Property ;
+  skos:prefLabel "softwareName"@en ;
+.
+
+sdsc:softwareOutputs
+  rdf:type rdf:Property ;
+  skos:prefLabel "softwareOutputs"@en ;
+.
+
+sdsc:softwareProducer
+  rdf:type rdf:Property ;
+  skos:prefLabel "softwareProducers"@en ;
+.
+
+sdsc:softwareTasks
+  rdf:type rdf:Property ;
+  skos:prefLabel "softwareTasks"@en ;
+.
+sdsc:softwareTasksClass
+  rdf:type rdfs:Class ;
+  rdfs:subClassOf sdsc:EnumerationType ;
+  skos:prefLabel "Software Tasks Enumeration Class"@en ;
+.
+
+sdsc:status
+  rdf:type rdf:Property ;
+  skos:prefLabel "status"@en ;
+.
+
+sdsc:supportedOperatingSystem
+  rdf:type rdf:Property ;
+  skos:prefLabel "supportedOperatingSystem"@en ;
+.
+
+sdsc:teamOrLab
+  rdf:type rdf:Property ;
+  skos:prefLabel "teamOrLab"@en ;
+.
+
+sdsc:updatedAt
+  rdf:type rdf:Property ;
+  skos:prefLabel "updatedAt"@en ;
+.
+
+sdsc:userGuideline
+  rdf:type rdf:Property ;
+  skos:prefLabel "userGuideline"@en ;
+.
+
+sdsc:usesDeepLearning
+  rdf:type rdf:Property ;
+  skos:prefLabel "usesDeepLearning"@en ;
+.
+
+sdsc:website
+  rdf:type rdf:Property ;
+  skos:prefLabel "website"@en ;
+.
+
+sdsc:windows
+  rdf:type sdsc:OperatingSystem ;
+.
+sd:hasFunding
+  rdf:type rdf:Property ;
+  skos:prefLabel "hasFunding"@en ;
+.
+sd:hasInput
+  rdf:type rdf:Property ;
+  skos:prefLabel "hasInput"@en ;
+.
+
+
+
+
+sdsc:submissionShape a sh:NodeShape ;
+sh:targetClass sdsc:submission ;
+sh:property
+    sdsc:additionalIllustrativeImageLicenseShape,
+    sdsc:additionalIllustrativeImageShape,
+    sdsc:additionalSoftwareLicenseShape,
+    sdsc:algorithmParametersShape,
+    sdsc:authorShape,
+    sdsc:containerShape,
+    sdsc:deepLearningFrameworkShape,
+    sdsc:descriptionShape,
+    sdsc:downloadLinkShape,
+    sdsc:externalDocumentationShape,
+    sdsc:fairLevelShape,
+    sdsc:firebaseUserIdShape,
+    sdsc:hasFundingShape,
+    sdsc:hasInputShape,
+    sdsc:homePageUrlShape,
+    sdsc:hostingPlatformShape,
+    sdsc:idShape,
+    sdsc:identifierShape,
+    sdsc:illustrativeImageLicenseShape,
+    sdsc:illustrativeImageShape,
+    sdsc:imagingModalityShape,
+    sdsc:isAccessibleForFreeShape,
+    sdsc:keywordShape,
+    sdsc:maintainerShape,
+    sdsc:memoryRequirementsShape,
+    sdsc:minimalGpuShape,
+    sdsc:minimalUsableDatasetShape,
+    sdsc:optionalDescriptiveImageLicenseShape,
+    sdsc:optionalDescriptiveImageShape,
+    sdsc:optionalFunctionalityImageLicenseShape,
+    sdsc:optionalFunctionalityImageShape,
+    sdsc:optionalLinkShape,
+    sdsc:optionalTechnicalImageLicenseShape,
+    sdsc:optionalTechnicalImageShape,
+    sdsc:programmingLanguageShape,
+    sdsc:publicationShape,
+    sdsc:relatedWorkShape,
+    sdsc:runnableExamplesShape,
+    sdsc:shortDescriptionShape,
+    sdsc:softwareCategoryShape,
+    sdsc:softwareLicenseShape,
+    sdsc:softwareNameShape,
+    sdsc:softwareOutputsShape,
+    sdsc:softwareProducerShape,
+    sdsc:softwareTasksShape,
+    sdsc:softwareVersionShape,
+    sdsc:statusShape,
+    sdsc:supportedOperatingSystemShape,
+    sdsc:updatedAtShape,
+    sdsc:userGuidelineShape,
+    sdsc:usesDeepLearningShape
+    .
+
+sdsc:authorShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:author ;
+  sh:node sdsc:authorNodeShape ;
+  sh:message "Something is wrong with one of the values given for the predicates belong to author, check the authorNodeShape." ;
+  sh:minCount 1 ;
+.
+
+sdsc:FundingShape
+  rdf:type sh:NodeShape ;
+  sh:property sdsc:fundingGrantShape ;
+  sh:property sdsc:fundingSourceShape ;
+  sh:property sdsc:identifierShape ;
+  sh:targetClass sdsc:Funding ;
+.
+
+sdsc:authorNodeShape a sh:NodeShape ;
+sh:property sdsc:identifierShape ,
+            sdsc:givenNameShape,
+            sdsc:affiliationShape,
+            sdsc:familyNameShape ;
+sh:targetObjectsOf sdsc:author ;
+.
+
+sdsc:shortDescriptionShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:shortDescription ;
+  sh:datatype xsd:string ;
+  sh:maxLength 256 ;
+  sh:minCount 1 ;
+.
+
+sdsc:fairLevelShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:fairLevel ;
+  sh:datatype xsd:integer ;
+  sh:maxInclusive "5"^^xsd:integer ;
+  sh:minCount "1"^^xsd:integer ;
+  sh:minInclusive "1"^^xsd:integer ;
+.
+sdsc:fundingGrantShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:fundingGrant ;
+  sh:datatype xsd:string ;
+.
+sdsc:fundingSourceShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:fundingSource ;
+  sh:datatype xsd:string ;
+.
+sdsc:maintainerNodeShape
+  rdf:type sh:NodeShape ;
+  sh:property sdsc:affiliationShape ;
+  sh:property sdsc:emailShape ;
+  sh:property sdsc:familyNameShape ;
+  sh:property sdsc:givenNameShape ;
+  sh:targetObjectsOf schema:maintainer ;
+.
+sdsc:optionalDescriptiveImageLicenseShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:optionalDescriptiveImageLicense ;
+.
+
+sdsc:programmingLanguageShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:programmingLanguage ;
+  sh:class sdsc:ProgrammingLanguageClass ;
+
+.
+sdsc:publicationNodeShape a sh:NodeShape ;
+sh:property sdsc:citationShape ;
+sh:targetObjectsOf sdsc:publication
+.
+
+sdsc:emailShape
+  rdf:type sh:PropertyShape ;
+  sh:path schema:email ;
+  sh:datatype xsd:string ;
+  sh:minCount 1 ;
+  sh:pattern "^[\\w.-]+@[\\w.-]+\\.\\w+$" ;
+.
+
+sdsc:additionalIllustrativeImageLicenseShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:additionalIllustrativeImageLicense ;
+  sh:datatype xsd:string ;
+.
+sdsc:additionalIllustrativeImageShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:additionalIllustrativeImage ;
+  sh:nodeKind sh:IRI ;
+.
+sdsc:additionalSoftwareLicenseShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:additionalSoftwareLicense ;
+  sh:datatype xsd:string ;
+.
+sdsc:containerShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:container ;
+  sh:datatype xsd:string ;
+.
+sdsc:deepLearningFrameworkShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:deepLearningFramework ;
+  sh:datatype xsd:boolean ;
+.
+sdsc:identifierShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:identifier ;
+  sh:datatype xsd:string ;
+.
+sdsc:memoryRequirementsShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:memoryRequirements ;
+  sh:datatype xsd:string ;
+.
+sdsc:minimalGpuShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:minimalGpu ;
+  sh:datatype xsd:string ;
+.
+sdsc:minimalUsableDatasetShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:minimalUsableDataset ;
+  sh:datatype xsd:string ;
+.
+sdsc:optionalDescriptiveImageShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:optionalDescriptiveImage ;
+  sh:nodeKind sh:IRI ;
+.
+sdsc:optionalFunctionalityImageLicenseShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:optionalFunctionalityImageLicense ;
+  sh:datatype xsd:string ;
+.
+sdsc:optionalFunctionalityImageShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:optionalFunctionalityImage ;
+  sh:nodeKind sh:IRI ;
+.
+sdsc:optionalLinkShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:optionalLink ;
+  sh:nodeKind sh:IRI ;
+.
+sdsc:optionalTechnicalImageLicenseShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:optionalTechnicalImageLicense ;
+  sh:datatype xsd:string ;
+.
+sdsc:optionalTechnicalImageShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:optionalTechnicalImage ;
+  sh:nodeKind sh:IRI ;
+.
+sdsc:relatedWorkShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:relatedWork ;
+  sh:datatype xsd:string ;
+.
+sdsc:runnableExamplesShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:runnableExamples ;
+  sh:datatype xsd:string ;
+.
+sdsc:softwareProducerShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:softwareProducer ;
+  sh:node sdsc:softwareProducerNodeShape ;
+.
+sdsc:updatedAtShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:updatedAt ;
+  sh:node sdsc:updatedAtNodeShape ;
+.
+sdsc:userGuidelineShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:userGuideline ;
+  sh:datatype xsd:string ;
+.
+sdsc:affiliationShape
+  rdf:type sh:PropertyShape ;
+  sh:path schema:affiliation ;
+  sh:datatype xsd:string ;
+  sh:minCount 1 ;
+.
+sdsc:algorithmParametersShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:algorithmParameters ;
+  sh:datatype xsd:string ;
+  sh:pattern "\\[.*\\]" ;
+.
+sdsc:citationShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:citation ;
+  sh:datatype xsd:string ;
+  sh:minCount 1 ;
+.
+sdsc:descriptionShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:description ;
+  sh:datatype xsd:string ;
+  sh:minCount 1 ;
+.
+sdsc:downloadLinkShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:downloadLink ;
+  sh:minCount 1 ;
+  sh:nodeKind sh:IRI ;
+.
+sdsc:externalDocumentationShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:externalDocumentation ;
+  sh:datatype xsd:string ;
+  sh:minCount 1 ;
+.
+sdsc:familyNameShape
+  rdf:type sh:PropertyShape ;
+  sh:path schema:familyName ;
+  sh:datatype xsd:string ;
+  sh:minCount 1 ;
+.
+sdsc:firebaseUserIdShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:firebaseUserId ;
+  sh:datatype xsd:string ;
+  sh:minCount 1 ;
+.
+sdsc:givenNameShape
+  rdf:type sh:PropertyShape ;
+  sh:path schema:givenName ;
+  sh:datatype xsd:string ;
+  sh:minCount 1 ;
+.
+sdsc:hasFundingShape
+  rdf:type sh:PropertyShape ;
+  sh:path sd:hasFunding ;
+  sh:class sdsc:Funding ;
+  sh:nodeKind sh:BlankNode ;
+.
+sdsc:hasInputShape
+  rdf:type sh:PropertyShape ;
+  sh:path sd:hasInput ;
+  sh:class sdsc:hasInputClass ;
+  sh:minCount 1 ;
+.
+sdsc:homePageUrlShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:homePageUrl ;
+  sh:minCount 1 ;
+  sh:nodeKind sh:IRI ;
+.
+sdsc:hostingPlatformShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:hostingPlatform ;
+  sh:datatype xsd:string ;
+  sh:minCount 1 ;
+.
+sdsc:idShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:id ;
+  sh:datatype xsd:string ;
+  sh:minCount 1 ;
+.
+sdsc:illustrativeImageLicenseShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:illustrativeImageLicense ;
+  sh:class sdsc:IllustrativeImageLicenseClass ;
+  sh:minCount 1 ;
+.
+sdsc:illustrativeImageShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:illustrativeImage ;
+  sh:minCount 1 ;
+  sh:nodeKind sh:IRI ;
+.
+sdsc:imagingModalityShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:imagingModality ;
+  sh:class sdsc:imagingModalityClass ;
+  sh:minCount 1 ;
+.
+sdsc:isAccessibleForFreeShape
+  rdf:type sh:PropertyShape ;
+  sh:path schema:isAccessibleForFree ;
+  sh:datatype xsd:boolean ;
+  sh:minCount 1 ;
+.
+sdsc:keywordShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:keyword ;
+  sh:datatype xsd:string ;
+  sh:pattern "\\[.*\\]" ;
+.
+sdsc:maintainerShape
+  rdf:type sh:PropertyShape ;
+  sh:path schema:maintainer ;
+  sh:node sdsc:maintainerNodeShape ;
+  sh:minCount 1 ;
+.
+sdsc:nanosecondsShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:nanoseconds ;
+  sh:datatype xsd:integer ;
+  sh:minCount 1 ;
+.
+sdsc:organisationNameShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:organisationName ;
+  sh:datatype xsd:string ;
+  sh:minCount 1 ;
+.
+sdsc:publicationShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:publication ;
+  sh:node sdsc:publicationNodeShape ;
+  sh:minCount 1 ;
+.
+sdsc:secondsShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:seconds ;
+  sh:datatype xsd:integer ;
+  sh:minCount 1 ;
+.
+sdsc:softwareCategoryShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:softwareCategory ;
+  sh:class sdsc:softwareCategoryClass ;
+  sh:minCount 1 ;
+.
+sdsc:softwareLicenseShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:softwareLicense ;
+  sh:datatype xsd:string ;
+  sh:minCount 1 ;
+.
+sdsc:softwareNameShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:softwareName ;
+  sh:datatype xsd:string ;
+  sh:minCount 1 ;
+.
+sdsc:softwareOutputsShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:softwareOutputs ;
+  sh:datatype xsd:string ;
+  sh:minCount 1 ;
+.
+sdsc:softwareProducerNodeShape
+  rdf:type sh:NodeShape ;
+  sh:property sdsc:organisationNameShape ;
+  sh:property sdsc:teamOrLabShape ;
+  sh:property sdsc:websiteShape ;
+.
+sdsc:softwareTasksShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:softwareTasks ;
+  sh:minCount 1 ;
+  sh:nodeKind sh:IRI ;
+.
+sdsc:softwareVersionShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:softwareVersion ;
+  sh:datatype xsd:string ;
+  sh:minCount 1 ;
+.
+sdsc:statusShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:status ;
+  sh:datatype xsd:string ;
+  sh:minCount 1 ;
+.
+sdsc:supportedOperatingSystemShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:supportedOperatingSystem ;
+  sh:class sdsc:OperatingSystem ;
+  sh:minCount 1 ;
+.
+sdsc:teamOrLabShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:teamOrLab ;
+  sh:datatype xsd:string ;
+  sh:minCount 1 ;
+.
+sdsc:updatedAtNodeShape
+  rdf:type sh:NodeShape ;
+  sh:property sdsc:nanosecondsShape ;
+  sh:property sdsc:secondsShape ;
+  sh:targetObjectsOf sdsc:updatedAt ;
+.
+sdsc:usesDeepLearningShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:usesDeepLearning ;
+  sh:datatype xsd:boolean ;
+  sh:minCount 1 ;
+.
+sdsc:websiteShape
+  rdf:type sh:PropertyShape ;
+  sh:path sdsc:website ;
+  sh:minCount 1 ;
+  sh:nodeKind sh:IRI ;
+.
