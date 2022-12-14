@@ -37,6 +37,10 @@ black = "^22.10.0"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[options.entry_points]
+console_scripts = 'gimie = gimie.cli:main'
+
+
 # Tooling configuration
 
 [tool.black]
