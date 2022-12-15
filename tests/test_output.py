@@ -4,7 +4,9 @@ from pyshacl import validate
 from rdflib import Graph
 
 
-out_graph_path = Path("output.jsonld")  # will become run_gimie() when functional
+out_graph_path = Path(
+    "output.jsonld"
+)  # will become run_gimie() when functional
 validation_graph_path = Path("shaclgraph.ttl")
 
 
@@ -12,7 +14,7 @@ def test_validate_output_is_linked_data():
     """Is output valid RDF?"""
     g = Graph()
     with open(out_graph_path) as output_graph:
-        g.parse(output_graph, format='json-ld')
+        g.parse(output_graph, format="json-ld")
 
 
 def test_output_conforms_shapes():
@@ -22,7 +24,7 @@ def test_output_conforms_shapes():
     with open(validation_graph_path) as validation_graph, open(
         out_graph_path
     ) as output_graph:
-        g.parse(output_graph, format='json-ld')
+        g.parse(output_graph, format="json-ld")
         shapes.parse(validation_graph)
         valid_graph, validation_report, _ = validate(
             data_graph=g,
@@ -38,5 +40,3 @@ def test_output_conforms_shapes():
             debug=False,
         )
         assert valid_graph
-
-
