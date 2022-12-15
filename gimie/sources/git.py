@@ -1,7 +1,30 @@
 from typing import Tuple, Optional
 from dataclasses import field
+from pydriller import Repository
 import datetime
-import pydriller
+
+
+class Release:
+    """
+    This class represents a release of a repository.
+
+    Parameters
+    ----------
+    tag: str
+        The tag of the release.
+    date: datetime.datetime
+        The date of the release.
+    commit_hash: str
+        The commit hash of the release.
+    """
+    tag: str
+    date: datetime.datetime
+    commit_hash: str
+
+    def __init__(self, tag: str, date: datetime.datetime, commit_hash: str):
+        self.tag = tag
+        self.date = date
+        self.commit_hash = commit_hash
 
 
 class GitMetadata:
@@ -23,13 +46,15 @@ class GitMetadata:
 
     authors: Tuple[str] = field(default_factory=tuple, init=False)
     creation_date: Optional[datetime.datetime] = field(init=False)
-    repository: pydriller.Repository
+    repository: Repository
+    releases: Tuple[Release] = field(default_factory=tuple, init=False)
 
     def __init__(self, path: str):
-        self.repository = pydriller.Repository(path)
+        self.repository = Repository(path)
 
         self.authors = self.get_authors()
         self.creation_date = self.get_creation_date()
+        self.releases = self.get_releases()
 
     def get_authors(self) -> Tuple[str]:
         """Get the authors of the repository."""
@@ -39,5 +64,12 @@ class GitMetadata:
         """Get the creation date of the repository."""
         try:
             return next(self.repository.traverse_commits()).author_date
+        except StopIteration:
+            return None
+
+    def get_releases(self) -> Tuple[Release]:
+        """Get the releases of the repository."""
+        try:
+            return tuple(Release(tag=tag.name, date=tag.commit.authored_datetime, commit_hash=tag.commit.hexsha) for tag in self.repository.git.repo.tags)
         except StopIteration:
             return None
