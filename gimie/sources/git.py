@@ -1,9 +1,10 @@
 from typing import Tuple, Optional
-from dataclasses import field
+from dataclasses import dataclass, field
 from pydriller import Repository
 import datetime
 
 
+@dataclass(order=True)
 class Release:
     """
     This class represents a release of a repository.
@@ -17,14 +18,10 @@ class Release:
     commit_hash: str
         The commit hash of the release.
     """
-    tag: str
-    date: datetime.datetime
-    commit_hash: str
 
-    def __init__(self, tag: str, date: datetime.datetime, commit_hash: str):
-        self.tag = tag
-        self.date = date
-        self.commit_hash = commit_hash
+    tag: str = field(compare=False)
+    date: datetime.datetime = field(compare=True)
+    commit_hash: str = field(compare=False)
 
 
 class GitMetadata:
@@ -54,7 +51,7 @@ class GitMetadata:
 
         self.authors = self.get_authors()
         self.creation_date = self.get_creation_date()
-        self.releases = self.get_releases()
+        self.releases = sorted(self.get_releases())
 
     def get_authors(self) -> Tuple[str]:
         """Get the authors of the repository."""
