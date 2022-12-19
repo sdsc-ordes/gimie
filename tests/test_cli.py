@@ -6,13 +6,13 @@ from typer.testing import CliRunner
 runner = CliRunner()
 
 
-def test_data():
-    """Checks if the 'gimie data' command runs."""
-    result = runner.invoke(cli.app, ["data", "help"])
+def test_data_help():
+    """Checks if the 'gimie data --help' command exits successfully."""
+    result = runner.invoke(cli.app, ["data", "--help"])
     assert result.exit_code == 0
 
 
-def test_status():
-    """Checks if the 'gimie status' command runs."""
-    result = runner.invoke(cli.app, ["advice", "help"])
+def test_advice_help():
+    """Checks if the 'gimie advice --help' command exits successfully."""
+    result = runner.invoke(cli.app, ["advice", "--help"])
     assert result.exit_code == 0
