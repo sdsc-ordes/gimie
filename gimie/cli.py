@@ -38,7 +38,7 @@ def data(
 
 
 @app.command()
-def status(path: str):
+def advice(path: str):
     """Show a metadata completion report for a Git repository
     at the target PATH."""
     ...

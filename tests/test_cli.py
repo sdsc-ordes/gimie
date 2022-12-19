@@ -14,5 +14,5 @@ def test_data():
 
 def test_status():
     """Checks if the 'gimie status' command runs."""
-    result = runner.invoke(cli.app, ["status", "help"])
+    result = runner.invoke(cli.app, ["advice", "help"])
     assert result.exit_code == 0
