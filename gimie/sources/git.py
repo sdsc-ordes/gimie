@@ -43,6 +43,7 @@ class GitMetadata:
 
     authors: Tuple[str] = field(default_factory=tuple, init=False)
     creation_date: Optional[datetime.datetime] = field(init=False)
+    creator: Optional[str] = field(init=False)
     repository: Repository
     releases: Tuple[Release] = field(default_factory=tuple, init=False)
 
@@ -52,6 +53,7 @@ class GitMetadata:
         self.authors = self.get_authors()
         self.creation_date = self.get_creation_date()
         self.releases = sorted(self.get_releases())
+        self.creator = self.get_repo_creator()
 
     def get_authors(self) -> Tuple[str]:
         """Get the authors of the repository."""
@@ -68,5 +70,12 @@ class GitMetadata:
         """Get the releases of the repository."""
         try:
             return tuple(Release(tag=tag.name, date=tag.commit.authored_datetime, commit_hash=tag.commit.hexsha) for tag in self.repository.git.repo.tags)
+        except StopIteration:
+            return None
+
+    def get_repo_creator(self) -> Optional[str]:
+        """Get the creator of the repository."""
+        try:
+            return next(self.repository.traverse_commits()).author.name
         except StopIteration:
             return None
