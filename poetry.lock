@@ -1826,7 +1826,6 @@ files = [
     {file = "typecode_libmagic-5.39.210531-py3-none-macosx_10_14_x86_64.whl", hash = "sha256:0a6e9745e1cdceda97cdee9d5396e65ab2025a16aa79a926350715c0ba4dfb72"},
     {file = "typecode_libmagic-5.39.210531-py3-none-manylinux1_x86_64.whl", hash = "sha256:ee001c8093dfa89a9d1fe6d9139ef9f367a1cb9af6fd02ffebf9246af994fbf7"},
     {file = "typecode_libmagic-5.39.210531-py3-none-win_amd64.whl", hash = "sha256:24ceecb5c1249ddbdb6a471a0d35fbc11008cbd3b71cad0966f94ff94918a1fa"},
-]
 
 [[package]]
 name = "types-pytz"
@@ -1952,3 +1951,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 lock-version = "2.0"
 python-versions = "^3.8"
 content-hash = "446ee2a1358bd1d899e316d2f21c957f8943eed290862db5f352808173894559"
+
