@@ -24,8 +24,7 @@ path = r"C:\Users\franken\gimie"  # this is to be filled with the path from the 
 
 def find_licenses(path: str):
     """returns a python list of licenses found at destination path"""
-    path_files = os.listdir(path)
-    g = Graph()
+    path_files = os.listdir(path) #maybe make it look through all directories?
     found_licenses = []
     for file in path_files:
         result = re.match(
@@ -33,27 +32,21 @@ def find_licenses(path: str):
         )
         # regex used is very basic right now, what are other common license file names?
         if result:
-            license_location = str(path) + "\\" + str(file)
+            license_location = os.path.join(path, file)
             license_mappings = get_licenses(license_location, min_score=50)
             # todo we need some tests to see how to set this min_score param
 
-            extracted_license = (license_mappings.get("licenses")[0]).get(
-                "spdx_url"
+            extracted_license = (license_mappings.get("licenses")[0]["spdx_url"]
             )
             found_licenses.append(extracted_license)
-            g.add(
-                (
-                    URIRef("https://www.gimie.org/repo"),
-                    URIRef("https://schema.org/license"),
-                    URIRef(str(extracted_license)),
-                )
-            )
-            g.serialize(destination="extractedtriple.ttl", format="ttl")
+
     return found_licenses
 
+def add_license_to_graph(license):
+    g = Graph()
+    g.add((
+        URIRef(path),
+        URIRef("https://schema.org/license"),
+        URIRef(str(license)),
+    ))
 
-# todo write a similar function for online repositories using just the repository URL
-
-# class LicenseMetadata:
-#     def __init__(self, path: str):
-#         raise NotImplementedError
