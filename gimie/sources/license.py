@@ -24,7 +24,9 @@ path = r"C:\Users\franken\gimie"  # this is to be filled with the path from the 
 
 def find_licenses(path: str):
     """returns a python list of licenses found at destination path"""
-    path_files = os.listdir(path) #maybe make it look through all directories?
+    path_files = os.listdir(
+        path
+    )  # maybe make it look through all directories?
     found_licenses = []
     for file in path_files:
         result = re.match(
@@ -36,17 +38,18 @@ def find_licenses(path: str):
             license_mappings = get_licenses(license_location, min_score=50)
             # todo we need some tests to see how to set this min_score param
 
-            extracted_license = (license_mappings.get("licenses")[0]["spdx_url"]
-            )
+            extracted_license = license_mappings.get("licenses")[0]["spdx_url"]
             found_licenses.append(extracted_license)
 
     return found_licenses
 
+
 def add_license_to_graph(license):
     g = Graph()
-    g.add((
-        URIRef(path),
-        URIRef("https://schema.org/license"),
-        URIRef(str(license)),
-    ))
-
+    g.add(
+        (
+            URIRef(path),
+            URIRef("https://schema.org/license"),
+            URIRef(str(license)),
+        )
+    )
