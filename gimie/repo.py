@@ -16,7 +16,7 @@
 # limitations under the License.
 from typing import Optional, Tuple
 from dataclasses import field, dataclass
-from gimie.sources import files, git, html, license
+from gimie.sources import files, git, license, web
 
 
 @dataclass
@@ -72,8 +72,8 @@ class Repo:
     def get_git_meta(self) -> Optional[git.GitMetadata]:
         return git.GitMetadata(self.path) if self.use_git else None
 
-    def get_html_meta(self) -> Optional[html.HtmlMetadata]:
-        return html.HtmlMetadata(self.path) if self.use_html else None
+    def get_html_meta(self) -> Optional[web.WebMetadata]:
+        return web.WebMetadata(self.path) if self.use_html else None
 
     def get_files_meta(self) -> Optional[files.FilesMetadata]:
         return files.FilesMetadata(self.path) if self.use_files else None
