@@ -2,13 +2,13 @@
 # Copyright 2022 - Swiss Data Science Center (SDSC)
 # A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
 # Eidgenössische Technische Hochschule Zürich (ETHZ).
-# 
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 # http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,8 @@
 # limitations under the License.
 from typing import Tuple, Optional
 from dataclasses import dataclass, field
-from pydriller import Repository
+from functools import cache, cached_property
+from pydriller import Repository, Commit
 import datetime
 
 
@@ -57,39 +58,38 @@ class GitMetadata:
         The creation date of the repository.
     """
 
-    authors: Tuple[str] = field(default_factory=tuple, init=False)
-    creation_date: Optional[datetime.datetime] = field(init=False)
-    creator: Optional[str] = field(init=False)
     repository: Repository
-    releases: Tuple[Release] = field(default_factory=tuple, init=False)
 
     def __init__(self, path: str):
         self.repository = Repository(path)
 
-        self.authors = self.get_authors()
-        self.creation_date = self.get_creation_date()
-        self.releases = sorted(self.get_releases())
-        self.creator = self.get_repo_creator()
-
-    def get_authors(self) -> Tuple[str]:
+    @cached_property
+    def authors(self) -> Tuple[str]:
         """Get the authors of the repository."""
         return tuple(set(commit.author.name for commit in self.repository.traverse_commits()))
 
-    def get_creation_date(self) -> Optional[datetime.datetime]:
+    @cached_property
+    def creation_date(self) -> Optional[datetime.datetime]:
         """Get the creation date of the repository."""
         try:
             return next(self.repository.traverse_commits()).author_date
         except StopIteration:
             return None
 
-    def get_releases(self) -> Tuple[Release]:
+    @cached_property
+    def releases(self) -> Tuple[Release]:
         """Get the releases of the repository."""
         try:
-            return tuple(Release(tag=tag.name, date=tag.commit.authored_datetime, commit_hash=tag.commit.hexsha) for tag in self.repository.git.repo.tags)
+            # This is necessary to initialize the repository
+            next(self.repository.traverse_commits())
+            releases = tuple(Release(tag=tag.name, date=tag.commit.authored_datetime,
+                                     commit_hash=tag.commit.hexsha) for tag in self.repository.git.repo.tags)
+            return sorted(releases)
         except StopIteration:
             return None
 
-    def get_repo_creator(self) -> Optional[str]:
+    @cached_property
+    def repository_creator(self) -> Optional[str]:
         """Get the creator of the repository."""
         try:
             return next(self.repository.traverse_commits()).author.name

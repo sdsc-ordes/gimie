@@ -1,6 +1,6 @@
 """Tests for the Gimie command line interface."""
 
-from gimie.sources.git import GitMetadata, Release
+from gimie.sources.git import GitMetadata
 import datetime
 import pytest
 
@@ -25,10 +25,10 @@ def test_git_creation_date():
         2022, 12, 7, 10, 19, 31, tzinfo=datetime.timezone.utc)
 
 
-def test_git_repo_creator():
+def test_git_repository_creator():
     """Test the creator of a git repository."""
     git_metadata = GitMetadata(LOCAL_REPOSITORY)
-    assert git_metadata.get_repo_creator() == "Cyril Matthey-Doret"
+    assert git_metadata.repository_creator == "Cyril Matthey-Doret"
 
 
 def test_git_releases():
