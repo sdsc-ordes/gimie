@@ -16,8 +16,8 @@
 # limitations under the License.
 from typing import Tuple, Optional
 from dataclasses import dataclass, field
-from functools import cache, cached_property
-from pydriller import Repository, Commit
+from functools import cached_property
+from pydriller import Repository
 import datetime
 
 
@@ -52,13 +52,13 @@ class GitMetadata:
 
     Attributes
     ----------
-    authors: Tuple[str]
-        The authors of the repository.
+    authors
     creation_date
-        The creation date of the repository.
-    """
-
+    creator
+    releases
     repository: Repository
+        The repository we are extracting metadata from.
+    """
 
     def __init__(self, path: str):
         self.repository = Repository(path)
@@ -77,6 +77,14 @@ class GitMetadata:
             return None
 
     @cached_property
+    def creator(self) -> Optional[str]:
+        """Get the creator of the repository."""
+        try:
+            return next(self.repository.traverse_commits()).author.name
+        except StopIteration:
+            return None
+
+    @cached_property
     def releases(self) -> Tuple[Release]:
         """Get the releases of the repository."""
         try:
@@ -85,13 +93,5 @@ class GitMetadata:
             releases = tuple(Release(tag=tag.name, date=tag.commit.authored_datetime,
                                      commit_hash=tag.commit.hexsha) for tag in self.repository.git.repo.tags)
             return sorted(releases)
-        except StopIteration:
-            return None
-
-    @cached_property
-    def repository_creator(self) -> Optional[str]:
-        """Get the creator of the repository."""
-        try:
-            return next(self.repository.traverse_commits()).author.name
         except StopIteration:
             return None
