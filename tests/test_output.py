@@ -27,14 +27,15 @@ out_graph_path = Path(
 validation_graph_path = Path("shaclgraph.ttl")
 
 
-@pytest.mark.skip('not yet implemented')
+@pytest.mark.skip("not yet implemented")
 def test_validate_output_is_linked_data():
     """Is output valid RDF?"""
     g = Graph()
     with open(out_graph_path) as output_graph:
         g.parse(output_graph, format="json-ld")
 
-@pytest.mark.skip('not yet implemented')
+
+@pytest.mark.skip("not yet implemented")
 def test_output_conforms_shapes():
     """Does graph conform SHACL shapes graph?"""
     g = Graph()

@@ -1,4 +1,3 @@
-
 # Gimie
 # Copyright 2022 - Swiss Data Science Center (SDSC)
 # A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
