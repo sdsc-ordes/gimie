@@ -31,11 +31,16 @@ class LicenseMetadata:
     Examples
     --------
     >>> LicenseMetadata('./LICENSE').get_licenses()
-    ('https://spdx.org/licenses/Apache-2.0.html')
+    ['https://spdx.org/licenses/Apache-2.0']
     """
 
     def __init__(self, paths: Union[str, Iterable[str]]):
-        self.paths: Tuple[str] = tuple(paths)
+        if isinstance(paths, str):
+            self.paths = (paths,)
+        elif isinstance(paths, Iterable):
+            self.paths = tuple(paths)
+        else:
+            raise TypeError("paths must be a string or iterable of strings.")
 
     def get_licenses(self, min_score: int = 50) -> List[str]:
         """Returns the SPDX URLs of detected licenses.
@@ -54,11 +59,9 @@ class LicenseMetadata:
             A list of SPDX URLs matching provided licenses,
             e.g. https://spdx.org/licenses/Apache-2.0.html.
         """
-        mappings = [
-            get_licenses(path, min_score=min_score) for path in self.paths
-        ]
+        mappings = get_licenses(self.paths[0], min_score=min_score)
         licenses = [
-            mapping.get("licenses")[0]["spdx_url"] for mapping in mappings
+            mapping["spdx_url"] for mapping in mappings.get('licenses')
         ]
 
         return licenses
