@@ -14,18 +14,51 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Iterable, List, Tuple, Union
 from scancode.api import get_licenses
 
 
-path = r"C:\Users\franken\gimie\LICENSE"  # this is to be filled with the path from the CLI input, not sure how to access it
+class LicenseMetadata:
+    """
+    This class provides metadata about software licenses.
+    It requires paths to files containing the license text.
 
+    Attributes
+    ----------
+    paths:
+        The collection of paths containing license information.
 
-def find_licenses(path: str):
-    """returns a python list of licenses found at destination path"""
-    found_licenses = []
-    license_mappings = get_licenses(path, min_score=50)
-    # todo we need some tests to see how to set this min_score param
-    extracted_license = license_mappings.get("licenses")[0]["spdx_url"]
-    found_licenses.append(extracted_license)
+    Examples
+    --------
+    >>> LicenseMetadata('./LICENSE').get_licenses()
+    ('https://spdx.org/licenses/Apache-2.0.html')
+    """
 
-    return found_licenses
+    def __init__(self, paths: Union[str, Iterable[str]]):
+        self.paths: Tuple[str] = tuple(paths)
+
+    def get_licenses(self, min_score: int = 50) -> List[str]:
+        """Returns the SPDX URLs of detected licenses.
+        Performs a diff comparison between file contents and a
+        database of licenses via the scancode API.
+
+        Parameters
+        ----------
+        min_score:
+            The minimal matching score used by scancode (from 0 to 100)
+            to return a license match.
+
+        Returns
+        -------
+        licenses:
+            A list of SPDX URLs matching provided licenses,
+            e.g. https://spdx.org/licenses/Apache-2.0.html.
+        """
+        mappings = [
+            get_licenses(path, min_score=min_score) for path in self.paths
+        ]
+        licenses = [
+            mapping.get("licenses")[0]["spdx_url"] for mapping in mappings
+        ]
+
+        return licenses
