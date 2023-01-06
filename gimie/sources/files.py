@@ -14,6 +14,24 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+import re
+
+
 class FilesMetadata:
     def __init__(self, path: str):
-        raise NotImplementedError
+        """returns the location of a license file for a given repository path"""
+        self.licenselocation = self.license_locator(path)
+
+    def license_locator(self, path: str):
+        license_locations = []
+        path_files = os.listdir(path)
+        for file in path_files:
+            result = re.match(
+                "((licens.*)|(reuse)|(copy))", file, flags=re.IGNORECASE
+            )
+            # regex used is very basic right now, what are other common license file names?
+            if result:
+                license_location = os.path.join(path, file)
+                license_locations.append(license_location)
+        return license_locations
