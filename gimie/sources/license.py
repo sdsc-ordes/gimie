@@ -14,42 +14,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 from scancode.api import get_licenses
-import re
-from rdflib import Graph, Literal, URIRef
 
-path = r"C:\Users\franken\gimie"  # this is to be filled with the path from the CLI input, not sure how to access it
+
+path = r"C:\Users\franken\gimie\LICENSE"  # this is to be filled with the path from the CLI input, not sure how to access it
 
 
 def find_licenses(path: str):
     """returns a python list of licenses found at destination path"""
-    path_files = os.listdir(
-        path
-    )  # maybe make it look through all directories?
     found_licenses = []
-    for file in path_files:
-        result = re.match(
-            "((licens.*)|(reuse)|(copy))", file, flags=re.IGNORECASE
-        )
-        # regex used is very basic right now, what are other common license file names?
-        if result:
-            license_location = os.path.join(path, file)
-            license_mappings = get_licenses(license_location, min_score=50)
-            # todo we need some tests to see how to set this min_score param
-
-            extracted_license = license_mappings.get("licenses")[0]["spdx_url"]
-            found_licenses.append(extracted_license)
+    license_mappings = get_licenses(path, min_score=50)
+    # todo we need some tests to see how to set this min_score param
+    extracted_license = license_mappings.get("licenses")[0]["spdx_url"]
+    found_licenses.append(extracted_license)
 
     return found_licenses
-
-
-def add_license_to_graph(license):
-    g = Graph()
-    g.add(
-        (
-            URIRef(path),
-            URIRef("https://schema.org/license"),
-            URIRef(str(license)),
-        )
-    )
