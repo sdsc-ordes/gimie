@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Iterable, List, Tuple, Union
+from typing import List, Tuple
 from scancode.api import get_licenses
 
 
@@ -35,7 +35,7 @@ class LicenseMetadata:
     """
 
     def __init__(self, *paths: str):
-            self.paths = paths
+            self.paths: Tuple[str] = paths
 
     def get_licenses(self, min_score: int = 50) -> List[str]:
         """Returns the SPDX URLs of detected licenses.
