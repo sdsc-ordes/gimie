@@ -34,13 +34,8 @@ class LicenseMetadata:
     ['https://spdx.org/licenses/Apache-2.0']
     """
 
-    def __init__(self, paths: Union[str, Iterable[str]]):
-        if isinstance(paths, str):
-            self.paths = (paths,)
-        elif isinstance(paths, Iterable):
-            self.paths = tuple(paths)
-        else:
-            raise TypeError("paths must be a string or iterable of strings.")
+    def __init__(self, *paths: str):
+            self.paths = paths
 
     def get_licenses(self, min_score: int = 50) -> List[str]:
         """Returns the SPDX URLs of detected licenses.
