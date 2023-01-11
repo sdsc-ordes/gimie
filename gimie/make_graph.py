@@ -33,10 +33,10 @@ def validate_url(url: str):
         return False
 
 
-def generate_fair_uri(
-    repository_path: str = "https://example.com/Repository/",
-):
-    """given a repository_path, returns a URI with a hash for uniqueness, or the repository URL if it's online"""
+def generate_fair_uri(repository_path: str):
+    """given a repository_path, returns a URI with a hash for uniqueness, or the repository URL if it's online
+    Example input:  -> https://www.github.com/SDSC-ORD/gimie (online)
+                    -> my repository (local)"""
     # Compute the SHA-256 hash of the repository name
     hash = hashlib.sha256(repository_path.encode()).hexdigest()
     if validate_url(repository_path):
