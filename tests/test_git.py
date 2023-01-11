@@ -6,6 +6,7 @@ import datetime
 import pytest
 
 LOCAL_REPOSITORY = os.getcwd()
+RENKU_REPOSITORY = "https://github.com/SwissDataScienceCenter/renku"
 
 
 def test_git_authors():
