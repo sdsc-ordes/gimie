@@ -7,6 +7,7 @@ import pytest
 
 LOCAL_REPOSITORY = os.getcwd()
 
+
 def test_git_authors():
     """Test part of the authors returned by gimie."""
     git_metadata = GitMetadata(LOCAL_REPOSITORY)

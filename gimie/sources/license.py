@@ -36,7 +36,7 @@ class LicenseMetadata:
     """
 
     def __init__(self, *paths: str):
-            self.paths: Tuple[str] = paths
+        self.paths: Tuple[str] = paths
 
     def get_licenses(self, min_score: int = 50) -> List[str]:
         """Returns the SPDX URLs of detected licenses.
@@ -57,7 +57,7 @@ class LicenseMetadata:
         """
         mappings = get_licenses(self.paths[0], min_score=min_score)
         licenses = [
-            mapping["spdx_url"] for mapping in mappings.get('licenses')
+            mapping["spdx_url"] for mapping in mappings.get("licenses")
         ]
 
         return licenses
