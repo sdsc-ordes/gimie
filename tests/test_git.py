@@ -4,7 +4,7 @@ from gimie.sources.git import GitMetadata
 import datetime
 import pytest
 
-LOCAL_REPOSITORY = ".."
+LOCAL_REPOSITORY = "https://github.com/SDSC-ORD/gimie"
 RENKU_REPOSITORY = "https://github.com/SwissDataScienceCenter/renku"
 
 
