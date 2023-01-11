@@ -14,6 +14,43 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+import re
+
+from typing import List
+
+
 class FilesMetadata:
-    def __init__(self, path: str):
-        raise NotImplementedError
+    """This classes provides helpers to navigate and read metadata files
+    from a project directory.
+
+    Examples
+    --------
+    >>> FilesMetadata('.').locate_licenses()
+    ['./LICENSE']
+    """
+
+    def __init__(self, project_path: str):
+        self.project_path = project_path
+
+    def locate_licenses(self) -> List[str]:
+        """Returns valid potential paths to license files in the project.
+        This uses pattern-matching on file names.
+        """
+        license_files = []
+        pattern = r".*(license(s)?|reus(e|ing)|copy(ing)?)(\.(txt|md|rst))?$"
+        for root, _, files in os.walk(self.project_path):
+            # skip toplevel hidden dirs (e.g. .git/)
+            subdir = os.path.relpath(root, self.project_path)
+            if subdir.startswith(".") and subdir != ".":
+                continue
+            for file in files:
+                # skip hidden files
+                if file.startswith("."):
+                    continue
+
+                if re.match(pattern, file, flags=re.IGNORECASE):
+                    license_path = os.path.join(root, file)
+                    license_files.append(license_path)
+
+        return license_files

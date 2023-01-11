@@ -1,10 +1,11 @@
 """Tests for the Gimie command line interface."""
 
+import os
 from gimie.sources.git import GitMetadata
 import datetime
 import pytest
 
-LOCAL_REPOSITORY = "https://github.com/SDSC-ORD/gimie"
+LOCAL_REPOSITORY = os.getcwd()
 RENKU_REPOSITORY = "https://github.com/SwissDataScienceCenter/renku"
 
 
