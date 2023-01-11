@@ -6,7 +6,9 @@ from calamus.schema import JsonLDSchema
 schema = fields.Namespace("http://schema.org/")
 
 
-def generate_fair_uri(repository_path):
+def generate_fair_uri(
+    repository_path: str = "https://example.com/Repository/",
+):
     """given a repository_path, returns a URI with a hash for uniqueness, or the repository URL if it's online"""
     # Compute the SHA-256 hash of the repository name
     hash = hashlib.sha256(repository_path.encode()).hexdigest()
@@ -57,7 +59,7 @@ class RepositorySchema(JsonLDSchema):
         model = Repository
 
 
-def to_graph(path, output_format="ttl"):
+def to_graph(path: str, output_format: str = "ttl"):
     """A function which turns a given path into a graph in a desired rdfLib supported rdf serialization"""
     software_instance = Repository(path)
     jsonld_dict = RepositorySchema().dump(software_instance)
@@ -71,4 +73,3 @@ def to_graph(path, output_format="ttl"):
 
 
 # to_graph("https://wwww.gimie.com") #Test functionality
-# TODO add function and class descriptions, write tests, see how license_to graph and fair uri functions fit into this
