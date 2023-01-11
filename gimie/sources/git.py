@@ -66,7 +66,12 @@ class GitMetadata:
     @cached_property
     def authors(self) -> Tuple[str]:
         """Get the authors of the repository."""
-        return tuple(set(commit.author.name for commit in self.repository.traverse_commits()))
+        return tuple(
+            set(
+                commit.author.name
+                for commit in self.repository.traverse_commits()
+            )
+        )
 
     @cached_property
     def creation_date(self) -> Optional[datetime.datetime]:
@@ -90,8 +95,14 @@ class GitMetadata:
         try:
             # This is necessary to initialize the repository
             next(self.repository.traverse_commits())
-            releases = tuple(Release(tag=tag.name, date=tag.commit.authored_datetime,
-                                     commit_hash=tag.commit.hexsha) for tag in self.repository.git.repo.tags)
+            releases = tuple(
+                Release(
+                    tag=tag.name,
+                    date=tag.commit.authored_datetime,
+                    commit_hash=tag.commit.hexsha,
+                )
+                for tag in self.repository.git.repo.tags
+            )
             return sorted(releases)
         except StopIteration:
             return None

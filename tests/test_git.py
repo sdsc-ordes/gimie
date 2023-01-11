@@ -4,7 +4,7 @@ from gimie.sources.git import GitMetadata
 import datetime
 import pytest
 
-LOCAL_REPOSITORY = ".."
+LOCAL_REPOSITORY = "https://github.com/SDSC-ORD/gimie"
 RENKU_REPOSITORY = "https://github.com/SwissDataScienceCenter/renku"
 
 
@@ -21,8 +21,11 @@ def test_git_authors():
 def test_git_creation_date():
     """Test the creation date of a git repository."""
     git_metadata = GitMetadata(LOCAL_REPOSITORY)
-    assert git_metadata.creation_date.astimezone(datetime.timezone.utc) == datetime.datetime(
-        2022, 12, 7, 10, 19, 31, tzinfo=datetime.timezone.utc)
+    assert git_metadata.creation_date.astimezone(
+        datetime.timezone.utc
+    ) == datetime.datetime(
+        2022, 12, 7, 10, 19, 31, tzinfo=datetime.timezone.utc
+    )
 
 
 def test_git_creator():
@@ -36,6 +39,11 @@ def test_git_releases():
     git_metadata = GitMetadata(RENKU_REPOSITORY)
     first_release = git_metadata.releases[0]
     assert first_release.tag == "maint-0.1"
-    assert first_release.date.astimezone(datetime.timezone.utc) == datetime.datetime(
-        2018, 2, 16, 20, 40, 10, tzinfo=datetime.timezone.utc)
-    assert first_release.commit_hash == "615132e9c0c0e6e139f566c4066a17af93651b55"
+    assert first_release.date.astimezone(
+        datetime.timezone.utc
+    ) == datetime.datetime(
+        2018, 2, 16, 20, 40, 10, tzinfo=datetime.timezone.utc
+    )
+    assert (
+        first_release.commit_hash == "615132e9c0c0e6e139f566c4066a17af93651b55"
+    )
