@@ -2,8 +2,35 @@ from rdflib import Graph, URIRef, parser
 import hashlib
 from calamus import fields
 from calamus.schema import JsonLDSchema
+from urllib.parse import urlparse
 
 schema = fields.Namespace("http://schema.org/")
+
+
+def validate_url(url: str):
+    """Checks if input is a valid URL.
+    credits: https://stackoverflow.com/a/38020041
+
+    Examples
+    -------------
+    >>> validate_url('/data/my_repo')
+    False
+    >>> validate_url(532)
+    False
+    >>> validate_url('https://www.github.com/SDSC-ORD/gimie')
+    True
+    >>> validate_url('http://www.github.com/SDSC-ORD/gimie')
+    True
+    >>> validate_url('github.com/SDSC-ORD/gimie')
+    True
+    """
+    # if "https://" or "http://" not in url:
+    #     url = "https://" + url
+    try:
+        result = urlparse(url)
+        return all([result.scheme, result.netloc])
+    except:
+        return False
 
 
 def generate_fair_uri(
@@ -12,20 +39,17 @@ def generate_fair_uri(
     """given a repository_path, returns a URI with a hash for uniqueness, or the repository URL if it's online"""
     # Compute the SHA-256 hash of the repository name
     hash = hashlib.sha256(repository_path.encode()).hexdigest()
-    # TODO https://www.github.com/repoX should return the same result as github.com/repoX
-    if (
-        False
-    ):  # repository_path.is_online(): #we need a method that checks whether the repopath is online or a foldername
+    if validate_url(repository_path):
         fair_uri = repository_path
     else:
-        # Return the FAIR URI in the form "fair:sha256-HASH, truncated to 5 characters to promote readability"
+        # Return the FAIR URI in the form "sha256-HASH, truncated to 5 characters to promote readability"
         fair_uri = (
             f"gimie:{repository_path}/" + hash[:5]
-        )  # TODO decide on URI we want to use for non online repos
+        )  # TODO decide on URI+prefix we want to use for non online repos
     return fair_uri
 
 
-class Repository:
+class ProjectGraph:
     """A class to represent a GIT repository
 
     Parameters
@@ -41,8 +65,20 @@ class Repository:
 
     def __init__(self, path: str):
         self._id = generate_fair_uri(path)
-        self.license_url = "http://example.com/books/1"  # LicenseMetadata(self.path).get_licenses() TODO replace
+        self.license_url = "http://example.com/license/1"  # LicenseMetadata(self.path).get_licenses() TODO replace
         self.programming_language = "python"  # FilesMetadata(self.path).get_programming_lang() TODO replace
+
+    def to_graph(self, format: str = "ttl") -> str:
+        """A function which turns a given path into a graph in a desired rdfLib supported rdf serialization"""
+        jsonld_dict = RepositorySchema().dump(self)
+        g = Graph()
+        g.parse(format="json-ld", data=jsonld_dict)
+
+        g.bind(
+            "schema", schema
+        )  # TODO prefix assignment, still have to figure out code for automation of this
+        # print(g.serialize(format=format))
+        return g.serialize(format=format)
 
 
 class RepositorySchema(JsonLDSchema):
@@ -56,20 +92,4 @@ class RepositorySchema(JsonLDSchema):
         """a metaclass which indicates how the repository should be rdf:typed conform Calamus"""
 
         rdf_type = schema.SoftwareApplication
-        model = Repository
-
-
-def to_graph(path: str, output_format: str = "ttl"):
-    """A function which turns a given path into a graph in a desired rdfLib supported rdf serialization"""
-    software_instance = Repository(path)
-    jsonld_dict = RepositorySchema().dump(software_instance)
-    g = Graph()
-    g.parse(format="json-ld", data=jsonld_dict)
-
-    g.bind(
-        "schema", schema
-    )  # TODO prefix assignment, still have to figure out code for automation of this
-    print(g.serialize(format=output_format))
-
-
-# to_graph("https://wwww.gimie.com") #Test functionality
+        model = ProjectGraph
