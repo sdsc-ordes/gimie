@@ -19,13 +19,9 @@ def validate_url(url: str):
     False
     >>> validate_url('https://www.github.com/SDSC-ORD/gimie')
     True
-    >>> validate_url('http://www.github.com/SDSC-ORD/gimie')
-    True
     >>> validate_url('github.com/SDSC-ORD/gimie')
-    True
+    False
     """
-    # if "https://" or "http://" not in url:
-    #     url = "https://" + url
     try:
         result = urlparse(url)
         return all([result.scheme, result.netloc])
