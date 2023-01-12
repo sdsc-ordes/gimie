@@ -26,7 +26,8 @@ python = "^3.9"
 extruct = "^0.14.0"
 PyDriller = "^2.3"
 pyshacl = "^0.20.0"
-scancode-toolkit = "^31.2.4"
+# temporarily disabled due to installation problems
+# scancode-toolkit = "^31.2.4"
 typer = "^0.7.0"
 calamus = "^0.4.1"
 

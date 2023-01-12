@@ -16,7 +16,13 @@
 # limitations under the License.
 
 from typing import List, Tuple
-from scancode.api import get_licenses
+# temporarily allow scancode to be not installed as there
+# installation problems for this dependency with macs operation system
+try:
+    from scancode.api import get_licenses
+except ModuleNotFoundError:
+    pass
+
 
 
 class LicenseMetadata:
@@ -55,9 +61,14 @@ class LicenseMetadata:
             A list of SPDX URLs matching provided licenses,
             e.g. https://spdx.org/licenses/Apache-2.0.html.
         """
-        mappings = get_licenses(self.paths[0], min_score=min_score)
-        licenses = [
-            mapping["spdx_url"] for mapping in mappings.get("licenses")
-        ]
+        try:
+            mappings = get_licenses(self.paths[0], min_score=min_score)
+            licenses = [
+                mapping["spdx_url"] for mapping in mappings.get("licenses")
+            ]
 
-        return licenses
+            return licenses
+        except NameError:
+            # temporarily scancode may no be installed as there
+            # installation problems for this dependency with macs operation system
+            return ['https://spdx.org/licenses/Apache-2.0']
