@@ -16,13 +16,13 @@
 # limitations under the License.
 
 from typing import List, Tuple
+
 # temporarily allow scancode to be not installed as there
 # installation problems for this dependency with macs operation system
 try:
     from scancode.api import get_licenses
 except ModuleNotFoundError:
     pass
-
 
 
 class LicenseMetadata:
@@ -71,4 +71,4 @@ class LicenseMetadata:
         except NameError:
             # temporarily scancode may no be installed as there
             # installation problems for this dependency with macs operation system
-            return ['https://spdx.org/licenses/Apache-2.0']
+            return ["https://spdx.org/licenses/Apache-2.0"]
