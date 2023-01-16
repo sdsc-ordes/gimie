@@ -1,5 +1,10 @@
 name: Python Poetry Build
 
+# the version on pypi is set in the `pyproject.toml` file
+# a tag that corresponds to the version should be pushed
+# whenever the version in that file is upgraded. The tag
+# will then trigger the deploy of the new package version
+# on pypi
 on:
   push:
     tags:
@@ -13,6 +18,4 @@ jobs:
       - name: Build and publish to pypi
         uses: JRubics/poetry-publish@v1.16
         with:
-          pypi_token: ${{ secrets.PYPI_TEST_API_TOKEN }}
-          repository_name: "testpypi"
-          repository_url: "https://test.pypi.org/legacy/"
+          pypi_token: ${{ secrets.PYPI_API_TOKEN }}
