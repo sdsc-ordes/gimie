@@ -59,7 +59,7 @@ class GitExtractor(Extractor):
     def extract(self):
         ...
 
-    def serialize(self, format: str = 'ttl') -> str:
+    def serialize(self, format: str = "ttl") -> str:
         ...
 
     @cached_property
