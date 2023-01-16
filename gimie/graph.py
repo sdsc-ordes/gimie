@@ -1,6 +1,6 @@
 from rdflib import Graph, URIRef, parser
 import hashlib
-from gimie.utils import validate_url
+from gimie.utils import generate_fair_uri, validate_url
 from calamus import fields
 from calamus.schema import JsonLDSchema
 
@@ -23,12 +23,14 @@ class ProjectGraph:
 
     def __init__(self, path: str):
         self._id = generate_fair_uri(path)
-        self.license_url = "http://example.com/license/1"  # LicenseMetadata(self.path).get_licenses() TODO replace
-        self.programming_language = "python"  # FilesMetadata(self.path).get_programming_lang() TODO replace
+        # LicenseMetadata(self.path).get_licenses() TODO replace
+        self.license_url = "http://example.com/license/1"
+        # FilesMetadata(self.path).get_programming_lang() TODO replace
+        self.programming_language = "python"
 
     def to_graph(self, format: str = "ttl") -> str:
         """A function which turns a given path into a graph in a desired rdfLib supported rdf serialization"""
-        jsonld_dict = RepositorySchema().dump(self)
+        jsonld_dict = ProjectGraphSchema().dump(self)
         g = Graph()
         g.parse(format="json-ld", data=jsonld_dict)
 
@@ -39,7 +41,7 @@ class ProjectGraph:
         return g.serialize(format=format)
 
 
-class RepositorySchema(JsonLDSchema):
+class ProjectGraphSchema(JsonLDSchema):
     """A Class which indicates how the attributes of Repository map to schema.org properties conform Calamus"""
 
     _id = fields.Id()

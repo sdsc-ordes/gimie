@@ -16,10 +16,11 @@
 # limitations under the License.
 from typing import Tuple, Optional
 from functools import cached_property
+from gimie.models import Release
 from pydriller import Repository
 import datetime
 
-from gimie.sources import Extractor
+from gimie.abstract import Extractor
 from rdflib import Graph
 
 
@@ -58,7 +59,7 @@ class GitExtractor(Extractor):
     def extract(self):
         ...
 
-    def serialize(self, format: str='ttl') -> str:
+    def serialize(self, format: str = 'ttl') -> str:
         ...
 
     @cached_property
@@ -94,3 +95,7 @@ class GitExtractor(Extractor):
             return sorted(releases)
         except StopIteration:
             return None
+
+    def to_graph(self) -> Graph:
+        """Generate an RDF graph from the instance"""
+        return NotImplementedError

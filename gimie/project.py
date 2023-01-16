@@ -16,7 +16,7 @@
 # limitations under the License.
 from typing import Iterable, List, Union
 from gimie.utils import validate_url
-from gimie.sources import (
+from gimie.sources.utils import (
     get_local_extractor,
     get_remote_extractor,
     is_local_source,
@@ -52,7 +52,7 @@ class Project:
         # We want to temporarily clone remote projects (i.e. cleanup behind)
         if validate_url(path):
             self.url = path
-            self.path = self.clone(path)
+            self.project_dir = self.clone(path)
             self._remote = True
         else:
             self.url = None
@@ -61,7 +61,7 @@ class Project:
         self.extractors = self.get_extractors(sources)
 
     def clone(self, url: str) -> str:
-        ...
+        raise NotImplementedError
 
     def get_extractors(self, sources: Iterable[str]) -> List[Extractor]:
 
@@ -75,9 +75,9 @@ class Project:
                     "Cannot use a remote source with a local project."
                 )
             if is_remote_source(src):
-                extractor = get_local_extractor(self.project_dir, src)
-            else:
                 extractor = get_remote_extractor(self.url, src)
+            else:
+                extractor = get_local_extractor(self.project_dir, src)
             extractors.append(extractor)
 
         return extractors

@@ -1,4 +1,7 @@
 from urllib.parse import urlparse
+from typing import List
+import os
+import re
 
 
 def validate_url(url: str):
@@ -37,3 +40,31 @@ def generate_fair_uri(repository_path: str):
             f"gimie:{repository_path}/" + hash[:5]
         )  # TODO decide on URI+prefix we want to use for non online repos
     return fair_uri
+
+
+def locate_licenses(path) -> List[str]:
+    """Returns valid potential paths to license files in the project.
+    This uses pattern-matching on file names.
+
+    Examples
+    --------
+    >>> locate_licenses('.')
+    ['./LICENSE']
+    """
+    license_files = []
+    pattern = r".*(license(s)?|reus(e|ing)|copy(ing)?)(\.(txt|md|rst))?$"
+    for root, _, files in os.walk(path):
+        # skip toplevel hidden dirs (e.g. .git/)
+        subdir = os.path.relpath(root, path)
+        if subdir.startswith(".") and subdir != ".":
+            continue
+        for file in files:
+            # skip hidden files
+            if file.startswith("."):
+                continue
+
+            if re.match(pattern, file, flags=re.IGNORECASE):
+                license_path = os.path.join(root, file)
+                license_files.append(license_path)
+
+    return license_files

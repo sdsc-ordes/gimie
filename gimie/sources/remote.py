@@ -14,6 +14,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-class WebMetadata:
+from gimie.abstract import Extractor
+from rdflib import Graph
+
+
+class GitlabExtractor(Extractor):
+    def __init__(self, path: str):
+        raise NotImplementedError
+
+    def to_graph(self) -> Graph:
+        """Generate an RDF graph from the instance"""
+        return NotImplementedError
+
+
+class GithubExtractor(Extractor):
     def __init__(self, path: str):
         raise NotImplementedError
