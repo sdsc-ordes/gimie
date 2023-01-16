@@ -54,3 +54,12 @@ Or [poetry](https://python-poetry.org/), to work in an isolated virtual environm
 git clone https://github.com/SDSC-ORD/gimie && cd gimie
 poetry install
 ```
+
+## Publish on Pypi
+
+To publish a new version of the package on Pypi: 
+
+- update package version in the `pyproject.toml` file
+- update package version in the `gimie/sources/__init__.py` file
+- push version tag: this will trigger an action to publish the new package version on Pypi
+
