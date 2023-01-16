@@ -3,12 +3,9 @@ name: Python Poetry Build
 on: [push]
 
 jobs:
-  tests:
-    uses: ./.github/workflows/poetry-pytest.yml
   build:
     runs-on: ubuntu-latest
     steps:
-      - needs: [tests]
       - uses: actions/checkout@v2
       - name: Build and publish to pypi
         uses: JRubics/poetry-publish@v1.16
