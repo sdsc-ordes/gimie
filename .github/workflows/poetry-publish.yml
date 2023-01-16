@@ -1,6 +1,9 @@
 name: Python Poetry Build
 
-on: [push]
+on:
+  push:
+    tags:
+    - '*'
 
 jobs:
   build:
