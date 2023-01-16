@@ -1,8 +1,7 @@
-name: Python package
-on:
-  push:
-    tags:
-      - "v*.*.*"
+name: Python Poetry Build
+
+on: [push]
+
 jobs:
   tests:
     uses: ./.github/workflows/poetry-pytest.yml
