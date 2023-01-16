@@ -15,33 +15,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from typing import Tuple, Optional
-from dataclasses import dataclass, field
 from functools import cached_property
 from pydriller import Repository
 import datetime
 
-
-@dataclass(order=True)
-class Release:
-    """
-    This class represents a release of a repository.
-
-    Parameters
-    ----------
-    tag: str
-        The tag of the release.
-    date: datetime.datetime
-        The date of the release.
-    commit_hash: str
-        The commit hash of the release.
-    """
-
-    tag: str = field(compare=False)
-    date: datetime.datetime = field(compare=True)
-    commit_hash: str = field(compare=False)
+from gimie.sources import Extractor
+from rdflib import Graph
 
 
-class GitMetadata:
+class GitExtractor(Extractor):
     """
     This class is responsible for extracting metadata from a git repository.
 
@@ -72,6 +54,12 @@ class GitMetadata:
                 for commit in self.repository.traverse_commits()
             )
         )
+
+    def extract(self):
+        ...
+
+    def serialize(self, format: str='ttl') -> str:
+        ...
 
     @cached_property
     def creation_date(self) -> Optional[datetime.datetime]:
