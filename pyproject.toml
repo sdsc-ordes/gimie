@@ -35,8 +35,17 @@ calamus = "^0.4.1"
 pytest = "^7.2.0"
 black = "^22.10.0"
 
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+
+[tool.poetry-dynamic-versioning.substitution]
+files = [gimie/__init__.py"]
+
 [build-system]
-requires = ["poetry-core"]
+[build-system]
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
+build-backend = "poetry_dynamic_versioning.backend"
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
