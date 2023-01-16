@@ -80,3 +80,4 @@ class Repo:
 
     def get_license_meta(self) -> Optional[license.LicenseMetadata]:
         return license.LicenseMetadata(self.path) if self.use_license else None
+
