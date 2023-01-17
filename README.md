@@ -59,6 +59,4 @@ poetry install
 
 To publish a new version of the package on Pypi: 
 
-- update package version in the `pyproject.toml` file
 - push version tag: this will trigger an action to publish the new package version on Pypi
-
