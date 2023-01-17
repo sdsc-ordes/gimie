@@ -2,7 +2,7 @@
 
 [tool.poetry]
 name = "gimie"
-version = "0.1.0"
+version = "0.1.2"
 description = "Extract structured metadata from git repositories."
 authors = ["Swiss Data Science Center <contact@datascience.ch>"]
 license = "GPLv3"

@@ -16,7 +16,7 @@
 # limitations under the License.
 import logging
 
-__version__ = "0.1.0"
+__version__ = "0.1.2"
 
 logger = logging.getLogger()
 logger.setLevel(logging.WARNING)
