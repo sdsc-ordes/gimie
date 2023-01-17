@@ -52,3 +52,7 @@ target-version = ["py38", "py39"]
 [tool.pytest.ini_options]
 addopts = "--doctest-modules"
 testpaths = ["gimie", "tests"]
+
+[tool.pyright]
+reportMissingTypeStubs = false
+reportUntypedBaseClass = false
