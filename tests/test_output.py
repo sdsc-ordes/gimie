@@ -30,7 +30,7 @@ OUT_TTL = Project(
 
 def test_validate_output_is_linked_data():
     """Is output valid RDF?"""
-    g = Graph().parse(format='ttl', data=OUT_TTL)
+    g = Graph().parse(format="ttl", data=OUT_TTL)
 
 
 @pytest.mark.skip("not yet implemented")
