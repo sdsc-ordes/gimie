@@ -14,13 +14,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Tuple, Optional
+from typing import Tuple, Optional, Union
 from functools import cached_property
 from gimie.models import Release
 from pydriller import Repository
 import datetime
 
-from gimie.abstract import Extractor
+from gimie.sources.abstract import Extractor
 from rdflib import Graph
 
 
@@ -49,12 +49,9 @@ class GitExtractor(Extractor):
     @cached_property
     def authors(self) -> Tuple[str]:
         """Get the authors of the repository."""
-        return tuple(
-            set(
-                commit.author.name
-                for commit in self.repository.traverse_commits()
-            )
-        )
+        commits = self.repository.traverse_commits()
+        authors = set(commit.author.name for commit in commits)
+        return tuple(aut for aut in authors if aut is not None)
 
     def extract(self):
         ...
@@ -79,7 +76,7 @@ class GitExtractor(Extractor):
             return None
 
     @cached_property
-    def releases(self) -> Tuple[Release]:
+    def releases(self) -> Tuple[Union[Release, None]]:
         """Get the releases of the repository."""
         try:
             # This is necessary to initialize the repository
@@ -90,12 +87,13 @@ class GitExtractor(Extractor):
                     date=tag.commit.authored_datetime,
                     commit_hash=tag.commit.hexsha,
                 )
-                for tag in self.repository.git.repo.tags
+                for tag in self.repository.git.repo.tags # type: ignore
             )
-            return sorted(releases)
+            return tuple(sorted(releases))
+        # When there's no release
         except StopIteration:
-            return None
+            return (None,)
 
     def to_graph(self) -> Graph:
         """Generate an RDF graph from the instance"""
-        return NotImplementedError
+        raise NotImplementedError

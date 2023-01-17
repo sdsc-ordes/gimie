@@ -4,15 +4,15 @@ from gimie.sources import (
     SOURCES,
 )
 
-from gimie.abstract import Extractor
+from gimie.sources.abstract import Extractor
 
 
 def get_local_extractor(path: str, source: str) -> Extractor:
-    return LOCAL_SOURCES[source](path=path)
+    return LOCAL_SOURCES[source](path)
 
 
 def get_remote_extractor(path: str, source: str) -> Extractor:
-    return REMOTE_SOURCES[source](path=path)
+    return REMOTE_SOURCES[source](path)
 
 
 def is_local_source(source: str) -> bool:
