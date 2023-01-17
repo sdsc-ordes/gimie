@@ -1,7 +1,8 @@
-from urllib.parse import urlparse
-from typing import List
 import os
 import re
+import hashlib
+from typing import List
+from urllib.parse import urlparse
 
 
 def validate_url(url: str):
@@ -27,6 +28,28 @@ def validate_url(url: str):
 
 
 def generate_fair_uri(path: str):
+    """Given a repository path, returns a URI with a
+    hash for uniqueness, or the repository URL if it's online.
+    The URI format for local paths is "gimie:{basename}/{md5sum(abspath)}".
+
+    Parameters
+    ----------
+    path:
+        Path to the repository, either local or a URL.
+
+
+    Returns
+    -------
+    fair_uri:
+        A unique resource identifier (URI) for the repository path.
+
+    Examples
+    --------
+    >>> generate_fair_uri("https://www.github.com/SDSC-ORD/gimie")
+    "https://www.github.com/SDSC-ORD/gimie"
+    >>> generate_fair_uri("/data/org/project")
+    "gimie:project/93db0"
+    """
 
     # We only need to craft a URI for a local path.
     if validate_url(path):
@@ -38,9 +61,20 @@ def generate_fair_uri(path: str):
     return fair_uri
 
 
-def locate_licenses(path) -> List[str]:
+def locate_licenses(path: str) -> List[str]:
     """Returns valid potential paths to license files in the project.
     This uses pattern-matching on file names.
+
+    Parameters
+    ----------
+    path:
+        The root path to search for license files.
+
+    Returns
+    -------
+    license_files:
+        The list of relative paths (from input path) to files which
+        potentially contain license text.
 
     Examples
     --------
