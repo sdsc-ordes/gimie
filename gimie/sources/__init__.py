@@ -9,11 +9,11 @@ from gimie.sources.remote import (
 from rdflib import Graph
 
 REMOTE_SOURCES: Dict[str, Any] = {
-    "gitlab": GitlabExtractor,
+    #    "gitlab": GitlabExtractor,
     "github": GithubExtractor,
 }
 LOCAL_SOURCES: Dict[str, Any] = {
-    "git": GitExtractor,
+    #    "git": GitExtractor,
 }
 
 SOURCES: Dict[str, Any] = LOCAL_SOURCES | REMOTE_SOURCES
