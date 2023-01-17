@@ -26,7 +26,6 @@ from gimie.project import Project
 OUT_GRAPH = Project(
     "https://github.com/SDSC-ORD/gimie", sources=["github"]
 ).serialize(format="ttl")
-SHAPES_GRAPH = Graph().parse(Path("shaclgraph.ttl"))
 
 
 def test_validate_output_is_linked_data():
@@ -37,6 +36,8 @@ def test_validate_output_is_linked_data():
 @pytest.mark.skip("not yet implemented")
 def test_output_conforms_shapes():
     """Does graph conform SHACL shapes graph?"""
+    with open("shaclgraph.ttl") as shapes:
+        shapes_graph = Graph().parse(shapes.read())
     valid_graph, _, _ = validate(
         data_graph=OUT_GRAPH,
         shacl_graph=SHAPES_GRAPH,
