@@ -26,19 +26,15 @@ def validate_url(url: str):
         return False
 
 
-def generate_fair_uri(repository_path: str):
-    """given a repository_path, returns a URI with a hash for uniqueness, or the repository URL if it's online
-    Example input:  -> https://www.github.com/SDSC-ORD/gimie (online)
-                    -> my repository (local)"""
-    # Compute the SHA-256 hash of the repository name
-    hash = hashlib.sha256(repository_path.encode()).hexdigest()
-    if validate_url(repository_path):
-        fair_uri = repository_path
+def generate_fair_uri(path: str):
+
+    # We only need to craft a URI for a local path.
+    if validate_url(path):
+        fair_uri = path
     else:
-        # Return the FAIR URI in the form "sha256-HASH, truncated to 5 characters to promote readability"
-        fair_uri = (
-            f"gimie:{repository_path}/" + hash[:5]
-        )  # TODO decide on URI+prefix we want to use for non online repos
+        hashed = hashlib.md5(path.encode()).hexdigest()
+        name = os.path.basename(path)
+        fair_uri = f"gimie:{name}/{hashed[:5]}"
     return fair_uri
 
 
