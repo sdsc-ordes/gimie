@@ -23,14 +23,14 @@ from rdflib import Graph
 from gimie.project import Project
 
 
-OUT_GRAPH = Project(
+OUT_TTL = Project(
     "https://github.com/SDSC-ORD/gimie", sources=["github"]
 ).serialize(format="ttl")
 
 
 def test_validate_output_is_linked_data():
     """Is output valid RDF?"""
-    g = Graph().parse(OUT_GRAPH)
+    g = Graph().parse(format='ttl', data=OUT_TTL)
 
 
 @pytest.mark.skip("not yet implemented")
