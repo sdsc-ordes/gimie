@@ -29,9 +29,6 @@ class SerializationFormat(str, Enum):
     ttl = "ttl"
     jsonld = "json-ld"
     nt = "nt"
-    nquads = "nquads"
-    json = "json"
-    csv = "csv"
 
 
 def version_callback(value: bool):
