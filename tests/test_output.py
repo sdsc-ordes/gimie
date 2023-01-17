@@ -23,9 +23,9 @@ from rdflib import Graph
 from gimie.project import Project
 
 
-OUT_GRAPH = Project("https://github.com/SDSC-ORD/gimie", sources=["github"]).serialize(
-    format="ttl"
-)
+OUT_GRAPH = Project(
+    "https://github.com/SDSC-ORD/gimie", sources=["github"]
+).serialize(format="ttl")
 SHAPES_GRAPH = Graph().parse(Path("shaclgraph.ttl"))
 
 

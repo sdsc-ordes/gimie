@@ -87,7 +87,7 @@ class GitExtractor(Extractor):
                     date=tag.commit.authored_datetime,
                     commit_hash=tag.commit.hexsha,
                 )
-                for tag in self.repository.git.repo.tags # type: ignore
+                for tag in self.repository.git.repo.tags  # type: ignore
             )
             return tuple(sorted(releases))
         # When there's no release

@@ -49,7 +49,8 @@ def data(
         False, "--exclude", help="Do not use these sources."
     ),
     format: SerializationFormat = typer.Option(
-        SerializationFormat.ttl, "--format",
+        SerializationFormat.ttl,
+        "--format",
         show_choices=True,
         help="Output serialization format for the RDF graph.",
     ),
@@ -64,7 +65,6 @@ def data(
     proj = Project(path)
     print(proj.serialize(format=format))
     proj.cleanup()
-
 
 
 @app.command()
