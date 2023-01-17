@@ -1,4 +1,7 @@
 from abc import ABC, abstractmethod
+from typing import Optional
+
+
 from rdflib import Graph
 
 
@@ -10,7 +13,7 @@ class Extractor(ABC):
     they are free to override the default serialize() and jsonld()
     """
 
-    def __init__(self, path: str):
+    def __init__(self, path: str, _id: Optional[str] = None):
         self.path = path
 
     @abstractmethod
