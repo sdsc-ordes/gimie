@@ -2,7 +2,8 @@
 
 [tool.poetry]
 name = "gimie"
-version = "0.1.0"
+# placeholder, will be set to git tag by poetry-dynamic-versioning
+version = "0.0.0"
 description = "Extract structured metadata from git repositories."
 authors = ["Swiss Data Science Center <contact@datascience.ch>"]
 license = "GPLv3"
