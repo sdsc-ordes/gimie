@@ -45,13 +45,15 @@ class Project:
 
     Examples
     --------
-    >>> proj = Project("https://github.com/SDSC-ORD/gimie", sources=['git'])
-    Traceback (most recent call last):
-    ...
-    NotImplementedError
+    >>> proj = Project("https://github.com/SDSC-ORD/gimie", sources=['github'])
     """
 
-    def __init__(self, path: str, sources: Iterable[str] = ["github"]):
+    def __init__(
+        self, path: str, sources: Union[str, Iterable[str]] = ["github"]
+    ):
+
+        if isinstance(sources, str):
+            sources = [sources]
 
         # Remember if we cloned to cleanup at the end
         self._cloned = False
