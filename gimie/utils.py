@@ -46,9 +46,9 @@ def generate_fair_uri(path: str):
     Examples
     --------
     >>> generate_fair_uri("https://www.github.com/SDSC-ORD/gimie")
-    "https://www.github.com/SDSC-ORD/gimie"
+    'https://www.github.com/SDSC-ORD/gimie'
     >>> generate_fair_uri("/data/org/project")
-    "gimie:project/93db0"
+    'gimie:project/93db0'
     """
 
     # We only need to craft a URI for a local path.
