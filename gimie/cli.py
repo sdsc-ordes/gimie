@@ -15,11 +15,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Command line interface to the gimie package."""
+from enum import Enum
 from typing import Optional
 from gimie import __version__
 import typer
 
+from gimie.project import Project
+
 app = typer.Typer(add_completion=False)
+
+
+class SerializationFormat(str, Enum):
+    ttl = "ttl"
+    jsonld = "json-ld"
+    nt = "nt"
+    nquads = "nquads"
+    json = "json"
+    csv = "csv"
 
 
 def version_callback(value: bool):
@@ -32,14 +44,14 @@ def version_callback(value: bool):
 @app.command()
 def data(
     path: str,
-    skip_license: bool = typer.Option(
-        False, "--skip-license", help="Skip license scan."
+    only: str = typer.Option(False, "--only", help="Only use these sources."),
+    exclude: str = typer.Option(
+        False, "--exclude", help="Do not use these sources."
     ),
-    skip_html: bool = typer.Option(
-        False, "--skip-html", help="Skip html page scan."
-    ),
-    skip_git: bool = typer.Option(
-        False, "--skip-git", help="Skip git commit scan."
+    format: SerializationFormat = typer.Option(
+        SerializationFormat.ttl, "--format",
+        show_choices=True,
+        help="Output serialization format for the RDF graph.",
     ),
     version: Optional[bool] = typer.Option(
         None,
@@ -49,6 +61,10 @@ def data(
     ),
 ):
     """Extract metadata from a Git repository at the target PATH."""
+    proj = Project(path)
+    print(proj.serialize(format=format))
+    proj.cleanup()
+
 
 
 @app.command()
