@@ -14,11 +14,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Extractors which depend on locally available data. Usually the cloned repository."""
 from typing import Tuple, Optional, Union
 from functools import cached_property
 from gimie.models import Release
 from pydriller import Repository
 import datetime
+from typing import List
 
 from gimie.sources.abstract import Extractor
 from rdflib import Graph
@@ -96,4 +98,43 @@ class GitExtractor(Extractor):
 
     def to_graph(self) -> Graph:
         """Generate an RDF graph from the instance"""
+        raise NotImplementedError
+
+
+class LicenseExtractor(Extractor):
+    """
+    This class provides metadata about software licenses.
+    It requires paths to files containing the license text.
+
+    Attributes
+    ----------
+    paths:
+        The collection of paths containing license information.
+
+    Examples
+    --------
+    >>> LicenseMetadata('./LICENSE').get_licenses()
+    ['https://spdx.org/licenses/Apache-2.0']
+    """
+
+    def __init__(self, path: str):
+        self.path: str = path
+
+    def get_licenses(self, min_score: int = 50) -> List[str]:
+        """Returns the SPDX URLs of detected licenses.
+        Performs a diff comparison between file contents and a
+        database of licenses via the scancode API.
+
+        Parameters
+        ----------
+        min_score:
+            The minimal matching score used by scancode (from 0 to 100)
+            to return a license match.
+
+        Returns
+        -------
+        licenses:
+            A list of SPDX URLs matching provided licenses,
+            e.g. https://spdx.org/licenses/Apache-2.0.html.
+        """
         raise NotImplementedError
