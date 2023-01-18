@@ -35,6 +35,7 @@ class Release:
 @dataclass
 class Organization:
     """See http//schema.org/Organization"""
+
     _id: str
     name: str
     email: Optional[List[str]] = None
@@ -59,7 +60,7 @@ class Person:
     name: str
     email: Optional[str] = None
     given_name: Optional[str] = None
-    affiliation: Optional[str] = None
+    affiliations: Optional[List[Organization]] = None
 
     def __str__(self):
         full_name = f"({self.given_name}) " if self.given_name else ""
@@ -72,7 +73,9 @@ class PersonSchema(JsonLDSchema):
     _id = fields.Id()
     name = fields.String(SDO.name)
     given_name = fields.String(SDO.givenName)
-    affiliation = fields.String(SDO.affiliation)
+    affiliations = fields.Nested(
+        SDO.affiliation, OrganizationSchema, many=True
+    )
 
     class Meta:
         rdf_type = SDO.Person

@@ -82,13 +82,23 @@ class GithubExtractor(Extractor):
     def get_user(self, name: str) -> Person:
         """Specialized API query to get user details."""
         # TODO: Handle first/last names and username properly
-        resp = requests.get(f"{GH_API}/users/{name}").json()
+        user = requests.get(f"{GH_API}/users/{name}").json()
+        # Get user's affiliations
+        orgs = requests.get(f"{GH_API}/users/{name}/orgs").json()
+        orgs = [
+            Organization(
+                _id=org["url"],
+                name=org["login"],
+                description=org["description"],
+            )
+            for org in orgs
+        ]
         return Person(
-            _id=resp["url"],
-            name=resp["login"],
-            given_name=resp["name"],
-            email=resp["email"],
-            affiliation=resp["company"],
+            _id=user["url"],
+            name=user["login"],
+            given_name=user["name"],
+            email=user["email"],
+            affiliations=orgs,
         )
 
     def get_organization(self, name: str) -> Organization:
