@@ -19,7 +19,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 import requests
-from typing import List, Optional
+from typing import List, Optional, Union
 from urllib.parse import urlparse
 
 from calamus import fields
@@ -27,7 +27,7 @@ from calamus.schema import JsonLDSchema
 from rdflib import Graph
 
 from gimie.sources.abstract import Extractor
-from gimie.models import Person, PersonSchema
+from gimie.models import Organization, OrganizationSchema, Person, PersonSchema
 from gimie.namespaces import SDO
 
 GH_API = "https://api.github.com"
@@ -37,9 +37,9 @@ GH_API = "https://api.github.com"
 class GithubExtractor(Extractor):
     path: str
     name: Optional[str] = None
-    author: Optional[Person] = None
+    author: Optional[Union[Organization, Person]] = None
     contributors: Optional[List[Person]] = None
-    prog_language: Optional[str] = None
+    prog_language: Optional[List[str]] = None
     download_url: Optional[str] = None
     description: Optional[str] = None
     date_created: Optional[datetime] = None
@@ -54,8 +54,9 @@ class GithubExtractor(Extractor):
         if resp.status_code != 200:
             raise ConnectionError(resp.json()["message"])
         data = resp.json()
-
-        self.author = self.get_user(data["owner"]["login"])
+        self.author = self.get_owner(
+            data["owner"]["login"], data["owner"]["type"]
+        )
         self.contributors = self.get_contributors()
         self.download_url = (
             data["archive_url"][:-6]
@@ -67,10 +68,36 @@ class GithubExtractor(Extractor):
         self.date_modified = datetime.fromisoformat(data["updated_at"][:-1])
         self.license = data["license"]["url"]
 
+    def get_owner(
+        self, name: str, owner_type: str
+    ) -> Union[Organization, Person]:
+        """Set the person or organization who owns the repository."""
+        if owner_type == "User":
+            return self.get_user(name)
+        elif owner_type == "Organization":
+            return self.get_organization(name)
+        else:
+            raise ValueError(f"Unknown Github owner type: {owner_type}.")
+
     def get_user(self, name: str) -> Person:
         """Specialized API query to get user details."""
+        # TODO: Handle first/last names and username properly
         resp = requests.get(f"{GH_API}/users/{name}").json()
-        return Person.from_github(**resp)
+        return Person(
+            _id=resp["url"],
+            name=resp["login"],
+            given_name=resp["name"],
+            email=resp["email"],
+            affiliation=resp["company"],
+        )
+
+    def get_organization(self, name: str) -> Organization:
+        resp = requests.get(f"{GH_API}/orgs/{name}").json()
+        return Organization(
+            _id=resp["url"],
+            name=resp["login"],
+            description=resp["description"],
+        )
 
     def get_contributors(self) -> List[Person]:
         """Specialized API query to get list of contributors names."""
@@ -89,9 +116,9 @@ class GithubExtractorSchema(JsonLDSchema):
 
     _id = fields.Id()
     name = fields.String(SDO.name)
-    author = fields.Nested(SDO.author, PersonSchema)
-    contributors = fields.List(SDO.contributor, fields.String)
-    prog_language = fields.String(SDO.programmingLanguage)
+    author = fields.Nested(SDO.author, [PersonSchema, OrganizationSchema])
+    contributors = fields.Nested(SDO.contributor, PersonSchema, many=True)
+    prog_language = fields.List(SDO.programmingLanguage, fields.IRI)
     download_url = fields.IRI(SDO.downloadUrl)
     description = fields.String(SDO.description)
     date_created = fields.Date(SDO.dateCreated)

@@ -35,10 +35,20 @@ class Release:
 @dataclass
 class Organization:
     """See http//schema.org/Organization"""
-
+    _id: str
     name: str
     email: Optional[List[str]] = None
-    members: Optional[List[Person]] = None
+    description: Optional[str] = None
+
+
+class OrganizationSchema(JsonLDSchema):
+    _id = fields.Id()
+    name = fields.String(SDO.name)
+    description = fields.String(SDO.description)
+
+    class Meta:
+        rdf_type = SDO.Organization
+        model = Organization
 
 
 @dataclass
@@ -50,21 +60,6 @@ class Person:
     email: Optional[str] = None
     given_name: Optional[str] = None
     affiliation: Optional[str] = None
-
-    @classmethod
-    def from_github(
-        cls, id: str, login: str, name: str, email: str, company: str, **kwargs
-    ) -> Person:
-        """Instantiate a person from a Github API response."""
-        # TODO: Handle first name, given name and last name
-
-        return Person(
-            _id=id,
-            name=login,
-            given_name=name,
-            email=email,
-            affiliation=company,
-        )
 
     def __str__(self):
         full_name = f"({self.given_name}) " if self.given_name else ""
