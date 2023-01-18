@@ -19,7 +19,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 import requests
-from typing import List, Optional, Union
+from typing import Any, Dict, List, Optional, TypeAlias, Union
 from urllib.parse import urlparse
 
 from calamus import fields
@@ -50,10 +50,7 @@ class GithubExtractor(Extractor):
         self._id = self.path
         self.name = urlparse(self.path).path.strip("/")
 
-        resp = requests.get(f"{GH_API}/repos/{self.name}")
-        if resp.status_code != 200:
-            raise ConnectionError(resp.json()["message"])
-        data = resp.json()
+        data = self._request(f"repos/{self.name}")
         self.author = self.get_owner(
             data["owner"]["login"], data["owner"]["type"]
         )
@@ -67,6 +64,23 @@ class GithubExtractor(Extractor):
         self.date_created = datetime.fromisoformat(data["created_at"][:-1])
         self.date_modified = datetime.fromisoformat(data["updated_at"][:-1])
         self.license = data["license"]["url"]
+
+    @classmethod
+    def _request(cls, query_path: str) -> Any:
+        """Wrapper to query github api and return
+        a dictionary of the json response.
+
+        Parameters
+        ----------
+        query_path:
+            The query, without the base path.
+
+        """
+        resp = requests.get(f"{GH_API}/{query_path.lstrip('/')}")
+        # If the query fails, explain why
+        if resp.status_code != 200:
+            raise ConnectionError(resp.json()["message"])
+        return resp.json()
 
     def get_owner(
         self, name: str, owner_type: str
@@ -82,9 +96,9 @@ class GithubExtractor(Extractor):
     def get_user(self, name: str) -> Person:
         """Specialized API query to get user details."""
         # TODO: Handle first/last names and username properly
-        user = requests.get(f"{GH_API}/users/{name}").json()
+        user = self._request(f"users/{name}")
         # Get user's affiliations
-        orgs = requests.get(f"{GH_API}/users/{name}/orgs").json()
+        orgs = self._request(f"users/{name}/orgs")
         orgs = [
             Organization(
                 _id=org["url"],
@@ -102,7 +116,7 @@ class GithubExtractor(Extractor):
         )
 
     def get_organization(self, name: str) -> Organization:
-        resp = requests.get(f"{GH_API}/orgs/{name}").json()
+        resp = self._request(f"orgs/{name}")
         return Organization(
             _id=resp["url"],
             name=resp["login"],
@@ -111,7 +125,7 @@ class GithubExtractor(Extractor):
 
     def get_contributors(self) -> List[Person]:
         """Specialized API query to get list of contributors names."""
-        conts = requests.get(f"{GH_API}/repos/{self.name}/contributors").json()
+        conts = self._request(f"repos/{self.name}/contributors")
         return [self.get_user(cont["login"]) for cont in conts]
 
     def to_graph(self) -> Graph:
