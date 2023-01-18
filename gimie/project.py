@@ -14,6 +14,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Orchestration of multiple extractors for a given project.
+This is the main entry point for end-to-end analysis."""
 from tempfile import gettempdir, TemporaryDirectory
 from typing import Iterable, List, Union
 from gimie.graph import combine_graphs
