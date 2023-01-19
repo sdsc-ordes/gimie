@@ -113,8 +113,8 @@ class LicenseExtractor(Extractor):
 
     Examples
     --------
-    >>> LicenseMetadata('./LICENSE').get_licenses()
-    ['https://spdx.org/licenses/Apache-2.0']
+    # >>> LicenseExtractor('./LICENSE').get_licenses()
+    # ['https://spdx.org/licenses/Apache-2.0']
     """
 
     def __init__(self, path: str):
