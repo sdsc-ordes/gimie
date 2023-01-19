@@ -22,7 +22,7 @@ classifiers = [
 # Dependency management
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.8"
 extruct = "^0.14.0"
 PyDriller = "^2.3"
 pyshacl = "^0.20.0"
