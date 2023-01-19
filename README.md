@@ -10,8 +10,8 @@ Scientific code repositories contain valuable metadata which can be used to enri
 * [x] Github API
 * [ ] Gitlab API
 * [ ] Local Git metadata
-* [ ] License contents
-* [ ] README contents
+* [ ] License text
+* [ ] Free text in README
 * [ ] Renku project metadata
 
 ## Installation
@@ -26,13 +26,13 @@ pip install git+https://github.com/SDSC-ORD/gimie.git#egg=gimie
 
 As a command line tool:
 ```shell
-gimie https://github.com/numpy/numpy
+gimie data https://github.com/numpy/numpy
 ```
 As a python library:
 
 ```python
 from gimie.project import Project
-proj = Project("https://github.com/numpy/nump)
+proj = Project("https://github.com/numpy/numpy)
 
 # To retrieve the rdflib.Graph object
 g = proj.to_graph()
@@ -41,7 +41,7 @@ g = proj.to_graph()
 proj.serialize(format='ttl')
 ```
 
-Or to extract from a specific source:
+Or to extract only from a specific source:
 ```python
 from gimie.sources.remote import GithubExtractor
 gh = GithubExtractor('https://github.com/SDSC-ORD/gimie')
