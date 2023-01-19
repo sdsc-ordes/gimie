@@ -79,7 +79,11 @@ class Person:
     def __str__(self):
         full_name = f"({self.given_name}) " if self.given_name else ""
         email = f"<{self.email}> " if self.email else ""
-        orgs = f"[{', '.join([org.name for org in self.affiliations])}]" if self.affiliations else ""
+        orgs = (
+            f"[{', '.join([org.name for org in self.affiliations])}]"
+            if self.affiliations
+            else ""
+        )
         return f"{self.name} {full_name}{email}{orgs}".strip(" ")
 
 
