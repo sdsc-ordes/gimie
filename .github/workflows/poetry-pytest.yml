@@ -1,4 +1,4 @@
-name: Python Poetry Build
+name: Python Poetry Test
 
 on: [push]
 

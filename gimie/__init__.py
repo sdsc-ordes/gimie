@@ -16,7 +16,9 @@
 # limitations under the License.
 import logging
 
-__version__ = "0.1.0"
+import importlib.metadata as importlib_metadata
+
+__version__ = importlib_metadata.version(__name__)
 
 logger = logging.getLogger()
 logger.setLevel(logging.WARNING)
