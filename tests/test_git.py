@@ -1,7 +1,7 @@
 """Tests for the Gimie command line interface."""
 
 import os
-from gimie.sources.local import GitExtractor
+from gimie.sources.git import GitExtractor
 import datetime
 
 LOCAL_REPOSITORY = os.getcwd()

@@ -23,7 +23,7 @@ from typing import Optional, List
 from calamus.schema import JsonLDSchema
 from calamus import fields
 
-from gimie.namespaces import SDO
+from gimie.graph.namespaces import SDO
 
 
 @dataclass(order=True)

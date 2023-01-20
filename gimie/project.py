@@ -18,9 +18,9 @@
 This is the main entry point for end-to-end analysis."""
 from tempfile import gettempdir, TemporaryDirectory
 from typing import Iterable, List, Union
-from gimie.graph import combine_graphs
+from gimie.graph.operations import combine_graphs
 from gimie.utils import validate_url
-from gimie.sources.utils import (
+from gimie.sources.helpers import (
     get_local_extractor,
     get_remote_extractor,
     is_local_source,
