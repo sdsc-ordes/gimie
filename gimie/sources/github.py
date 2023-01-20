@@ -62,8 +62,7 @@ class GithubExtractor(Extractor):
         )
         self.contributors = self._get_contributors()
         self.download_url = (
-            data["archive_url"][:-6]
-            .removesuffix("{/ref}")
+            data["archive_url"][:-12]
             .format(archive_format="tarball")
         )
         self.description = data["description"]
