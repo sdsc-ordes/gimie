@@ -76,3 +76,11 @@ Or [poetry](https://python-poetry.org/), to work in an isolated virtual environm
 git clone https://github.com/SDSC-ORD/gimie && cd gimie
 poetry install
 ```
+
+## Releases and Publishing on Pypi
+
+Releases are done via github release
+
+- a release will trigger a github workflow to publish the package on Pypi
+- Make sure to update to a new version in `pyproject.toml` before making the release
+- It is possible to test the publishing on Pypi.test by running a manual workflow: go to github actions and run the Workflow: 'Publish on Pypi Test'
