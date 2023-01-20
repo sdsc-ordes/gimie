@@ -61,7 +61,7 @@ class GithubExtractor(Extractor):
             data["owner"]["login"], data["owner"]["type"]
         )
         self.contributors = self._get_contributors()
-        self.download_url = data["archive_url"][:-12].format(
+        self.download_url = data["archive_url"][:-6].format(
             archive_format="tarball"
         )
         self.description = data["description"]
