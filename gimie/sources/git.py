@@ -15,15 +15,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Extractors which depend on locally available data. Usually the cloned repository."""
-from typing import Tuple, Optional, Union
 from functools import cached_property
-from gimie.models import Release
-from pydriller import Repository
 import datetime
-from typing import List
+from typing import Tuple, List, Optional, Union
 
-from gimie.sources.abstract import Extractor
+from pydriller import Repository
 from rdflib import Graph
+
+from gimie.models import Release
+from gimie.sources.abstract import Extractor
 
 
 class GitExtractor(Extractor):

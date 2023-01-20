@@ -28,7 +28,7 @@ from rdflib import Graph
 
 from gimie.sources.abstract import Extractor
 from gimie.models import Organization, OrganizationSchema, Person, PersonSchema
-from gimie.namespaces import SDO
+from gimie.graph.namespaces import SDO
 
 GH_API = "https://api.github.com"
 
@@ -46,15 +46,21 @@ class GithubExtractor(Extractor):
     date_modified: Optional[datetime] = None
     license: Optional[str] = None
 
+    def to_graph(self) -> Graph:
+        jd = GithubExtractorSchema().dumps(self)
+        g: Graph = Graph().parse(format="json-ld", data=str(jd))
+        g.bind("schema", SDO)
+        return g
+
     def extract(self):
         self._id = self.path
         self.name = urlparse(self.path).path.strip("/")
 
         data = self._request(f"repos/{self.name}")
-        self.author = self.get_owner(
+        self.author = self._get_owner(
             data["owner"]["login"], data["owner"]["type"]
         )
-        self.contributors = self.get_contributors()
+        self.contributors = self._get_contributors()
         self.download_url = (
             data["archive_url"][:-6]
             .removesuffix("{/ref}")
@@ -82,18 +88,18 @@ class GithubExtractor(Extractor):
             raise ConnectionError(resp.json()["message"])
         return resp.json()
 
-    def get_owner(
+    def _get_owner(
         self, name: str, owner_type: str
     ) -> Union[Organization, Person]:
         """Set the person or organization who owns the repository."""
         if owner_type == "User":
-            return self.get_user(name)
+            return self._get_user(name)
         elif owner_type == "Organization":
-            return self.get_organization(name)
+            return self._get_organization(name)
         else:
             raise ValueError(f"Unknown Github owner type: {owner_type}.")
 
-    def get_user(self, name: str) -> Person:
+    def _get_user(self, name: str) -> Person:
         """Specialized API query to get user details."""
         # TODO: Handle first/last names and username properly
         user = self._request(f"users/{name}")
@@ -115,7 +121,7 @@ class GithubExtractor(Extractor):
             affiliations=orgs,
         )
 
-    def get_organization(self, name: str) -> Organization:
+    def _get_organization(self, name: str) -> Organization:
         resp = self._request(f"orgs/{name}")
         return Organization(
             _id=resp["url"],
@@ -123,16 +129,10 @@ class GithubExtractor(Extractor):
             description=resp["description"],
         )
 
-    def get_contributors(self) -> List[Person]:
+    def _get_contributors(self) -> List[Person]:
         """Specialized API query to get list of contributors names."""
         conts = self._request(f"repos/{self.name}/contributors")
-        return [self.get_user(cont["login"]) for cont in conts]
-
-    def to_graph(self) -> Graph:
-        jd = GithubExtractorSchema().dumps(self)
-        g: Graph = Graph().parse(format="json-ld", data=str(jd))
-        g.bind("schema", SDO)
-        return g
+        return [self._get_user(cont["login"]) for cont in conts]
 
 
 class GithubExtractorSchema(JsonLDSchema):
@@ -152,15 +152,3 @@ class GithubExtractorSchema(JsonLDSchema):
     class Meta:
         rdf_type = SDO.SoftwareSourceCode
         model = GithubExtractor
-
-
-class GitlabExtractor(Extractor):
-    def __init__(self, path: str):
-        raise NotImplementedError
-
-    def extractor(self):
-        raise NotImplementedError
-
-    def to_graph(self) -> Graph:
-        """Generate an RDF graph from the instance"""
-        raise NotImplementedError
