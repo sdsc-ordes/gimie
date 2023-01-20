@@ -19,7 +19,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 import requests
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, List, Optional, Union
 from urllib.parse import urlparse
 
 from calamus import fields

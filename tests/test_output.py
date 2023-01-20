@@ -15,7 +15,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Test the gimie output"""
-from pathlib import Path
 from pyshacl import validate
 import pytest
 from rdflib import Graph
@@ -31,6 +30,7 @@ OUT_TTL = Project(
 def test_validate_output_is_linked_data():
     """Is output valid RDF?"""
     g = Graph().parse(format="ttl", data=OUT_TTL)
+    assert g is not None
 
 
 @pytest.mark.skip("not yet implemented")
@@ -39,8 +39,8 @@ def test_output_conforms_shapes():
     with open("shaclgraph.ttl") as shapes:
         shapes_graph = Graph().parse(shapes.read())
     valid_graph, _, _ = validate(
-        data_graph=OUT_GRAPH,
-        shacl_graph=SHAPES_GRAPH,
+        data_graph=Graph().parse(data=OUT_TTL),
+        shacl_graph=shapes_graph,
         ont_graph=None,
         inference="rdfs",
         abort_on_first=False,
