@@ -14,20 +14,35 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Sources from which metadata can be extracted by gimie."""
-from typing import Any, Dict
+"""Helper functions to check sources and access extractors."""
+from gimie.sources import (
+    LOCAL_SOURCES,
+    REMOTE_SOURCES,
+    SOURCES,
+)
 
-from gimie.sources.github import GithubExtractor
+from gimie.sources.abstract import Extractor
 
-# from gimie.sources.gitlab import GitlabExtractor
-# from gimie.sources.git import GitExtractor
 
-REMOTE_SOURCES: Dict[str, Any] = {
-    #    "gitlab": GitlabExtractor,
-    "github": GithubExtractor,
-}
-LOCAL_SOURCES: Dict[str, Any] = {
-    #    "git": GitExtractor,
-}
+def get_local_extractor(path: str, source: str) -> Extractor:
+    return LOCAL_SOURCES[source](path)
 
-SOURCES: Dict[str, Any] = {**LOCAL_SOURCES, **REMOTE_SOURCES}
+
+def get_remote_extractor(path: str, source: str) -> Extractor:
+    return REMOTE_SOURCES[source](path)
+
+
+def get_extractor(path: str, source: str) -> Extractor:
+    return SOURCES[source](path)
+
+
+def is_local_source(source: str) -> bool:
+    return source in LOCAL_SOURCES
+
+
+def is_remote_source(source: str) -> bool:
+    return source in REMOTE_SOURCES
+
+
+def is_valid_source(source: str) -> bool:
+    return source in SOURCES

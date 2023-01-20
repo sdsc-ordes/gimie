@@ -14,34 +14,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Tuple, Optional
-from dataclasses import dataclass, field
+"""Extractors which depend on locally available data. Usually the cloned repository."""
 from functools import cached_property
-from pydriller import Repository
 import datetime
+from typing import Tuple, List, Optional, Union
+
+from pydriller import Repository
+from rdflib import Graph
+
+from gimie.models import Release
+from gimie.sources.abstract import Extractor
 
 
-@dataclass(order=True)
-class Release:
-    """
-    This class represents a release of a repository.
-
-    Parameters
-    ----------
-    tag: str
-        The tag of the release.
-    date: datetime.datetime
-        The date of the release.
-    commit_hash: str
-        The commit hash of the release.
-    """
-
-    tag: str = field(compare=False)
-    date: datetime.datetime = field(compare=True)
-    commit_hash: str = field(compare=False)
-
-
-class GitMetadata:
+class GitExtractor(Extractor):
     """
     This class is responsible for extracting metadata from a git repository.
 
@@ -66,12 +51,15 @@ class GitMetadata:
     @cached_property
     def authors(self) -> Tuple[str]:
         """Get the authors of the repository."""
-        return tuple(
-            set(
-                commit.author.name
-                for commit in self.repository.traverse_commits()
-            )
-        )
+        commits = self.repository.traverse_commits()
+        authors = set(commit.author.name for commit in commits)
+        return tuple(aut for aut in authors if aut is not None)
+
+    def extract(self):
+        ...
+
+    def serialize(self, format: str = "ttl") -> str:
+        ...
 
     @cached_property
     def creation_date(self) -> Optional[datetime.datetime]:
@@ -90,7 +78,7 @@ class GitMetadata:
             return None
 
     @cached_property
-    def releases(self) -> Tuple[Release]:
+    def releases(self) -> Tuple[Union[Release, None]]:
         """Get the releases of the repository."""
         try:
             # This is necessary to initialize the repository
@@ -101,8 +89,52 @@ class GitMetadata:
                     date=tag.commit.authored_datetime,
                     commit_hash=tag.commit.hexsha,
                 )
-                for tag in self.repository.git.repo.tags
+                for tag in self.repository.git.repo.tags  # type: ignore
             )
-            return sorted(releases)
+            return tuple(sorted(releases))
+        # When there's no release
         except StopIteration:
-            return None
+            return (None,)
+
+    def to_graph(self) -> Graph:
+        """Generate an RDF graph from the instance"""
+        raise NotImplementedError
+
+
+class LicenseExtractor(Extractor):
+    """
+    This class provides metadata about software licenses.
+    It requires paths to files containing the license text.
+
+    Attributes
+    ----------
+    paths:
+        The collection of paths containing license information.
+
+    Examples
+    --------
+    # >>> LicenseExtractor('./LICENSE').get_licenses()
+    # ['https://spdx.org/licenses/Apache-2.0']
+    """
+
+    def __init__(self, path: str):
+        self.path: str = path
+
+    def get_licenses(self, min_score: int = 50) -> List[str]:
+        """Returns the SPDX URLs of detected licenses.
+        Performs a diff comparison between file contents and a
+        database of licenses via the scancode API.
+
+        Parameters
+        ----------
+        min_score:
+            The minimal matching score used by scancode (from 0 to 100)
+            to return a license match.
+
+        Returns
+        -------
+        licenses:
+            A list of SPDX URLs matching provided licenses,
+            e.g. https://spdx.org/licenses/Apache-2.0.html.
+        """
+        raise NotImplementedError

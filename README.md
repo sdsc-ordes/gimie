@@ -7,10 +7,12 @@ Gimie (GIt Meta Information Extractor) is a python library and command line tool
 ## Context
 Scientific code repositories contain valuable metadata which can be used to enrich existing catalogues, platforms or databases. This tool aims to easily extract structured metadata from a generic git repositories. The following sources of information are used:
 
-* [ ] Git metadata
-* [ ] Filenames
-* [ ] License
-* [ ] Freetext content in README and other files
+* [x] Github API
+* [ ] Gitlab API
+* [ ] Local Git metadata
+* [ ] License text
+* [ ] Free text in README
+* [ ] Renku project metadata
 
 ## Installation
 
@@ -24,18 +26,38 @@ pip install git+https://github.com/SDSC-ORD/gimie.git#egg=gimie
 
 As a command line tool:
 ```shell
-gimie https://github.com/numpy/numpy
+gimie data https://github.com/numpy/numpy
 ```
 As a python library:
 
 ```python
-import gimie
-repo = gimie.Repo("https://github.com/numpy/nump)
+from gimie.project import Project
+proj = Project("https://github.com/numpy/numpy)
+
+# To retrieve the rdflib.Graph object
+g = proj.to_graph()
+
+# To retrieve the serialized graph
+proj.serialize(format='ttl')
+```
+
+Or to extract only from a specific source:
+```python
+from gimie.sources.remote import GithubExtractor
+gh = GithubExtractor('https://github.com/SDSC-ORD/gimie')
+gh.extract()
+
+# To retrieve the rdflib.Graph object
+g = gh.to_graph()
+
+# To retrieve the serialized graph
+gh.serialize(format='ttl')
 ```
 
 ## Outputs
 
 The default output is JSON-ld, a JSON serialization of the [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework) data model. We follow the schema recommended by [codemeta](https://codemeta.github.io/).
+Supported formats are json-ld, turtle and n-triples.
 
 ## Contributing
 

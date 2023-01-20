@@ -14,20 +14,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Sources from which metadata can be extracted by gimie."""
-from typing import Any, Dict
+"""Operations on graphs."""
+from functools import reduce
 
-from gimie.sources.github import GithubExtractor
+from calamus import fields
+from rdflib import Graph
 
-# from gimie.sources.gitlab import GitlabExtractor
-# from gimie.sources.git import GitExtractor
 
-REMOTE_SOURCES: Dict[str, Any] = {
-    #    "gitlab": GitlabExtractor,
-    "github": GithubExtractor,
-}
-LOCAL_SOURCES: Dict[str, Any] = {
-    #    "git": GitExtractor,
-}
+schema = fields.Namespace("http://schema.org/")
 
-SOURCES: Dict[str, Any] = {**LOCAL_SOURCES, **REMOTE_SOURCES}
+
+def combine_graphs(*graphs: Graph) -> Graph:
+    """Combines an arbitrary number of input graphs
+    into a single graph."""
+    return reduce(lambda g1, g2: g1 | g2, graphs)

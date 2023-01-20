@@ -1,9 +1,8 @@
 """Tests for the Gimie command line interface."""
 
 import os
-from gimie.sources.git import GitMetadata
+from gimie.sources.git import GitExtractor
 import datetime
-import pytest
 
 LOCAL_REPOSITORY = os.getcwd()
 RENKU_REPOSITORY = "https://github.com/SwissDataScienceCenter/renku"
@@ -11,7 +10,7 @@ RENKU_REPOSITORY = "https://github.com/SwissDataScienceCenter/renku"
 
 def test_git_authors():
     """Test part of the authors returned by gimie."""
-    git_metadata = GitMetadata(LOCAL_REPOSITORY)
+    git_metadata = GitExtractor(LOCAL_REPOSITORY)
     assert "Cyril Matthey-Doret" in git_metadata.authors
     assert "sabrinaossey" in git_metadata.authors
     assert "Martin Nathan Tristan Fontanet" in git_metadata.authors
@@ -21,7 +20,7 @@ def test_git_authors():
 
 def test_git_creation_date():
     """Test the creation date of a git repository."""
-    git_metadata = GitMetadata(LOCAL_REPOSITORY)
+    git_metadata = GitExtractor(LOCAL_REPOSITORY)
     assert git_metadata.creation_date.astimezone(
         datetime.timezone.utc
     ) == datetime.datetime(
@@ -31,13 +30,13 @@ def test_git_creation_date():
 
 def test_git_creator():
     """Test the creator of a git repository."""
-    git_metadata = GitMetadata(LOCAL_REPOSITORY)
+    git_metadata = GitExtractor(LOCAL_REPOSITORY)
     assert git_metadata.creator == "Cyril Matthey-Doret"
 
 
 def test_git_releases():
     """Test the first release of a git repository."""
-    git_metadata = GitMetadata(RENKU_REPOSITORY)
+    git_metadata = GitExtractor(RENKU_REPOSITORY)
     first_release = git_metadata.releases[0]
     assert first_release.tag == "maint-0.1"
     assert first_release.date.astimezone(

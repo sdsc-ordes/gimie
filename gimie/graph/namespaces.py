@@ -14,6 +14,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-class WebMetadata:
-    def __init__(self, path: str):
-        raise NotImplementedError
+from rdflib.namespace import Namespace
+
+SDO = Namespace("http://schema.org/")
+COD = Namespace("https://doi.org/10.5063/schema/codemeta-2.0/")
+SD = Namespace("https://w3id.org/okn/o/sd/1.9.0/")
+BIO = Namespace("https://bioschemas.org/")
