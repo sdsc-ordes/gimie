@@ -23,7 +23,6 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
-extruct = "^0.14.0"
 PyDriller = "^2.3"
 pyshacl = "^0.20.0"
 # temporarily disabled due to installation problems
