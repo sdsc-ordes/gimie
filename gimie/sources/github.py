@@ -43,7 +43,7 @@ def _set_auth():
         headers = {"Authorization": f"token {github_token}"}
 
         login = requests.get("https://api.github.com/user", headers=headers)
-        assert login.json().get('login')
+        assert login.json().get("login")
     except AssertionError:
         return {}
     else:
@@ -100,7 +100,9 @@ class GithubExtractor(Extractor):
             The query, without the base path.
 
         """
-        resp = requests.get(f"{GH_API}/{query_path.lstrip('/')}", headers=GH_HEADERS)
+        resp = requests.get(
+            f"{GH_API}/{query_path.lstrip('/')}", headers=GH_HEADERS
+        )
         # If the query fails, explain why
         if resp.status_code != 200:
             raise ConnectionError(resp.json()["message"])
