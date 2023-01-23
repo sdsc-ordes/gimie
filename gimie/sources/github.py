@@ -19,8 +19,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 import requests
+import os
 from typing import Any, List, Optional, Union
 from urllib.parse import urlparse
+from dotenv import load_dotenv
 
 from calamus import fields
 from calamus.schema import JsonLDSchema
@@ -31,6 +33,24 @@ from gimie.models import Organization, OrganizationSchema, Person, PersonSchema
 from gimie.graph.namespaces import SDO
 
 GH_API = "https://api.github.com"
+load_dotenv()
+
+
+def _set_auth():
+    try:
+        github_token = os.environ.get("GITHUB_TOKEN")
+        assert github_token
+        headers = {"Authorization": f"token {github_token}"}
+
+        login = requests.get("https://api.github.com/user", headers=headers)
+        assert login.json().get('login')
+    except AssertionError:
+        return {}
+    else:
+        return headers
+
+
+GH_HEADERS = _set_auth()
 
 
 @dataclass
@@ -80,7 +100,7 @@ class GithubExtractor(Extractor):
             The query, without the base path.
 
         """
-        resp = requests.get(f"{GH_API}/{query_path.lstrip('/')}")
+        resp = requests.get(f"{GH_API}/{query_path.lstrip('/')}", headers=GH_HEADERS)
         # If the query fails, explain why
         if resp.status_code != 200:
             raise ConnectionError(resp.json()["message"])
