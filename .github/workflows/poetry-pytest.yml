@@ -31,5 +31,5 @@ jobs:
 
       - name: Test with pytest
         env:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          ACCESS_TOKEN: ${{ github.token }}
         run: poetry run pytest
