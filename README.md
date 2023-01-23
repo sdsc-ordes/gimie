@@ -48,7 +48,7 @@ And then edit the `.env` file and put your github token in.
 Add your github token in your terminal:
 
 ```bash
-export GITHUB_TOKEN=
+export ACCESS_TOKEN=
 ```
 
 After the github token has been added, you can run the command without running into an github api limit.
