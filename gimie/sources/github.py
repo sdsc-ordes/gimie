@@ -38,7 +38,7 @@ load_dotenv()
 
 def _set_auth():
     try:
-        github_token = os.environ.get("GITHUB_TOKEN")
+        github_token = os.environ.get("ACCESS_TOKEN")
         assert github_token
         headers = {"Authorization": f"token {github_token}"}
 
