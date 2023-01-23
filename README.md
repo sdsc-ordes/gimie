@@ -26,6 +26,36 @@ pip install git+https://github.com/SDSC-ORD/gimie.git#egg=gimie
 
 ## Usage
 
+### Set your github credentials
+
+In order to avoid rate limits with the github api, you need to provide your github
+username and a github token: see 
+[here ](https://docs.github.com/en/enterprise-server@3.4/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+on how to generate a github token.
+
+There are 2 options for setting up your github token in your local environment:
+
+**Option 1:**
+
+```
+cp .env.dist .env
+```
+
+And then edit the `.env` file and put your github token in.
+
+**Option 2:**
+
+Add your github token in your terminal:
+
+```bash
+export GITHUB_TOKEN=
+```
+
+After the github token has been added, you can run the command without running into an github api limit.
+Otherwise you can still run the command, but might hit that limit after running the command several times.
+
+### Run the command
+
 As a command line tool:
 ```shell
 gimie data https://github.com/numpy/numpy
