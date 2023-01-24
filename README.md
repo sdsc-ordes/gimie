@@ -21,7 +21,9 @@ Scientific code repositories contain valuable metadata which can be used to enri
 To install the dev version from github:
 
 ```shell
-pip install git+https://github.com/SDSC-ORD/gimie.git#egg=gimie
+poetry install
+poetry run pre-commit install
+pre-commit run --all-files
 ```
 
 ## Usage
