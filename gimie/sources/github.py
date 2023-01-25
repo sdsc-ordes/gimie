@@ -39,6 +39,7 @@ load_dotenv()
 @dataclass
 class GithubExtractor(Extractor):
     path: str
+    github_token: Optional[str] = None
     name: Optional[str] = None
     author: Optional[Union[Organization, Person]] = None
     contributors: Optional[List[Person]] = None
@@ -75,9 +76,10 @@ class GithubExtractor(Extractor):
     @classmethod
     def _set_auth(cls) -> Any:
         try:
-            github_token = os.environ.get("ACCESS_TOKEN")
-            assert github_token
-            headers = {"Authorization": f"token {github_token}"}
+            if not cls.github_token:
+                cls.github_token = os.environ.get("ACCESS_TOKEN")
+                assert cls.github_token
+            headers = {"Authorization": f"token {cls.github_token}"}
 
             login = requests.get(
                 "https://api.github.com/user", headers=headers
