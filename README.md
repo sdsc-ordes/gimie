@@ -18,15 +18,19 @@ Scientific code repositories contain valuable metadata which can be used to enri
 
 ## Installation
 
-To install the dev version from github:
-
-For usage:
+To install the stable version on PyPI:
 
 ```shell
 pip install gimie
 ```
 
-For development:
+To install the dev version from github:
+
+```shell
+pip install git+https://github.com/SDSC-ORD/gimie.git@main#egg=gimie
+```
+
+### For development:
 
 activate a conda or virtual environment with Python 3.8 or higher
 
