@@ -30,4 +30,6 @@ jobs:
         run: poetry run black . --check
 
       - name: Test with pytest
+        env:
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         run: poetry run pytest
