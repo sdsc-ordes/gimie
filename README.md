@@ -56,7 +56,7 @@ make check
 ### Set your github credentials
 
 In order to avoid rate limits with the github api, you need to provide your github
-username and a github token: see 
+username and a github token: see
 [here ](https://docs.github.com/en/enterprise-server@3.4/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 on how to generate a github token.
 
