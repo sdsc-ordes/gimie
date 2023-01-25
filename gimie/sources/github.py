@@ -73,13 +73,12 @@ class GithubExtractor(Extractor):
         self.date_modified = datetime.fromisoformat(data["updated_at"][:-1])
         self.license = data["license"]["url"]
 
-    @classmethod
-    def _set_auth(cls) -> Any:
+    def _set_auth(self) -> Any:
         try:
-            if not cls.github_token:
-                cls.github_token = os.environ.get("ACCESS_TOKEN")
-                assert cls.github_token
-            headers = {"Authorization": f"token {cls.github_token}"}
+            if not self.github_token:
+                self.github_token = os.environ.get("ACCESS_TOKEN")
+                assert self.github_token
+            headers = {"Authorization": f"token {self.github_token}"}
 
             login = requests.get(
                 "https://api.github.com/user", headers=headers
@@ -90,8 +89,7 @@ class GithubExtractor(Extractor):
         else:
             return headers
 
-    @classmethod
-    def _request(cls, query_path: str) -> Any:
+    def _request(self, query_path: str) -> Any:
         """Wrapper to query github api and return
         a dictionary of the json response.
 
@@ -102,7 +100,7 @@ class GithubExtractor(Extractor):
 
         """
         resp = requests.get(
-            f"{GH_API}/{query_path.lstrip('/')}", headers=cls._set_auth()
+            f"{GH_API}/{query_path.lstrip('/')}", headers=self._set_auth()
         )
         # If the query fails, explain why
         if resp.status_code != 200:
