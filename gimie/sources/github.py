@@ -36,23 +36,6 @@ GH_API = "https://api.github.com"
 load_dotenv()
 
 
-def _set_auth():
-    try:
-        github_token = os.environ.get("ACCESS_TOKEN")
-        assert github_token
-        headers = {"Authorization": f"token {github_token}"}
-
-        login = requests.get("https://api.github.com/user", headers=headers)
-        assert login.json().get("login")
-    except AssertionError:
-        return {}
-    else:
-        return headers
-
-
-GH_HEADERS = _set_auth()
-
-
 @dataclass
 class GithubExtractor(Extractor):
     path: str
@@ -90,6 +73,22 @@ class GithubExtractor(Extractor):
         self.license = data["license"]["url"]
 
     @classmethod
+    def _set_auth(cls) -> Any:
+        try:
+            github_token = os.environ.get("ACCESS_TOKEN")
+            assert github_token
+            headers = {"Authorization": f"token {github_token}"}
+
+            login = requests.get(
+                "https://api.github.com/user", headers=headers
+            )
+            assert login.json().get("login")
+        except AssertionError:
+            return {}
+        else:
+            return headers
+
+    @classmethod
     def _request(cls, query_path: str) -> Any:
         """Wrapper to query github api and return
         a dictionary of the json response.
@@ -101,7 +100,7 @@ class GithubExtractor(Extractor):
 
         """
         resp = requests.get(
-            f"{GH_API}/{query_path.lstrip('/')}", headers=GH_HEADERS
+            f"{GH_API}/{query_path.lstrip('/')}", headers=cls._set_auth()
         )
         # If the query fails, explain why
         if resp.status_code != 200:
