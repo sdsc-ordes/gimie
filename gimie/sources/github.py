@@ -20,7 +20,7 @@ from dataclasses import dataclass
 from datetime import datetime
 import requests
 import os
-from typing import Any, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union, Tuple
 from urllib.parse import urlparse
 from dotenv import load_dotenv
 
@@ -31,6 +31,7 @@ from rdflib import Graph
 from gimie.sources.abstract import Extractor
 from gimie.models import Organization, OrganizationSchema, Person, PersonSchema
 from gimie.graph.namespaces import SDO
+from gimie.utils import get_spdx_url
 
 GH_API = "https://api.github.com"
 load_dotenv()
@@ -40,15 +41,19 @@ load_dotenv()
 class GithubExtractor(Extractor):
     path: str
     github_token: Optional[str] = None
+
     name: Optional[str] = None
     author: Optional[Union[Organization, Person]] = None
     contributors: Optional[List[Person]] = None
-    prog_language: Optional[List[str]] = None
+    prog_langs: Optional[List[str]] = None
     download_url: Optional[str] = None
     description: Optional[str] = None
     date_created: Optional[datetime] = None
     date_modified: Optional[datetime] = None
+    keywords: Optional[List[str]] = None
     license: Optional[str] = None
+    software_version: Optional[str] = None
+    release_notes: Optional[str] = None
 
     def to_graph(self) -> Graph:
         jd = GithubExtractorSchema().dumps(self)
@@ -71,7 +76,14 @@ class GithubExtractor(Extractor):
         self.description = data["description"]
         self.date_created = datetime.fromisoformat(data["created_at"][:-1])
         self.date_modified = datetime.fromisoformat(data["updated_at"][:-1])
-        self.license = data["license"]["url"]
+        # If license is available, convert to standard SPDX URL
+        if data["license"]["url"]:
+            self.license = get_spdx_url(data["license"]["spdx_id"])
+        self.prog_langs = self._get_prog_langs()
+        self.keywords = data["topics"]
+        release = self._get_last_release()
+        if release is not None:
+            self.software_version, self.release_notes = release
 
     def _set_auth(self) -> Any:
         try:
@@ -107,6 +119,30 @@ class GithubExtractor(Extractor):
             raise ConnectionError(resp.json()["message"])
         return resp.json()
 
+    def _get_contributors(self) -> List[Person]:
+        """Specialized API query to get list of contributors names."""
+        conts = self._request(f"repos/{self.name}/contributors")
+        return [self._get_user(cont["login"]) for cont in conts]
+
+    def _get_last_release(self) -> Optional[Tuple[str, str]]:
+        resp: List[Dict[str, Any]] = self._request(
+            f"repos/{self.name}/releases"
+        )
+        if len(resp):
+            release = resp[0]
+            return release["name"], release["body"]
+        return None
+
+    def _get_organization(self, name: str) -> Organization:
+        resp = self._request(f"orgs/{name}")
+        return Organization(
+            _id=resp["url"],
+            name=resp["login"],
+            description=resp["description"],
+            legal_name=resp["name"],
+            logo=resp["avatar_url"],
+        )
+
     def _get_owner(
         self, name: str, owner_type: str
     ) -> Union[Organization, Person]:
@@ -118,9 +154,13 @@ class GithubExtractor(Extractor):
         else:
             raise ValueError(f"Unknown Github owner type: {owner_type}.")
 
+    def _get_prog_langs(self) -> List[str]:
+        """Get the list of programming languages used."""
+        resp = self._request(f"repos/{self.name}/languages")
+        return [lang for lang in resp.keys()]
+
     def _get_user(self, name: str) -> Person:
         """Specialized API query to get user details."""
-        # TODO: Handle first/last names and username properly
         user = self._request(f"users/{name}")
         # Get user's affiliations
         orgs = self._request(f"users/{name}/orgs")
@@ -134,24 +174,11 @@ class GithubExtractor(Extractor):
         ]
         return Person(
             _id=user["url"],
-            name=user["login"],
-            given_name=user["name"],
+            identifier=user["login"],
+            name=user["name"],
             email=user["email"],
             affiliations=orgs,
         )
-
-    def _get_organization(self, name: str) -> Organization:
-        resp = self._request(f"orgs/{name}")
-        return Organization(
-            _id=resp["url"],
-            name=resp["login"],
-            description=resp["description"],
-        )
-
-    def _get_contributors(self) -> List[Person]:
-        """Specialized API query to get list of contributors names."""
-        conts = self._request(f"repos/{self.name}/contributors")
-        return [self._get_user(cont["login"]) for cont in conts]
 
 
 class GithubExtractorSchema(JsonLDSchema):
@@ -161,12 +188,16 @@ class GithubExtractorSchema(JsonLDSchema):
     name = fields.String(SDO.name)
     author = fields.Nested(SDO.author, [PersonSchema, OrganizationSchema])
     contributors = fields.Nested(SDO.contributor, PersonSchema, many=True)
-    prog_language = fields.List(SDO.programmingLanguage, fields.IRI)
+    prog_langs = fields.List(SDO.programmingLanguage, fields.String)
     download_url = fields.IRI(SDO.downloadUrl)
     description = fields.String(SDO.description)
     date_created = fields.Date(SDO.dateCreated)
     date_modified = fields.Date(SDO.dateModified)
     license = fields.IRI(SDO.license)
+    path = fields.IRI(SDO.CodeRepository)
+    keywords = fields.List(SDO.keywords, fields.String)
+    release_notes = fields.String(SDO.releaseNotes)
+    software_version = fields.String(SDO.softwareVersion)
 
     class Meta:
         rdf_type = SDO.SoftwareSourceCode
