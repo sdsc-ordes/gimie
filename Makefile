@@ -11,6 +11,10 @@ check: ## Run code quality tools.
 	@echo "🚀 Linting code: Running pre-commit"
 	@poetry run pre-commit run -a
 
+.PHONY: docker-build
+docker-build: ## Build the gimie Docker image
+	@docker build -t gimie -f .docker/Dockerfile .
+
 .PHONY: test
 test: ## Test the code with pytest
 	@echo "🚀 Testing code: Running pytest"
