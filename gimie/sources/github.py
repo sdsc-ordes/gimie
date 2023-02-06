@@ -53,7 +53,6 @@ class GithubExtractor(Extractor):
     keywords: Optional[List[str]] = None
     license: Optional[str] = None
     software_version: Optional[str] = None
-    release_notes: Optional[str] = None
 
     def to_graph(self) -> Graph:
         jd = GithubExtractorSchema().dumps(self)
@@ -81,9 +80,7 @@ class GithubExtractor(Extractor):
             self.license = get_spdx_url(data["license"]["spdx_id"])
         self.prog_langs = self._get_prog_langs()
         self.keywords = data["topics"]
-        release = self._get_last_release()
-        if release is not None:
-            self.software_version, self.release_notes = release
+        self.version = self._get_last_release()
 
     def _set_auth(self) -> Any:
         try:
@@ -124,13 +121,12 @@ class GithubExtractor(Extractor):
         conts = self._request(f"repos/{self.name}/contributors")
         return [self._get_user(cont["login"]) for cont in conts]
 
-    def _get_last_release(self) -> Optional[Tuple[str, str]]:
+    def _get_last_release(self) -> Optional[str]:
         resp: List[Dict[str, Any]] = self._request(
             f"repos/{self.name}/releases"
         )
         if len(resp):
-            release = resp[0]
-            return release["name"], release["body"]
+            return resp[0]["name"]
         return None
 
     def _get_organization(self, name: str) -> Organization:
@@ -168,6 +164,7 @@ class GithubExtractor(Extractor):
             Organization(
                 _id=org["url"],
                 name=org["login"],
+                legal_name=org["name"],
                 description=org["description"],
             )
             for org in orgs
@@ -196,8 +193,7 @@ class GithubExtractorSchema(JsonLDSchema):
     license = fields.IRI(SDO.license)
     path = fields.IRI(SDO.CodeRepository)
     keywords = fields.List(SDO.keywords, fields.String)
-    release_notes = fields.String(SDO.releaseNotes)
-    software_version = fields.String(SDO.softwareVersion)
+    version = fields.String(SDO.version)
 
     class Meta:
         rdf_type = SDO.SoftwareSourceCode
