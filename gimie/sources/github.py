@@ -197,3 +197,4 @@ class GithubExtractorSchema(JsonLDSchema):
     class Meta:
         rdf_type = SDO.SoftwareSourceCode
         model = GithubExtractor
+        add_value_types = True
