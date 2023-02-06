@@ -164,7 +164,6 @@ class GithubExtractor(Extractor):
             Organization(
                 _id=org["url"],
                 name=org["login"],
-                legal_name=org["name"],
                 description=org["description"],
             )
             for org in orgs
