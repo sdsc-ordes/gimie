@@ -154,12 +154,7 @@ class GithubExtractor(Extractor):
     def extract(self):
         self._id = self.path
         self.name = urlparse(self.path).path.strip("/")
-        try:
-            data = query_repo_graphql(self.path, self._set_auth())["data"][
-                "repository"
-            ]
-        except KeyError:
-            print(query_repo_graphql(self.path, self._set_auth()))
+        data = self._fetch_repo_data(self.path)
         self.author = self._get_author(data["owner"])
         self.contributors = self._get_contributors(
             *data["mentionableUsers"]["nodes"]
@@ -176,6 +171,14 @@ class GithubExtractor(Extractor):
         self.download_url = (
             f"{self.path}/archive/refs/tags/{self.version}.tar.gz"
         )
+
+    def _fetch_repo_data(self, url: str) -> Dict[str, Any]:
+        """Fetch repository metadata from GraphQL endpoint."""
+        response = query_repo_graphql(url, self._set_auth())
+        if "errors" in response:
+            raise ValueError(response["errors"])
+
+        return response["data"]["repository"]
 
     def _set_auth(self) -> Any:
         try:
