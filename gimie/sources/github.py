@@ -154,9 +154,12 @@ class GithubExtractor(Extractor):
     def extract(self):
         self._id = self.path
         self.name = urlparse(self.path).path.strip("/")
-        data = query_repo_graphql(self.path, self._set_auth())["data"][
-            "repository"
-        ]
+        try:
+            data = query_repo_graphql(self.path, self._set_auth())["data"][
+                "repository"
+            ]
+        except KeyError:
+            print(query_repo_graphql(self.path, self._set_auth()))
         self.author = self._get_author(data["owner"])
         self.contributors = self._get_contributors(
             *data["mentionableUsers"]["nodes"]
