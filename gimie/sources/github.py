@@ -37,6 +37,97 @@ GH_API = "https://api.github.com"
 load_dotenv()
 
 
+def query_repo_graphql(url: str, headers: Dict[str, str]) -> Dict[str, Any]:
+    """Queries the GitHub GraphQL API to extract metadata about
+    target repository.
+
+    Parameters
+    ----------
+    url:
+        URL of the repository to query.
+    """
+    owner, name = urlparse(url).path.strip("/").split("/")
+    graphql_query = """
+    query repo($owner: String!, $name: String!) {
+        repository(name: $name, owner: $owner) {
+            createdAt
+            description
+            latestRelease {
+                name
+            }
+            licenseInfo {
+                spdxId
+            }
+            mentionableUsers(first: 100) {
+                nodes {
+                    login
+                    name
+                    avatarUrl
+                    company
+                    organizations(first: 100) {
+                        nodes {
+                            avatarUrl
+                            description
+                            login
+                            name
+                            url
+                        }
+                    }
+                    url
+                }
+            }
+            name
+            owner {
+                login
+                avatarUrl
+                url
+                ... on User {
+                    company
+                    organizations(first: 100) {
+                        edges {
+                            node {
+                                avatarUrl
+                                description
+                                login
+                                name
+                            }
+                        }
+                    }
+                }
+                ... on Organization {
+                    name
+                    description
+                }
+            }
+            primaryLanguage {
+                name
+            }
+            repositoryTopics(first: 10) {
+                nodes {
+                    topic {
+                        name
+                    }
+                }
+            }
+            updatedAt
+            url
+        }
+    }
+    """
+    resp = requests.post(
+        url=f"{GH_API}/graphql",
+        json={
+            "query": graphql_query,
+            "variables": {"owner": owner, "name": name},
+        },
+        headers=headers,
+    )
+    # If the query fails, explain why
+    if resp.status_code != 200:
+        raise ConnectionError(resp.json()["message"])
+    return resp.json()
+
+
 @dataclass
 class GithubExtractor(Extractor):
     path: str
