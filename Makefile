@@ -13,6 +13,7 @@ check: ## Run code quality tools.
 
 .PHONY: docker-build
 docker-build: ## Build the gimie Docker image
+	@echo "🐋 Building docker container"
 	@docker build -t gimie -f .docker/Dockerfile .
 
 .PHONY: test
