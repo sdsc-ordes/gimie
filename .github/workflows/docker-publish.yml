@@ -42,8 +42,8 @@ jobs:
             images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
             tags: |
               type=raw,value=latest,enable=${{ github.event_name == 'push' }}
-              type=raw, value=${{ steps.release-version.outputs.version_build }},enable=${{ github.event_name == 'push' }}
-              type=raw, value=${{ steps.release-version.outputs.version }},enable=${{ github.event_name == 'release' }}
+              type=raw,value=${{ steps.release-version.outputs.version_build }},enable=${{ github.event_name == 'push' }}
+              type=raw,value=${{ steps.release-version.outputs.version }},enable=${{ github.event_name == 'release' }}
 
         - name: Build and push Docker image
           uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
