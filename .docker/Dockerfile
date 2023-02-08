@@ -2,6 +2,11 @@ FROM python:3.10-slim-bullseye as python
 ENV PYTHONUNBUFFERED=true
 WORKDIR /app
 
+LABEL org.opencontainers.image.source=https://github.com/SDSC-ORD/gimie
+LABEL org.opencontainers.image.description="Extract linked metadata from repositories."
+LABEL org.opencontainers.image.licenses=Apache-2.0
+
+
 ##################################################
 # Poetry setup
 ##################################################
