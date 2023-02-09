@@ -34,8 +34,8 @@ jobs:
           id: release-version
           run: |
             version=$(grep -E '^version += +' pyproject.toml | sed -E 's/.*= +//' | sed "s/['\"]//g")
-            echo "version=$version" >> $GITHUB_OUTPUT
-            echo "version_build=$version_"$(git rev-parse --short "$GITHUB_SHA") >> $GITHUB_OUTPUT
+            echo "version=${version}" >> $GITHUB_OUTPUT
+            echo "version_build=${version}_"$(git rev-parse --short "$GITHUB_SHA") >> $GITHUB_OUTPUT
 
         - name: Log in to the Container registry
           uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
