@@ -63,3 +63,5 @@ jobs:
             push: true
             tags: ${{ steps.meta.outputs.tags }}
             labels: ${{ steps.meta.outputs.labels }}
+            build-args: VERSION_BUILD=${{ steps.release-version.outputs.version_build }}
+            outputs: type=image,annotation-index.org.opencontainers.image.description=Extract linked metadata from repositories.
