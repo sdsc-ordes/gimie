@@ -167,10 +167,12 @@ class GithubExtractor(Extractor):
             self.license = get_spdx_url(data["licenseInfo"]["spdxId"])
         self.prog_langs = [data["primaryLanguage"]["name"]]
         self.keywords = self._get_keywords(*data["repositoryTopics"]["nodes"])
-        self.version = data["latestRelease"]["name"]
-        self.download_url = (
-            f"{self.path}/archive/refs/tags/{self.version}.tar.gz"
-        )
+        last_release = data["latestRelease"]
+        if last_release is not None:
+            self.version = last_release["name"]
+            self.download_url = (
+                f"{self.path}/archive/refs/tags/{self.version}.tar.gz"
+            )
 
     def _fetch_repo_data(self, url: str) -> Dict[str, Any]:
         """Fetch repository metadata from GraphQL endpoint."""
