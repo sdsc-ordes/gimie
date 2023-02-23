@@ -26,6 +26,27 @@ from calamus import fields
 from gimie.graph.namespaces import SDO
 
 
+class IRI(fields.String):
+    """An external IRI reference.
+    NOTE: This is a temporary solution until calamus correctly serializes IRI fields."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def _serialize(self, value, attr, obj, **kwargs):
+        if self.parent.opts.add_value_types or self.add_value_types:
+            return {"@id": value}
+
+        value = super()._serialize(value, attr, obj, **kwargs)
+        if value:
+            return {"@id": value}
+
+    def _deserialize(self, value, attr, data, **kwargs):
+        if "@id" in value:
+            value = value["@id"]
+        return super()._deserialize(value, attr, data, **kwargs)
+
+
 @dataclass(order=True)
 class Release:
     """
@@ -52,14 +73,19 @@ class Organization:
 
     _id: str
     name: str
+    legal_name: Optional[str] = None
     email: Optional[List[str]] = None
     description: Optional[str] = None
+    logo: Optional[str] = None
 
 
 class OrganizationSchema(JsonLDSchema):
     _id = fields.Id()
     name = fields.String(SDO.name)
+    legal_name = fields.String(SDO.legalName)
+    email = fields.String(SDO.email)
     description = fields.String(SDO.description)
+    logo = IRI(SDO.logo)
 
     class Meta:
         rdf_type = SDO.Organization
@@ -71,26 +97,26 @@ class Person:
     """See http//schema.org/Person"""
 
     _id: str
-    name: str
+    identifier: str
+    name: Optional[str] = None
     email: Optional[str] = None
-    given_name: Optional[str] = None
     affiliations: Optional[List[Organization]] = None
 
     def __str__(self):
-        full_name = f"({self.given_name}) " if self.given_name else ""
+        name = f"({self.name}) " if self.name else ""
         email = f"<{self.email}> " if self.email else ""
         orgs = (
             f"[{', '.join([org.name for org in self.affiliations])}]"
             if self.affiliations
             else ""
         )
-        return f"{self.name} {full_name}{email}{orgs}".strip(" ")
+        return f"{self.identifier} {name}{email}{orgs}".strip(" ")
 
 
 class PersonSchema(JsonLDSchema):
     _id = fields.Id()
+    identifier = fields.String(SDO.identifier)
     name = fields.String(SDO.name)
-    given_name = fields.String(SDO.givenName)
     affiliations = fields.Nested(
         SDO.affiliation, OrganizationSchema, many=True
     )

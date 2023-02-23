@@ -115,3 +115,8 @@ def locate_licenses(path: str) -> List[str]:
                 license_files.append(license_path)
 
     return license_files
+
+
+def get_spdx_url(name: str) -> str:
+    """Given an SPDX license identifier, return the full URL."""
+    return f"https://spdx.org/licenses/{name}"
