@@ -29,7 +29,13 @@ from calamus.schema import JsonLDSchema
 from rdflib import Graph
 
 from gimie.sources.abstract import Extractor
-from gimie.models import Organization, OrganizationSchema, Person, PersonSchema
+from gimie.models import (
+    Organization,
+    OrganizationSchema,
+    Person,
+    PersonSchema,
+    IRI,
+)
 from gimie.graph.namespaces import SDO
 from gimie.utils import get_spdx_url
 
@@ -250,12 +256,12 @@ class GithubExtractorSchema(JsonLDSchema):
     description = fields.String(SDO.description)
     date_created = fields.Date(SDO.dateCreated)
     date_modified = fields.Date(SDO.dateModified)
-    license = fields.Raw(SDO.license)
-    path = fields.Raw(SDO.CodeRepository)
+    license = IRI(SDO.license)
+    path = IRI(SDO.CodeRepository)
     keywords = fields.List(SDO.keywords, fields.String)
     version = fields.String(SDO.version)
 
     class Meta:
         rdf_type = SDO.SoftwareSourceCode
         model = GithubExtractor
-        add_value_types = True
+        add_value_types = False

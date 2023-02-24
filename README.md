@@ -30,6 +30,16 @@ To install the dev version from github:
 pip install git+https://github.com/SDSC-ORD/gimie.git@main#egg=gimie
 ```
 
+Gimie is also available as a docker container hosted on the [Github container registry](https://github.com/SDSC-ORD/gimie/pkgs/container/gimie):
+
+```shell
+docker pull ghcr.io/sdsc-ord/gimie:latest
+
+# The access token can be provided as an environment variable
+docker run -e ACCESS_TOKEN=$ACCESS_TOKEN ghcr.io/sdsc-ord/gimie:latest gimie data <repo>
+```
+
+
 ### For development:
 
 activate a conda or virtual environment with Python 3.8 or higher
