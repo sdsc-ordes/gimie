@@ -20,7 +20,7 @@ from dataclasses import dataclass
 from datetime import datetime
 import requests
 import os
-from typing import Any, Dict, List, Optional, Union, Tuple
+from typing import Any, Dict, List, Optional, Set, Union
 from urllib.parse import urlparse
 from dotenv import load_dotenv
 
@@ -88,16 +88,19 @@ def query_user_graphql(login: str, headers: Dict[str, str]) -> Dict[str, Any]:
     return user
 
 
-def query_commits_graphql(url: str, headers: Dict[str, str]) -> Dict[str, Any]:
-    """Queries the list of commits and their authors from target repository using the Github GraphQL API."""
+def query_contributors_graphql(url: str, headers: Dict[str, str]) -> Set[str]:
+    """Queries the list of contributor usernames of target repository
+    using the Github GraphQL API.
+    NOTE: This is a workaround for the lack of a contributors field in the GraphQL API."""
     owner, name = urlparse(url).path.strip("/").split("/")
+    # Get commits by batches of 100
     commits_query = """
-    query repo($owner: String!, $name: String!) {
+    query repo($owner: String!, $name: String!, $cursor: String) {
         repository(name: $name, owner: $owner) {
             defaultBranchRef {
                 target {
                     ... on Commit {
-                        history(first: 100) {
+                        history(first: 100, after: $cursor) {
                             nodes {
                                 author {
                                     user {
@@ -105,16 +108,39 @@ def query_commits_graphql(url: str, headers: Dict[str, str]) -> Dict[str, Any]:
                                     }
                                 }
                             }
+                            pageInfo {
+                                hasNextPage
+                                endCursor
+                            }
                         }
                     }
                 }
             }
         }
     }"""
-    commits = send_graphql_query(
-        commits_query, data={"owner": owner, "name": name}, headers=headers
-    )
-    return commits
+
+    has_next_page, cursor = True, None
+    contributors = set()
+    while has_next_page:
+        commits = send_graphql_query(
+            commits_query,
+            data={"owner": owner, "name": name, "cursor": cursor},
+            headers=headers,
+        )
+        commits = commits["data"]["repository"]["defaultBranchRef"]["target"][
+            "history"
+        ]
+
+        cursor = commits["pageInfo"]["endCursor"]
+        has_next_page = commits["pageInfo"]["hasNextPage"]
+
+        # We skip commits which are not authored by a github user
+        contributors |= {
+            commit["author"]["user"]["login"]
+            for commit in commits["nodes"]
+            if commit["author"]["user"] is not None
+        }
+    return contributors
 
 
 def query_repo_graphql(url: str, headers: Dict[str, str]) -> Dict[str, Any]:
@@ -202,6 +228,9 @@ def query_repo_graphql(url: str, headers: Dict[str, str]) -> Dict[str, Any]:
 
 @dataclass
 class GithubExtractor(Extractor):
+    """Extractor for GitHub repositories. Uses the GitHub GraphQL API to
+    extract metadata into linked data."""
+
     path: str
     github_token: Optional[str] = None
 
@@ -218,12 +247,14 @@ class GithubExtractor(Extractor):
     software_version: Optional[str] = None
 
     def to_graph(self) -> Graph:
+        """Convert repository to RDF graph."""
         jd = GithubExtractorSchema().dumps(self)
         g: Graph = Graph().parse(format="json-ld", data=str(jd))
         g.bind("schema", SDO)
         return g
 
     def extract(self):
+        """Extract metadata from target GitHub repository."""
         self._id = self.path
         self.name = urlparse(self.path).path.strip("/")
         data = self._fetch_repo_data(self.path)
@@ -256,22 +287,14 @@ class GithubExtractor(Extractor):
         """Queries the GitHub GraphQL API to extract contributors through the commit list.
         NOTE: This is a workaround for the lack of a contributors field in the GraphQL API."""
         headers = self._set_auth()
-        commits = query_commits_graphql(url, headers)
-        authors = set()
-        for commit in commits["data"]["repository"]["defaultBranchRef"][
-            "target"
-        ]["history"]["nodes"]:
-            author = commit["author"]["user"]
-            if author is not None:
-                authors |= {author["login"]}
-
         contributors = []
-        for author in authors:
-            user = query_user_graphql(author, headers)
+        for username in query_contributors_graphql(url, headers):
+            user = query_user_graphql(username, headers)
             contributors.append(self._get_user(user["data"]["user"]))
-        return contributors
+        return list(contributors)
 
     def _set_auth(self) -> Any:
+        """Set authentication headers for GitHub API requests."""
         try:
             if not self.github_token:
                 self.github_token = os.environ.get("ACCESS_TOKEN")
