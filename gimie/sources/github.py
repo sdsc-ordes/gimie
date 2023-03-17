@@ -37,6 +37,80 @@ GH_API = "https://api.github.com"
 load_dotenv()
 
 
+def send_graphql_query(
+    query: str, data: Dict[str, Any], headers: Dict[str, str]
+) -> Dict[str, Any]:
+    """Generic function to send a GraphQL query to the GitHub API."""
+    resp = requests.post(
+        url=f"{GH_API}/graphql",
+        json={
+            "query": query,
+            "variables": data,
+        },
+        headers=headers,
+    )
+
+    if resp.status_code != 200:
+        raise ConnectionError(resp.json()["message"])
+    return resp.json()
+
+
+def query_user_graphql(login: str, headers: Dict[str, str]) -> Dict[str, Any]:
+    """Use GitHub GraphQL API to extract metadata about a user."""
+    user_query = """
+    query user($login: String!){
+        user(login: $login) {
+            avatarUrl
+            login
+            name
+            organizations(first: 100) {
+                nodes {
+                    avatarUrl
+                    description
+                    login
+                    name
+                    url
+                }
+            }
+            url
+            company
+        }
+    }"""
+    user = send_graphql_query(
+        user_query, data={"login": login}, headers=headers
+    )
+    return user
+
+
+def query_commits_graphql(url: str, headers: Dict[str, str]) -> Dict[str, Any]:
+    """Queries the list of commits and their authors from target repository using the Github GraphQL API."""
+    owner, name = urlparse(url).path.strip("/").split("/")
+    commits_query = """
+    query repo($owner: String!, $name: String!) {
+        repository(name: $name, owner: $owner) {
+            defaultBranchRef {
+                target {
+                    ... on Commit {
+                        history(first: 100) {
+                            nodes {
+                                author {
+                                    user {
+                                        login
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }"""
+    commits = send_graphql_query(
+        commits_query, data={"owner": owner, "name": name}, headers=headers
+    )
+    return commits
+
+
 def query_repo_graphql(url: str, headers: Dict[str, str]) -> Dict[str, Any]:
     """Queries the GitHub GraphQL API to extract metadata about
     target repository.
@@ -47,7 +121,7 @@ def query_repo_graphql(url: str, headers: Dict[str, str]) -> Dict[str, Any]:
         URL of the repository to query.
     """
     owner, name = urlparse(url).path.strip("/").split("/")
-    graphql_query = """
+    repo_query = """
     query repo($owner: String!, $name: String!) {
         repository(name: $name, owner: $owner) {
             createdAt
@@ -78,19 +152,19 @@ def query_repo_graphql(url: str, headers: Dict[str, str]) -> Dict[str, Any]:
             }
             name
             owner {
-                login
                 avatarUrl
+                login
                 url
                 ... on User {
                     company
+                    name
                     organizations(first: 100) {
-                        edges {
-                            node {
-                                avatarUrl
-                                description
-                                login
-                                name
-                            }
+                        nodes {
+                            avatarUrl
+                            description
+                            login
+                            name
+                            url
                         }
                     }
                 }
@@ -114,18 +188,10 @@ def query_repo_graphql(url: str, headers: Dict[str, str]) -> Dict[str, Any]:
         }
     }
     """
-    resp = requests.post(
-        url=f"{GH_API}/graphql",
-        json={
-            "query": graphql_query,
-            "variables": {"owner": owner, "name": name},
-        },
-        headers=headers,
+    repo = send_graphql_query(
+        repo_query, data={"owner": owner, "name": name}, headers=headers
     )
-    # If the query fails, explain why
-    if resp.status_code != 200:
-        raise ConnectionError(resp.json()["message"])
-    return resp.json()
+    return repo
 
 
 @dataclass
@@ -156,9 +222,7 @@ class GithubExtractor(Extractor):
         self.name = urlparse(self.path).path.strip("/")
         data = self._fetch_repo_data(self.path)
         self.author = self._get_author(data["owner"])
-        self.contributors = self._get_contributors(
-            *data["mentionableUsers"]["nodes"]
-        )
+        self.contributors = self._fetch_contributors(self.path)
         self.description = data["description"]
         self.date_created = datetime.fromisoformat(data["createdAt"][:-1])
         self.date_modified = datetime.fromisoformat(data["updatedAt"][:-1])
@@ -182,6 +246,25 @@ class GithubExtractor(Extractor):
 
         return response["data"]["repository"]
 
+    def _fetch_contributors(self, url: str) -> List[Person]:
+        """Queries the GitHub GraphQL API to extract contributors through the commit list.
+        NOTE: This is a workaround for the lack of a contributors field in the GraphQL API."""
+        headers = self._set_auth()
+        commits = query_commits_graphql(url, headers)
+        authors = set()
+        for commit in commits["data"]["repository"]["defaultBranchRef"][
+            "target"
+        ]["history"]["nodes"]:
+            author = commit["author"]["user"]
+            if author is not None:
+                authors |= {author["login"]}
+
+        contributors = []
+        for author in authors:
+            user = query_user_graphql(author, headers)
+            contributors.append(self._get_user(user["data"]["user"]))
+        return contributors
+
     def _set_auth(self) -> Any:
         try:
             if not self.github_token:
@@ -195,10 +278,6 @@ class GithubExtractor(Extractor):
             return {}
         else:
             return headers
-
-    def _get_contributors(self, *nodes: Dict[str, Any]) -> List[Person]:
-        """Extract contributors from GraphQL user nodes."""
-        return [self._get_user(cont) for cont in nodes]
 
     def _get_keywords(self, *nodes: Dict[str, Any]) -> List[str]:
         """Extract names from GraphQL topic nodes."""
