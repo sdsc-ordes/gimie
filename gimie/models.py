@@ -26,6 +26,27 @@ from calamus import fields
 from gimie.graph.namespaces import SDO
 
 
+class IRI(fields.String):
+    """An external IRI reference.
+    NOTE: This is a temporary solution until calamus correctly serializes IRI fields."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def _serialize(self, value, attr, obj, **kwargs):
+        if self.parent.opts.add_value_types or self.add_value_types:
+            return {"@id": value}
+
+        value = super()._serialize(value, attr, obj, **kwargs)
+        if value:
+            return {"@id": value}
+
+    def _deserialize(self, value, attr, data, **kwargs):
+        if "@id" in value:
+            value = value["@id"]
+        return super()._deserialize(value, attr, data, **kwargs)
+
+
 @dataclass(order=True)
 class Release:
     """
@@ -64,7 +85,7 @@ class OrganizationSchema(JsonLDSchema):
     legal_name = fields.String(SDO.legalName)
     email = fields.String(SDO.email)
     description = fields.String(SDO.description)
-    logo = fields.IRI(SDO.logo)
+    logo = IRI(SDO.logo)
 
     class Meta:
         rdf_type = SDO.Organization
