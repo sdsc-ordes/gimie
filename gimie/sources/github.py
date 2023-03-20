@@ -290,7 +290,9 @@ class GithubExtractor(Extractor):
         contributors = []
         for username in query_contributors_graphql(url, headers):
             user = query_user_graphql(username, headers)
-            contributors.append(self._get_user(user["data"]["user"]))
+            # Skip None users (e.g. dependabot)
+            if user["data"]["user"] is not None:
+                contributors.append(self._get_user(user["data"]["user"]))
         return list(contributors)
 
     def _set_auth(self) -> Any:
