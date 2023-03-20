@@ -43,6 +43,18 @@ GH_API = "https://api.github.com"
 load_dotenv()
 
 
+def send_rest_query(query: str, headers: Dict[str, str]) -> Dict[str, Any]:
+    """Generic function to send a GraphQL query to the GitHub API."""
+    resp = requests.get(
+        url=f"{GH_API}/{query}",
+        headers=headers,
+    )
+
+    if resp.status_code != 200:
+        raise ConnectionError(resp.json()["message"])
+    return resp.json()
+
+
 def send_graphql_query(
     query: str, data: Dict[str, Any], headers: Dict[str, str]
 ) -> Dict[str, Any]:
@@ -61,86 +73,46 @@ def send_graphql_query(
     return resp.json()
 
 
-def query_user_graphql(login: str, headers: Dict[str, str]) -> Dict[str, Any]:
-    """Use GitHub GraphQL API to extract metadata about a user."""
-    user_query = """
-    query user($login: String!){
-        user(login: $login) {
-            avatarUrl
-            login
-            name
-            organizations(first: 100) {
-                nodes {
-                    avatarUrl
-                    description
-                    login
-                    name
-                    url
-                }
-            }
-            url
-            company
-        }
-    }"""
-    user = send_graphql_query(
-        user_query, data={"login": login}, headers=headers
-    )
-    return user
-
-
-def query_contributors_graphql(url: str, headers: Dict[str, str]) -> Set[str]:
-    """Queries the list of contributor usernames of target repository
-    using the Github GraphQL API.
+def query_contributors(
+    url: str, headers: Dict[str, str]
+) -> List[Dict[str, Any]]:
+    """Queries the list of contributors of target repository
+    using Github's REST and GraphQL APIs. Returns a list of GraphQL User nodes.
     NOTE: This is a workaround for the lack of a contributors field in the GraphQL API."""
     owner, name = urlparse(url).path.strip("/").split("/")
-    # Get commits by batches of 100
-    commits_query = """
-    query repo($owner: String!, $name: String!, $cursor: String) {
-        repository(name: $name, owner: $owner) {
-            defaultBranchRef {
-                target {
-                    ... on Commit {
-                        history(first: 100, after: $cursor) {
-                            nodes {
-                                author {
-                                    user {
-                                        login
-                                    }
-                                }
-                            }
-                            pageInfo {
-                                hasNextPage
-                                endCursor
-                            }
-                        }
+    # Get contributors (available in the REST API but not GraphQL)
+    contributors = send_rest_query(
+        f"repos/{owner}/{name}/contributors", headers=headers
+    )
+    ids = [contributor["node_id"] for contributor in contributors]
+    # Get all contributors' metadata in 1 GraphQL query
+    users_query = """
+    query users($ids: [ID!]!) {
+        nodes(ids: $ids) {
+            ... on User {
+                avatarUrl
+                company
+                login
+                name
+                organizations(first: 100) {
+                    nodes {
+                        avatarUrl
+                        description
+                        login
+                        name
+                        url
                     }
                 }
+                url
             }
         }
     }"""
 
-    has_next_page, cursor = True, None
-    contributors = set()
-    while has_next_page:
-        commits = send_graphql_query(
-            commits_query,
-            data={"owner": owner, "name": name, "cursor": cursor},
-            headers=headers,
-        )
-        commits = commits["data"]["repository"]["defaultBranchRef"]["target"][
-            "history"
-        ]
-
-        cursor = commits["pageInfo"]["endCursor"]
-        has_next_page = commits["pageInfo"]["hasNextPage"]
-
-        # We skip commits which are not authored by a github user
-        contributors |= {
-            commit["author"]["user"]["login"]
-            for commit in commits["nodes"]
-            if commit["author"]["user"] is not None
-        }
-    return contributors
+    contributors = send_graphql_query(
+        users_query, data={"ids": ids}, headers=headers
+    )
+    # Drop empty users (e.g. dependabot)
+    return [user for user in contributors["data"]["nodes"] if user]
 
 
 def query_repo_graphql(url: str, headers: Dict[str, str]) -> Dict[str, Any]:
@@ -288,11 +260,9 @@ class GithubExtractor(Extractor):
         NOTE: This is a workaround for the lack of a contributors field in the GraphQL API."""
         headers = self._set_auth()
         contributors = []
-        for username in query_contributors_graphql(url, headers):
-            user = query_user_graphql(username, headers)
-            # Skip None users (e.g. dependabot)
-            if user["data"]["user"] is not None:
-                contributors.append(self._get_user(user["data"]["user"]))
+        resp = query_contributors(url, headers)
+        for user in resp:
+            contributors.append(self._get_user(user))
         return list(contributors)
 
     def _set_auth(self) -> Any:
