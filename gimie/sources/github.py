@@ -238,7 +238,8 @@ class GithubExtractor(Extractor):
         # If license is available, convert to standard SPDX URL
         if data["licenseInfo"] is not None:
             self.license = get_spdx_url(data["licenseInfo"]["spdxId"])
-        self.prog_langs = [data["primaryLanguage"]["name"]]
+        if data["primaryLanguage"] is not None:
+            self.prog_langs = [data["primaryLanguage"]["name"]]
         self.keywords = self._get_keywords(*data["repositoryTopics"]["nodes"])
         last_release = data["latestRelease"]
         if last_release is not None:
