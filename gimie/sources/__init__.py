@@ -14,20 +14,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Sources from which metadata can be extracted by gimie."""
-from typing import Any, Dict
+# """Sources from which metadata can be extracted by gimie."""
+# from typing import Any, Dict
 
-from gimie.sources.github import GithubExtractor
-
+# from gimie.sources.github import GithubExtractor
 # from gimie.sources.gitlab import GitlabExtractor
-# from gimie.sources.git import GitExtractor
 
-REMOTE_SOURCES: Dict[str, Any] = {
-    #    "gitlab": GitlabExtractor,
-    "github": GithubExtractor,
-}
-LOCAL_SOURCES: Dict[str, Any] = {
-    #    "git": GitExtractor,
-}
+# # from gimie.sources.gitlab import GitlabExtractor
+# # from gimie.sources.git import GitExtractor
 
-SOURCES: Dict[str, Any] = {**LOCAL_SOURCES, **REMOTE_SOURCES}
+# REMOTE_SOURCES: Dict[str, Any] = {
+#     #    "gitlab": GitlabExtractor,
+#     "github": GithubExtractor,
+#     "gitlab": GitlabExtractor,
+# }
+# LOCAL_SOURCES: Dict[str, Any] = {
+#     #    "git": GitExtractor,
+# }
+
+# SOURCES: Dict[str, Any] = {**LOCAL_SOURCES, **REMOTE_SOURCES}
