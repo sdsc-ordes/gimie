@@ -1,4 +1,5 @@
 from gimie.sources.gitlab import GitlabExtractor
+import pytest
 
 TEST_REPOS = [
     "https://gitlab.com/inkscape/inkscape",  # Owned by multiple persons, has releases
