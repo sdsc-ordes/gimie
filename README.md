@@ -122,6 +122,7 @@ g = gh.to_graph()
 # To retrieve the serialized graph
 gh.serialize(format='ttl')
 ```
+[For a GitLab project, replace `GithubExtractor` by `GitlabExtractor`, as well as the URL to the GitLab project.]
 
 ## Outputs
 

@@ -171,7 +171,11 @@ class GitlabExtractor(Extractor):
         self.keywords = data["topics"]
         
         #Get contributors as the project members that are not owners and those that have written merge requests
-        self.author = [self._get_author(user["node"]["user"]) for user in data["projectMembers"]["edges"] if user["node"]["accessLevel"]["stringValue"] == "OWNER"] 
+        # owners are either multiple individuals or a group, if not user is marked as owner
+        user_author = [user["node"]["user"] for user in data["projectMembers"]["edges"] if user["node"]["accessLevel"]["stringValue"] == "OWNER"] 
+        author = user_author if len(user_author) > 0 else data["group"]
+        self.author = [self._get_author(author)]
+        # contributors are project members or merge request authors 
         project_members = [user["node"]["user"] for user in data["projectMembers"]["edges"] if user["node"]["accessLevel"]["stringValue"] != "OWNER"] 
         merge_request_authors = [author["node"]["author"] for author in data["mergeRequests"]["edges"]]
         duplicate_contributors = project_members + merge_request_authors
