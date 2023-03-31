@@ -15,11 +15,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# import logging
+import logging
 
-# import importlib.metadata as importlib_metadata
+import importlib.metadata as importlib_metadata
 
-# __version__ = importlib_metadata.version(__name__)
+__version__ = importlib_metadata.version(__name__)
 
-# logger = logging.getLogger()
-# logger.setLevel(logging.WARNING)
+logger = logging.getLogger()
+logger.setLevel(logging.WARNING)
