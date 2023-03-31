@@ -17,9 +17,11 @@
 """Utility functions used throughout gimie."""
 import os
 import re
-import hashlib
+import uuid
 from typing import List, Literal
 from urllib.parse import urlparse
+
+from gimie.graph.namespaces import GIMIE
 
 
 def validate_url(url: str):
@@ -44,10 +46,8 @@ def validate_url(url: str):
         return False
 
 
-def generate_fair_uri(path: str):
-    """Given a repository path, returns a URI with a
-    hash for uniqueness, or the repository URL if it's online.
-    The URI format for local paths is "gimie:{basename}/{md5sum(abspath)}".
+def generate_uri(ref: str):
+    """Given a reference (e.g. commit sha), return a URI.
 
     Parameters
     ----------
@@ -62,20 +62,10 @@ def generate_fair_uri(path: str):
 
     Examples
     --------
-    >>> generate_fair_uri("https://www.github.com/SDSC-ORD/gimie")
-    'https://www.github.com/SDSC-ORD/gimie'
-    >>> generate_fair_uri("/data/org/project")
-    'gimie:project/93db0'
+    >>> generate_fair_uri("abc")
+    'https://sdsc-ord.github.io/gimie/abc'
     """
-
-    # We only need to craft a URI for a local path.
-    if validate_url(path):
-        fair_uri = path
-    else:
-        hashed = hashlib.md5(path.encode()).hexdigest()
-        name = os.path.basename(path)
-        fair_uri = f"gimie:{name}/{hashed[:5]}"
-    return fair_uri
+    return str(GIMIE[ref])
 
 
 def locate_licenses(path: str) -> List[str]:
