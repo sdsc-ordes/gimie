@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 from dataclasses import dataclass
 import requests
@@ -15,18 +14,14 @@ from rdflib import Graph
 from gimie.sources.abstract import Extractor
 
 
-from gimie.models import (
-    Organization,
-    OrganizationSchema,
-    Person,
-    PersonSchema
-)
+from gimie.models import Organization, OrganizationSchema, Person, PersonSchema
 
 from gimie.graph.namespaces import SDO
 
 GL_API_rest = "https://gitlab.com/api/v4/"
 GL_API = "https://gitlab.com/api"
 load_dotenv()
+
 
 def send_graphql_query(
     query: str, data: Dict[str, Any], headers: Dict[str, str]
@@ -45,6 +40,7 @@ def send_graphql_query(
         raise ConnectionError(resp.json()["message"])
     return resp.json()
 
+
 def query_repo_graphql(url: str, headers: Dict[str, str]) -> Dict[str, Any]:
     """Queries the Gitlab GraphQL API to extract metadata about
     target repository.
@@ -56,7 +52,7 @@ def query_repo_graphql(url: str, headers: Dict[str, str]) -> Dict[str, Any]:
     group, name = urlparse(url).path.strip("/").split("/")
     path = f"{group}/{name}"
     project_query = """
-    query project_query($path: ID!){ 
+    query project_query($path: ID!){
         project(fullPath: $path) {
             name
             id
@@ -142,7 +138,7 @@ class GitlabExtractor(Extractor):
     keywords: Optional[List[str]] = None
     sourceOrganization: Optional[Organization] = None
     download_url: Optional[str] = None
-    #license: Optional[str] = None
+    # license: Optional[str] = None
 
     def to_graph(self) -> Graph:
         """Convert repository to RDF graph."""
@@ -155,11 +151,11 @@ class GitlabExtractor(Extractor):
         """Extract metadata from target Gitlab repository."""
         self._id = self.path
         self.name = urlparse(self.path).path.strip("/")
-        
-        #change fetch project or group 
+
+        # change fetch project or group
         data = self._fetch_repo_data(self.path)
 
-        #unique to Gitlab Extractor
+        # unique to Gitlab Extractor
         self.identifier = urlparse(data["id"]).path.split("/")[2]
         self.sourceOrganization = self._get_organization(data["group"])
 
@@ -167,34 +163,49 @@ class GitlabExtractor(Extractor):
         self.description = data["description"]
         self.prog_langs = [lang["name"] for lang in data["languages"]]
         self.date_created = datetime.fromisoformat(data["createdAt"][:-1])
-        self.date_modified = datetime.fromisoformat(data["lastActivityAt"][:-1])
+        self.date_modified = datetime.fromisoformat(
+            data["lastActivityAt"][:-1]
+        )
         self.keywords = data["topics"]
-        
-        #Get contributors as the project members that are not owners and those that have written merge requests
+
+        # Get contributors as the project members that are not owners and those that have written merge requests
         # owners are either multiple individuals or a group, if not user is marked as owner
-        user_author = [user["node"]["user"] for user in data["projectMembers"]["edges"] if user["node"]["accessLevel"]["stringValue"] == "OWNER"] 
+        user_author = [
+            user["node"]["user"]
+            for user in data["projectMembers"]["edges"]
+            if user["node"]["accessLevel"]["stringValue"] == "OWNER"
+        ]
         author = user_author if len(user_author) > 0 else data["group"]
         self.author = [self._get_author(author)]
-        # contributors are project members or merge request authors 
-        project_members = [user["node"]["user"] for user in data["projectMembers"]["edges"] if user["node"]["accessLevel"]["stringValue"] != "OWNER"] 
-        merge_request_authors = [author["node"]["author"] for author in data["mergeRequests"]["edges"]]
+        # contributors are project members or merge request authors
+        project_members = [
+            user["node"]["user"]
+            for user in data["projectMembers"]["edges"]
+            if user["node"]["accessLevel"]["stringValue"] != "OWNER"
+        ]
+        merge_request_authors = [
+            author["node"]["author"]
+            for author in data["mergeRequests"]["edges"]
+        ]
         duplicate_contributors = project_members + merge_request_authors
-        self.contributors = [self._get_user(dict(unique)) for unique in set(tuple(sorted(contrib.items())) for contrib in duplicate_contributors)]
+        self.contributors = [
+            self._get_user(dict(unique))
+            for unique in set(
+                tuple(sorted(contrib.items()))
+                for contrib in duplicate_contributors
+            )
+        ]
 
         if len(data["releases"]["edges"]) > 0:
-            #go into releases and take the name from the first node (most recent)
+            # go into releases and take the name from the first node (most recent)
             self.version = data["releases"]["edges"][0]["node"]["name"]
-            self.download_url = (
-                f"{self.path}/-/archive/{self.version}/{self.name}-{self.version}.tar.gz"
-            )
+            self.download_url = f"{self.path}/-/archive/{self.version}/{self.name}-{self.version}.tar.gz"
 
         # for the license, we need to query the rest API
-        #the code below does not work, returns - if you have permission- the GitLab specific licence
+        # the code below does not work, returns - if you have permission- the GitLab specific licence
         # resp = requests.get(url=f"{GL_API_rest}/license/{self.identifier}")
         # if resp.status_code == 200:
         #     self.license = resp.json()
-
-
 
     def _fetch_repo_data(self, url: str) -> Dict[str, Any]:
         """Fetch repository metadata from GraphQL endpoint."""
@@ -203,7 +214,6 @@ class GitlabExtractor(Extractor):
             raise ValueError(response["errors"])
 
         return response["data"]["project"]
-    
 
     def _set_auth(self) -> Any:
         """Set authentication headers for Gitlab API requests."""
@@ -227,7 +237,7 @@ class GitlabExtractor(Extractor):
         if "username" in node:
             return self._get_user(node)
         return self._get_organization(node)
-       
+
     def _get_organization(self, node: Dict[str, Any]) -> Organization:
         """Extract details from a GraphQL organization node."""
         return Organization(
@@ -247,8 +257,6 @@ class GitlabExtractor(Extractor):
             name=node["name"],
             email=node["publicEmail"],
         )
-    
-        
 
 
 class GitlabExtractorSchema(JsonLDSchema):
@@ -258,16 +266,18 @@ class GitlabExtractorSchema(JsonLDSchema):
     name = fields.String(SDO.name)
     identifier = fields.String(SDO.identifier)
     sourceOrganization = fields.Nested(SDO.isPartOf, OrganizationSchema)
-    author = fields.Nested(SDO.author, [PersonSchema, OrganizationSchema], many=True)
+    author = fields.Nested(
+        SDO.author, [PersonSchema, OrganizationSchema], many=True
+    )
     contributors = fields.Nested(SDO.contributor, PersonSchema, many=True)
     prog_langs = fields.List(SDO.programmingLanguage, fields.String)
     download_url = fields.Raw(SDO.downloadUrl)
     description = fields.String(SDO.description)
     date_created = fields.Date(SDO.dateCreated)
     date_modified = fields.Date(SDO.dateModified)
-    #license = IRI(SDO.license)
-    #what is this ? 
-    #path = IRI(SDO.CodeRepository)
+    # license = IRI(SDO.license)
+    # what is this ?
+    # path = IRI(SDO.CodeRepository)
     keywords = fields.List(SDO.keywords, fields.String)
     version = fields.String(SDO.version)
 
