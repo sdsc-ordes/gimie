@@ -62,7 +62,7 @@ def generate_uri(ref: str):
 
     Examples
     --------
-    >>> generate_fair_uri("abc")
+    >>> generate_uri("abc")
     'https://sdsc-ord.github.io/gimie/abc'
     """
     return str(GIMIE[ref])
