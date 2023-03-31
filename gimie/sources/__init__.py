@@ -15,19 +15,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Sources from which metadata can be extracted by gimie."""
-from typing import Any, Dict
-
+from typing import Type
+from gimie.sources.abstract import Extractor
 from gimie.sources.github import GithubExtractor
+from gimie.sources.git import GitExtractor
 
 # from gimie.sources.gitlab import GitlabExtractor
-# from gimie.sources.git import GitExtractor
 
-REMOTE_SOURCES: Dict[str, Any] = {
-    #    "gitlab": GitlabExtractor,
-    "github": GithubExtractor,
-}
-LOCAL_SOURCES: Dict[str, Any] = {
-    #    "git": GitExtractor,
-}
 
-SOURCES: Dict[str, Any] = {**LOCAL_SOURCES, **REMOTE_SOURCES}
+from dataclasses import dataclass
+
+
+@dataclass
+class Source:
+    """Source of metadata."""
+
+    remote: bool
+    git: bool
+    extractor: Type[Extractor]
+
+
+SOURCES = {
+    "git": Source(remote=False, git=True, extractor=GitExtractor),
+    "github": Source(remote=True, git=True, extractor=GithubExtractor),
+    #'gitlab': Source(remote=True, git=True, extractor=GitlabExtractor),
+}

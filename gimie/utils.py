@@ -18,7 +18,7 @@
 import os
 import re
 import hashlib
-from typing import List
+from typing import List, Literal
 from urllib.parse import urlparse
 
 
