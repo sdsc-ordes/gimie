@@ -66,7 +66,7 @@ make check
 ### Set your github credentials
 
 In order to avoid rate limits with the github api, you need to provide your github
-username and a github token: see
+username and a github token with the `read:org` scope: see
 [here ](https://docs.github.com/en/enterprise-server@3.4/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 on how to generate a github token.
 
@@ -127,6 +127,11 @@ gh.serialize(format='ttl')
 
 The default output is JSON-ld, a JSON serialization of the [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework) data model. We follow the schema recommended by [codemeta](https://codemeta.github.io/).
 Supported formats are json-ld, turtle and n-triples.
+
+### Limitations
+
+* Currently, gimie will only the first 100 contributors of a repository (in arbitrary order), and for each users, at most 100 affiliations.
+* If a Github repository is owned by an organization, all "mentionable users" are reported as contributors. This will include all members of the organization in addition to contributors.
 
 ## Contributing
 
