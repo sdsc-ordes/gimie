@@ -48,6 +48,8 @@ def is_git_provider(source: str) -> bool:
 def get_git_provider(url: str) -> str:
     """Given a git repository URL, return the corresponding git provider.
     Local path or unsupported git providers will return "git"."""
+    # NOTE: We just check if the provider name is in the URL.
+    # There may be a more robust way.
     if validate_url(url):
         for name, prov in SOURCES.items():
             if prov.git and prov.remote and name in url:

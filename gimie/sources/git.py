@@ -22,13 +22,14 @@ import uuid
 
 from calamus import fields
 from calamus.schema import JsonLDSchema
+import git
 import pydriller
 from rdflib import Graph
 
 from gimie.models import Person, PersonSchema
 from gimie.graph.namespaces import SDO
 from gimie.sources.abstract import Extractor
-from gimie.utils import generate_fair_uri
+from gimie.utils import generate_uri
 
 
 @dataclass
@@ -59,7 +60,8 @@ class GitExtractor(Extractor):
 
     def extract(self):
         self.repository = pydriller.Repository(self.path)
-        self._id = generate_fair_uri(self.path)
+        head_commit_hash = git.Repo(self.path).head.commit.hexsha[:7]
+        self._id = generate_uri(head_commit_hash)
         # Assuming author is the first person to commit
         self.author = self._get_creator()
         self.contributors = self._get_contributors()
