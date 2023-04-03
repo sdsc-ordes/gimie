@@ -18,8 +18,8 @@ from gimie.models import Organization, OrganizationSchema, Person, PersonSchema
 
 from gimie.graph.namespaces import SDO
 
-GL_API_rest = "https://gitlab.com/api/v4/"
-GL_API = "https://gitlab.com/api"
+GL_API_REST = "https://gitlab.com/api/v4/"
+GL_API_GRAPHQL = "https://gitlab.com/api"
 load_dotenv()
 
 
@@ -28,7 +28,7 @@ def send_graphql_query(
 ) -> Dict[str, Any]:
     """Generic function to send a GraphQL query to the Gitlab API."""
     resp = requests.post(
-        url=f"{GL_API}/graphql",
+        url=f"{GL_API_GRAPHQL}/graphql",
         json={
             "query": query,
             "variables": data,
@@ -124,7 +124,7 @@ class GitlabExtractor(Extractor):
     extract metadata into linked data."""
 
     path: str
-    Gitlab_token: Optional[str] = None
+    token: Optional[str] = None
 
     name: Optional[str] = None
     identifier: Optional[str] = None
@@ -218,12 +218,12 @@ class GitlabExtractor(Extractor):
     def _set_auth(self) -> Any:
         """Set authentication headers for Gitlab API requests."""
         try:
-            if not self.Gitlab_token:
-                self.Gitlab_token = os.environ.get("ACCESS_TOKEN")
-                assert self.Gitlab_token
-            headers = {"Authorization": f"token {self.Gitlab_token}"}
+            if not self.token:
+                self.token = os.environ.get("ACCESS_TOKEN")
+                assert self.token
+            headers = {"Authorization": f"token {self.token}"}
 
-            login = requests.get(f"{GL_API}/user", headers=headers)
+            login = requests.get(f"{GL_API_REST}/user", headers=headers)
             assert login.json().get("login")
         except AssertionError:
             return {}
