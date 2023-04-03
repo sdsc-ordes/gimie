@@ -175,8 +175,8 @@ class GitlabExtractor(Extractor):
             for user in data["projectMembers"]["edges"]
             if user["node"]["accessLevel"]["stringValue"] == "OWNER"
         ]
-        author = user_author if len(user_author) > 0 else data["group"]
-        self.author = [self._get_author(author)]
+        authors = user_author if len(user_author) > 0 else [data["group"]]
+        self.author = [self._get_author(author) for author in authors]
         # contributors are project members or merge request authors
         project_members = [
             user["node"]["user"]
@@ -249,8 +249,6 @@ class GitlabExtractor(Extractor):
 
     def _get_user(self, node: Dict[str, Any]) -> Person:
         """Extract details from a GraphQL user node."""
-        # Get user's affiliations
-        # To Do
         return Person(
             _id=node["webUrl"],
             identifier=node["username"],
