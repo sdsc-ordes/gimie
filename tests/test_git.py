@@ -2,11 +2,13 @@
 
 import os
 from gimie.sources.git import GitExtractor
+from gimie.project import Project
 import datetime
 import pytest
 
 LOCAL_REPOSITORY = os.getcwd()
 RENKU_REPOSITORY = "https://github.com/SwissDataScienceCenter/renku"
+UNSUPPORTED_PROV = "https://codeberg.org/dnkl/foot"
 
 
 @pytest.fixture
@@ -37,3 +39,15 @@ def test_git_creation_date(local_meta):
     ) == datetime.datetime(
         2022, 12, 7, 10, 19, 31, tzinfo=datetime.timezone.utc
     )
+
+
+def test_clone_extract_github():
+    """Clone Git repository by setting git extractor
+    explicitely and extract metadata locally."""
+    meta = Project(RENKU_REPOSITORY, sources="git")
+
+
+def test_clone_unsupported():
+    """Instantiate Project from unsupported provider
+    with git as default provider"""
+    meta = Project(UNSUPPORTED_PROV)
