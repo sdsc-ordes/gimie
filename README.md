@@ -112,7 +112,7 @@ proj.serialize(format='ttl')
 
 Or to extract only from a specific source:
 ```python
-from gimie.sources.remote import GithubExtractor
+from gimie.sources.github import GithubExtractor
 gh = GithubExtractor('https://github.com/SDSC-ORD/gimie')
 gh.extract()
 
@@ -122,6 +122,7 @@ g = gh.to_graph()
 # To retrieve the serialized graph
 gh.serialize(format='ttl')
 ```
+[For a GitLab project, replace `gimie.sources.github` by `gimie.sources.gitlab`, `GithubExtractor` by `GitlabExtractor`, as well as the URL to the GitLab project.]
 
 ## Outputs
 
