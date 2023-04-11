@@ -19,7 +19,6 @@ from typing import Any, Dict
 
 from gimie.sources.github import GithubExtractor
 from gimie.sources.gitlab import GitlabExtractor
-from gimie.sources.gitlab import GitlabExtractor
 
 # from gimie.sources.git import GitExtractor
 
