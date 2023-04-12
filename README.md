@@ -10,7 +10,7 @@ Gimie (GIt Meta Information Extractor) is a python library and command line tool
 Scientific code repositories contain valuable metadata which can be used to enrich existing catalogues, platforms or databases. This tool aims to easily extract structured metadata from a generic git repositories. The following sources of information are used:
 
 * [x] Github API
-* [ ] Gitlab API
+* [x] Gitlab API
 * [ ] Local Git metadata
 * [ ] License text
 * [ ] Free text in README
@@ -112,7 +112,7 @@ proj.serialize(format='ttl')
 
 Or to extract only from a specific source:
 ```python
-from gimie.sources.remote import GithubExtractor
+from gimie.sources.github import GithubExtractor
 gh = GithubExtractor('https://github.com/SDSC-ORD/gimie')
 gh.extract()
 
@@ -122,6 +122,7 @@ g = gh.to_graph()
 # To retrieve the serialized graph
 gh.serialize(format='ttl')
 ```
+[For a GitLab project, replace `gimie.sources.github` by `gimie.sources.gitlab`, `GithubExtractor` by `GitlabExtractor`, as well as the URL to the GitLab project.]
 
 ## Outputs
 

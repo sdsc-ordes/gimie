@@ -14,14 +14,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 """Sources from which metadata can be extracted by gimie."""
 from typing import Type
 from gimie.sources.abstract import Extractor
 from gimie.sources.github import GithubExtractor
+from gimie.sources.gitlab import GitlabExtractor
 from gimie.sources.git import GitExtractor
-
-# from gimie.sources.gitlab import GitlabExtractor
-
 
 from dataclasses import dataclass
 
@@ -38,5 +37,5 @@ class Source:
 SOURCES = {
     "git": Source(remote=False, git=True, extractor=GitExtractor),
     "github": Source(remote=True, git=True, extractor=GithubExtractor),
-    #'gitlab': Source(remote=True, git=True, extractor=GitlabExtractor),
+    "gitlab": Source(remote=True, git=True, extractor=GitlabExtractor),
 }
