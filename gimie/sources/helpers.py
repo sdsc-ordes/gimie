@@ -15,34 +15,44 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Helper functions to check sources and access extractors."""
-from gimie.sources import (
-    LOCAL_SOURCES,
-    REMOTE_SOURCES,
-    SOURCES,
-)
+from gimie.sources import SOURCES
 
 from gimie.sources.abstract import Extractor
-
-
-def get_local_extractor(path: str, source: str) -> Extractor:
-    return LOCAL_SOURCES[source](path)
-
-
-def get_remote_extractor(path: str, source: str) -> Extractor:
-    return REMOTE_SOURCES[source](path)
+from gimie.utils import validate_url
 
 
 def get_extractor(path: str, source: str) -> Extractor:
-    return SOURCES[source](path)
-
-
-def is_local_source(source: str) -> bool:
-    return source in LOCAL_SOURCES
-
-
-def is_remote_source(source: str) -> bool:
-    return source in REMOTE_SOURCES
+    return SOURCES[source].extractor(path)
 
 
 def is_valid_source(source: str) -> bool:
     return source in SOURCES
+
+
+def is_remote_source(source: str) -> bool:
+    if is_valid_source(source):
+        return SOURCES[source].remote
+    return False
+
+
+def is_local_source(source: str) -> bool:
+    return not is_remote_source(source)
+
+
+def is_git_provider(source: str) -> bool:
+    if is_valid_source(source):
+        return SOURCES[source].git
+    return False
+
+
+def get_git_provider(url: str) -> str:
+    """Given a git repository URL, return the corresponding git provider.
+    Local path or unsupported git providers will return "git"."""
+    # NOTE: We just check if the provider name is in the URL.
+    # There may be a more robust way.
+    if validate_url(url):
+        for name, prov in SOURCES.items():
+            if prov.git and prov.remote and name in url:
+                return name
+    # Fall back to local git if local path of unsupported provider
+    return "git"

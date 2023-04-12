@@ -61,7 +61,6 @@ def data(
     """Extract metadata from a Git repository at the target PATH."""
     proj = Project(path)
     print(proj.serialize(format=format))
-    proj.cleanup()
 
 
 @app.command()

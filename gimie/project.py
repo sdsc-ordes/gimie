@@ -17,12 +17,12 @@
 """Orchestration of multiple extractors for a given project.
 This is the main entry point for end-to-end analysis."""
 from tempfile import gettempdir, TemporaryDirectory
-from typing import Iterable, List, Union
+from typing import Iterable, List, Optional, Union
 from gimie.graph.operations import combine_graphs
 from gimie.utils import validate_url
 from gimie.sources.helpers import (
-    get_local_extractor,
-    get_remote_extractor,
+    get_extractor,
+    get_git_provider,
     is_local_source,
     is_remote_source,
     is_valid_source,
@@ -47,16 +47,14 @@ class Project:
 
     Examples
     --------
-    >>> proj = Project("https://github.com/SDSC-ORD/gimie", sources=['github'])
+    >>> proj = Project("https://github.com/SDSC-ORD/gimie")
     """
 
     def __init__(
-        self, path: str, sources: Union[str, Iterable[str]] = ["github"]
+        self, path: str, sources: Optional[Union[str, Iterable[str]]] = None
     ):
 
-        if isinstance(sources, str):
-            sources = [sources]
-
+        sources = normalize_sources(path, sources)
         # Remember if we cloned to cleanup at the end
         self._cloned = False
         if validate_url(path):
@@ -85,17 +83,10 @@ class Project:
 
         extractors: List[Extractor] = []
         for src in sources:
-            if not is_valid_source(src):
-                raise ValueError(f"Invalid source: {src}.")
-
             if is_remote_source(src):
-                if self.url is None:
-                    raise ValueError(
-                        "Cannot use a remote source with a local project."
-                    )
-                extractor = get_remote_extractor(self.url, src)  # type: ignore
+                extractor = get_extractor(self.url, src)  # type: ignore
             else:
-                extractor = get_local_extractor(self.project_dir, src)
+                extractor = get_extractor(self.project_dir, src)
             extractors.append(extractor)
 
         return extractors
@@ -118,3 +109,52 @@ class Project:
                 shutil.rmtree(self.project_dir)
         except AttributeError:
             pass
+
+    def __del__(self):
+        self.cleanup()
+
+
+def normalize_sources(
+    path: str, sources: Optional[Union[Iterable[str], str]] = None
+) -> List[str]:
+    """Input validation and normalization for metadata sources.
+    Returns a list of all input sources.
+
+    Parameters
+    ----------
+    path :
+        The path to the repository, either a local path or a URL.
+    sources:
+        The metadata sources to use. If None only the git provider is used.
+
+    Returns
+    -------
+    List[str]
+        A list of all input sources. If the git provider was missing
+        from input sources, it is inferred from path.
+
+    Examples
+    --------
+    >>> normalize_sources("https://github.com/SDSC-ORD/gimie")
+    ['github']
+    >>> normalize_sources("https://github.com/SDSC-ORD/gimie", "github")
+    ['github']
+    >>> normalize_sources("https://github.com/SDSC-ORD/gimie", ["github"])
+    ['github']
+    """
+    if isinstance(sources, str):
+        norm = [sources]
+    elif isinstance(sources, Iterable):
+        norm = list(sources)
+    elif sources is None:
+        norm = []
+    else:
+        raise ValueError(f"Invalid sources: {sources}")
+
+    git_provider = get_git_provider(path)
+    if git_provider not in norm:
+        norm.append(git_provider)
+
+    if (not validate_url(path)) and any(map(is_remote_source, norm)):
+        raise ValueError("Cannot use a remote source with a local project.")
+    return norm

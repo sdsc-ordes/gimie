@@ -14,18 +14,25 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Extractors which depend on locally available data. Usually the cloned repository."""
-from functools import cached_property
-import datetime
-from typing import Tuple, List, Optional, Union
+"""Extractor which uses a locally available (usually cloned) repository."""
+from dataclasses import dataclass
+from datetime import datetime
+from typing import List, Optional, Union
+import uuid
 
-from pydriller import Repository
+from calamus import fields
+from calamus.schema import JsonLDSchema
+import git
+import pydriller
 from rdflib import Graph
 
-from gimie.models import Release
+from gimie.models import Person, PersonSchema
+from gimie.graph.namespaces import SDO
 from gimie.sources.abstract import Extractor
+from gimie.utils import generate_uri
 
 
+@dataclass
 class GitExtractor(Extractor):
     """
     This class is responsible for extracting metadata from a git repository.
@@ -37,104 +44,94 @@ class GitExtractor(Extractor):
 
     Attributes
     ----------
-    authors
-    creation_date
-    creator
-    releases
+    author
+    contributors
+    date_created
+    date_modified
     repository: Repository
         The repository we are extracting metadata from.
     """
 
-    def __init__(self, path: str):
-        self.repository = Repository(path)
-
-    @cached_property
-    def authors(self) -> Tuple[str]:
-        """Get the authors of the repository."""
-        commits = self.repository.traverse_commits()
-        authors = set(commit.author.name for commit in commits)
-        return tuple(aut for aut in authors if aut is not None)
+    path: str
+    author: Optional[Person] = None
+    contributors: Optional[List[Person]] = None
+    date_created: Optional[datetime] = None
+    date_modified: Optional[datetime] = None
 
     def extract(self):
-        ...
+        self.repository = pydriller.Repository(self.path)
+        head_commit_hash = git.Repo(self.path).head.commit.hexsha[:7]
+        self._id = generate_uri(head_commit_hash)
+        # Assuming author is the first person to commit
+        self.author = self._get_creator()
+        self.contributors = self._get_contributors()
+        self.date_created = self._get_creation_date()
+        self.date_modified = self._get_modification_date()
 
-    def serialize(self, format: str = "ttl") -> str:
-        ...
+    def to_graph(self) -> Graph:
+        """Generate an RDF graph from the instance"""
+        jd = GitExtractorSchema().dumps(self)
+        g: Graph = Graph().parse(data=str(jd), format="json-ld")
+        g.bind("schema", SDO)
+        return g
 
-    @cached_property
-    def creation_date(self) -> Optional[datetime.datetime]:
+    def _get_contributors(self) -> List[Person]:
+        """Get the authors of the repository."""
+        authors = set()
+        for commit in self.repository.traverse_commits():
+            if commit.author is not None:
+                authors.add((commit.author.name, commit.author.email))
+        return [self._dev_to_person(name, email) for name, email in authors]
+
+    def _get_creation_date(self) -> Optional[datetime]:
         """Get the creation date of the repository."""
         try:
             return next(self.repository.traverse_commits()).author_date
         except StopIteration:
             return None
 
-    @cached_property
-    def creator(self) -> Optional[str]:
+    def _get_modification_date(self) -> Optional[datetime]:
+        """Get the last modification date of the repository."""
+        try:
+            for commit in self.repository.traverse_commits():
+                pass
+            return commit.author_date
+        except (StopIteration, NameError):
+            return None
+
+    def _get_creator(self) -> Optional[Person]:
         """Get the creator of the repository."""
         try:
-            return next(self.repository.traverse_commits()).author.name
+            creator = next(self.repository.traverse_commits()).author
+            return self._dev_to_person(creator.name, creator.email)
         except StopIteration:
             return None
 
-    @cached_property
-    def releases(self) -> Tuple[Union[Release, None]]:
-        """Get the releases of the repository."""
-        try:
-            # This is necessary to initialize the repository
-            next(self.repository.traverse_commits())
-            releases = tuple(
-                Release(
-                    tag=tag.name,
-                    date=tag.commit.authored_datetime,
-                    commit_hash=tag.commit.hexsha,
-                )
-                for tag in self.repository.git.repo.tags  # type: ignore
-            )
-            return tuple(sorted(releases))
-        # When there's no release
-        except StopIteration:
-            return (None,)
-
-    def to_graph(self) -> Graph:
-        """Generate an RDF graph from the instance"""
-        raise NotImplementedError
+    def _dev_to_person(
+        self, name: Optional[str], email: Optional[str]
+    ) -> Person:
+        """Convert a Developer object to a Person object."""
+        if name is None:
+            uid = str(uuid.uuid4())
+        else:
+            uid = name.replace(" ", "_").lower()
+        dev_id = f"{self._id}/{uid}"
+        return Person(
+            _id=dev_id,
+            identifier=uid,
+            name=name,
+            email=email,
+        )
 
 
-class LicenseExtractor(Extractor):
-    """
-    This class provides metadata about software licenses.
-    It requires paths to files containing the license text.
+class GitExtractorSchema(JsonLDSchema):
+    _id = fields.Id()
+    author = fields.Nested(SDO.author, PersonSchema)
+    contributors = fields.Nested(SDO.contributor, PersonSchema, many=True)
+    date_created = fields.Date(SDO.dateCreated)
+    date_modified = fields.Date(SDO.dateModified)
 
-    Attributes
-    ----------
-    paths:
-        The collection of paths containing license information.
-
-    Examples
-    --------
-    # >>> LicenseExtractor('./LICENSE').get_licenses()
-    # ['https://spdx.org/licenses/Apache-2.0']
-    """
-
-    def __init__(self, path: str):
-        self.path: str = path
-
-    def get_licenses(self, min_score: int = 50) -> List[str]:
-        """Returns the SPDX URLs of detected licenses.
-        Performs a diff comparison between file contents and a
-        database of licenses via the scancode API.
-
-        Parameters
-        ----------
-        min_score:
-            The minimal matching score used by scancode (from 0 to 100)
-            to return a license match.
-
-        Returns
-        -------
-        licenses:
-            A list of SPDX URLs matching provided licenses,
-            e.g. https://spdx.org/licenses/Apache-2.0.html.
-        """
-        raise NotImplementedError
+    class Meta:
+        rdf_type = SDO.SoftwareSourceCode
+        model = GitExtractor
+        add_value_types = False
