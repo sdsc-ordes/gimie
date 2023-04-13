@@ -39,8 +39,8 @@ class Project:
 
     Parameters
     ----------
-    path :
-        The path to the repository, either a file path or a URL.
+    url :
+        The URL of the repository.
     sources:
         The metadata sources to use.
 
@@ -50,20 +50,20 @@ class Project:
     """
 
     def __init__(
-        self, path: str, sources: Optional[Union[str, Iterable[str]]] = None
+        self, url: str, sources: Optional[Union[str, Iterable[str]]] = None
     ):
 
-        if not validate_url(path):
+        if not validate_url(url):
             raise ValueError("Input must be a valid URL.")
 
-        sources = normalize_sources(path, sources)
+        sources = normalize_sources(url, sources)
         # Remember if we cloned to cleanup at the end
         self._cloned = False
-        self.url = path
+        self.url = url
         # We only need to clone a remote project
         # if a local extractor is enabled
         if any(map(is_local_source, sources)):
-            self.project_dir = self.clone(path)
+            self.project_dir = self.clone(url)
 
         self.extractors = self.get_extractors(sources)
         for ex in self.extractors:

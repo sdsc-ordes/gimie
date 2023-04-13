@@ -40,7 +40,7 @@ def version_callback(value: bool):
 
 @app.command()
 def data(
-    path: str,
+    url: str,
     only: str = typer.Option(False, "--only", help="Only use these sources."),
     exclude: str = typer.Option(
         False, "--exclude", help="Do not use these sources."
@@ -58,15 +58,15 @@ def data(
         callback=version_callback,
     ),
 ):
-    """Extract metadata from a Git repository at the target PATH."""
-    proj = Project(path)
+    """Extract metadata from a Git repository at the target URL."""
+    proj = Project(url)
     print(proj.serialize(format=format))
 
 
 @app.command()
 def advice(path: str):
     """Show a metadata completion report for a Git repository
-    at the target PATH."""
+    at the target URL."""
     ...
     raise typer.Exit()
 
