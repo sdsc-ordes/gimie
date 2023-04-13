@@ -25,7 +25,6 @@ from gimie.sources.helpers import (
     get_git_provider,
     is_local_source,
     is_remote_source,
-    is_valid_source,
     Extractor,
 )
 import shutil
@@ -54,18 +53,17 @@ class Project:
         self, path: str, sources: Optional[Union[str, Iterable[str]]] = None
     ):
 
+        if not validate_url(path):
+            raise ValueError("Input must be a valid URL.")
+
         sources = normalize_sources(path, sources)
         # Remember if we cloned to cleanup at the end
         self._cloned = False
-        if validate_url(path):
-            self.url = path
-            # We only need to clone a remote project
-            # if a local extractor is enabled
-            if any(map(is_local_source, sources)):
-                self.project_dir = self.clone(path)
-        else:
-            self.url = None
-            self.project_dir = path
+        self.url = path
+        # We only need to clone a remote project
+        # if a local extractor is enabled
+        if any(map(is_local_source, sources)):
+            self.project_dir = self.clone(path)
 
         self.extractors = self.get_extractors(sources)
         for ex in self.extractors:
@@ -101,7 +99,7 @@ class Project:
 
     def cleanup(self):
         """Recursively delete the project. Only works
-        for remote (i.e. cloned) projects."""
+        for cloned projects."""
         try:
             tempdir = gettempdir()
             in_temp = self.project_dir.startswith(tempdir)
@@ -115,15 +113,15 @@ class Project:
 
 
 def normalize_sources(
-    path: str, sources: Optional[Union[Iterable[str], str]] = None
+    url: str, sources: Optional[Union[Iterable[str], str]] = None
 ) -> List[str]:
     """Input validation and normalization for metadata sources.
     Returns a list of all input sources.
 
     Parameters
     ----------
-    path :
-        The path to the repository, either a local path or a URL.
+    url :
+        The URL to the repository.
     sources:
         The metadata sources to use. If None only the git provider is used.
 
@@ -151,10 +149,8 @@ def normalize_sources(
     else:
         raise ValueError(f"Invalid sources: {sources}")
 
-    git_provider = get_git_provider(path)
+    git_provider = get_git_provider(url)
     if git_provider not in norm:
         norm.append(git_provider)
 
-    if (not validate_url(path)) and any(map(is_remote_source, norm)):
-        raise ValueError("Cannot use a remote source with a local project.")
     return norm
