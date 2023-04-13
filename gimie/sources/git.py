@@ -44,6 +44,8 @@ class GitExtractor(Extractor):
 
     Attributes
     ----------
+    uri: Optional[str]
+        The URI to assign the repository in RDF.
     author
     contributors
     date_created
@@ -53,6 +55,7 @@ class GitExtractor(Extractor):
     """
 
     path: str
+    uri: Optional[str] = None
     author: Optional[Person] = None
     contributors: Optional[List[Person]] = None
     date_created: Optional[datetime] = None
@@ -60,8 +63,11 @@ class GitExtractor(Extractor):
 
     def extract(self):
         self.repository = pydriller.Repository(self.path)
-        head_commit_hash = git.Repo(self.path).head.commit.hexsha[:7]
-        self._id = generate_uri(head_commit_hash)
+        if self.uri is None:
+            head_commit_hash = git.Repo(self.path).head.commit.hexsha[:7]
+            self._id = generate_uri(head_commit_hash)
+        else:
+            self._id = self.uri
         # Assuming author is the first person to commit
         self.author = self._get_creator()
         self.contributors = self._get_contributors()

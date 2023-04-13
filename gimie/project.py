@@ -85,6 +85,7 @@ class Project:
                 extractor = get_extractor(self.url, src)  # type: ignore
             else:
                 extractor = get_extractor(self.project_dir, src)
+                extractor.uri = self.url
             extractors.append(extractor)
 
         return extractors
