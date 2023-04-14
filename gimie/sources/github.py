@@ -19,6 +19,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 import os
+import requests
 from typing import Any, Dict, List, Optional, Set, Union
 from urllib.parse import urlparse
 from dotenv import load_dotenv
@@ -50,8 +51,9 @@ def query_contributors(
     NOTE: This is a workaround for the lack of a contributors field in the GraphQL API."""
     owner, name = urlparse(url).path.strip("/").split("/")
     # Get contributors (available in the REST API but not GraphQL)
+    data = f"repos/{owner}/{name}/contributors"
     contributors = send_rest_query(
-        api = GH_API, f"repos/{owner}/{name}/contributors", headers=headers
+        GH_API, data, headers=headers
     )
     ids = [contributor["node_id"] for contributor in contributors]
     # Get all contributors' metadata in 1 GraphQL query
@@ -78,7 +80,7 @@ def query_contributors(
     }"""
 
     contributors = send_graphql_query(
-        api = GH_API, users_query, data={"ids": ids}, headers=headers
+        GH_API, users_query, data={"ids": ids}, headers=headers
     )
     # Drop empty users (e.g. dependabot)
     return [user for user in contributors["data"]["nodes"] if user]

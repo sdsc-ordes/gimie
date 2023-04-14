@@ -1,6 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass
 import os
+import requests
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
@@ -178,7 +179,7 @@ class GitlabExtractor(Extractor):
         }
         }
         """
-        response = query_graphql(api=GL_API_GRAPHQL, project_query, data, self._set_auth())
+        response = query_graphql(GL_API_GRAPHQL, project_query, data, self._set_auth())
         if "errors" in response:
             raise ValueError(response["errors"])
 

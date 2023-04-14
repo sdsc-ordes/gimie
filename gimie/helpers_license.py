@@ -1,5 +1,6 @@
 import os
 import re
+from typing import List
 
 from gimie.graph.namespaces import GIMIE
 
