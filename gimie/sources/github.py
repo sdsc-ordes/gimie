@@ -34,11 +34,11 @@ from gimie.models import (
     OrganizationSchema,
     Person,
     PersonSchema,
-    IRI,
+    IRI
 )
 from gimie.graph.namespaces import SDO
-from gimie.helpers_license import get_spdx_url
-from gimie.helpers_queries import send_rest_query, query_graphql,send_graphql_query
+from gimie.sources.helpers_license import get_spdx_url
+from gimie.sources.helpers_queries import send_rest_query, query_graphql,send_graphql_query
 
 GH_API = "https://api.github.com"
 load_dotenv()
@@ -227,7 +227,7 @@ class GithubExtractor(Extractor):
         """Set authentication headers for GitHub API requests."""
         try:
             if not self.token:
-                self.token = os.environ.get("ACCESS_TOKEN")
+                self.token = os.environ.get("GITHUB_TOKEN")
                 assert self.token
             headers = {"Authorization": f"token {self.token}"}
 

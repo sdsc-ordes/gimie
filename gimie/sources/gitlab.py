@@ -16,10 +16,11 @@ from gimie.models import (
     Organization, 
     OrganizationSchema, 
     Person, 
-    PersonSchema 
+    PersonSchema,
+    IRI
 )
 from gimie.graph.namespaces import SDO
-from gimie.helpers_queries import query_graphql
+from gimie.sources.helpers_queries import query_graphql
 
 GL_API_REST = "https://gitlab.com/api/v4/"
 GL_API_GRAPHQL = "https://gitlab.com/api"
@@ -189,7 +190,7 @@ class GitlabExtractor(Extractor):
         """Set authentication headers for Gitlab API requests."""
         try:
             if not self.token:
-                self.token = os.environ.get("ACCESS_TOKEN")
+                self.token = os.environ.get("GITLAB_TOKEN")
                 assert self.token
             headers = {"Authorization": f"token {self.token}"}
 
@@ -244,8 +245,7 @@ class GitlabExtractorSchema(JsonLDSchema):
     date_created = fields.Date(SDO.dateCreated)
     date_modified = fields.Date(SDO.dateModified)
     # license = IRI(SDO.license)
-    # what is this ?
-    # path = IRI(SDO.CodeRepository)
+    path = IRI(SDO.CodeRepository)
     keywords = fields.List(SDO.keywords, fields.String)
     version = fields.String(SDO.version)
 
