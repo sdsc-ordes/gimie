@@ -1,6 +1,5 @@
 from __future__ import annotations
 from dataclasses import dataclass
-import requests
 import os
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
@@ -12,111 +11,18 @@ from calamus.schema import JsonLDSchema
 from rdflib import Graph
 
 from gimie.sources.abstract import Extractor
-
-
-from gimie.models import Organization, OrganizationSchema, Person, PersonSchema
-
+from gimie.models import (
+    Organization, 
+    OrganizationSchema, 
+    Person, 
+    PersonSchema 
+)
 from gimie.graph.namespaces import SDO
+from gimie.helpers_queries import query_graphql
 
 GL_API_REST = "https://gitlab.com/api/v4/"
 GL_API_GRAPHQL = "https://gitlab.com/api"
 load_dotenv()
-
-
-def send_graphql_query(
-    query: str, data: Dict[str, Any], headers: Dict[str, str]
-) -> Dict[str, Any]:
-    """Generic function to send a GraphQL query to the Gitlab API."""
-    resp = requests.post(
-        url=f"{GL_API_GRAPHQL}/graphql",
-        json={
-            "query": query,
-            "variables": data,
-        },
-        headers=headers,
-    )
-
-    if resp.status_code != 200:
-        raise ConnectionError(resp.json()["message"])
-    return resp.json()
-
-
-def query_repo_graphql(url: str, headers: Dict[str, str]) -> Dict[str, Any]:
-    """Queries the Gitlab GraphQL API to extract metadata about
-    target repository.
-    Parameters
-    ----------
-    url:
-        URL of the repository to query.
-    """
-    group, name = urlparse(url).path.strip("/").split("/")
-    path = f"{group}/{name}"
-    project_query = """
-    query project_query($path: ID!){
-        project(fullPath: $path) {
-            name
-            id
-            description
-            createdAt
-            lastActivityAt
-            group {
-                id
-                name
-                description
-                avatarUrl
-                webUrl
-            }
-            languages {
-                name
-                share
-            }
-            topics
-            projectMembers {
-                edges {
-                    node {
-                    id
-                    accessLevel {
-                        stringValue
-                    }
-                    user {
-                        id
-                        name
-                        username
-                        publicEmail
-                        webUrl
-                    }
-                    }
-                }
-            }
-            mergeRequests{
-                edges{
-                node {
-                    author{
-                    id
-                    name
-                    username
-                    publicEmail
-                    webUrl
-                    }
-                }
-                }
-            }
-            releases {
-                edges {
-                node {
-                    name
-                }
-                }
-            }
-    }
-    }
-    """
-
-    project = send_graphql_query(
-        project_query, data={"path": path}, headers=headers
-    )
-    return project
-
 
 @dataclass
 class GitlabExtractor(Extractor):
@@ -209,7 +115,70 @@ class GitlabExtractor(Extractor):
 
     def _fetch_repo_data(self, url: str) -> Dict[str, Any]:
         """Fetch repository metadata from GraphQL endpoint."""
-        response = query_repo_graphql(url, self._set_auth())
+        group, name = urlparse(url).path.strip("/").split("/")
+        path = f"{group}/{name}"
+        data={"path": path}
+        project_query = """
+        query project_query($path: ID!){
+            project(fullPath: $path) {
+                name
+                id
+                description
+                createdAt
+                lastActivityAt
+                group {
+                    id
+                    name
+                    description
+                    avatarUrl
+                    webUrl
+                }
+                languages {
+                    name
+                    share
+                }
+                topics
+                projectMembers {
+                    edges {
+                        node {
+                        id
+                        accessLevel {
+                            stringValue
+                        }
+                        user {
+                            id
+                            name
+                            username
+                            publicEmail
+                            webUrl
+                        }
+                        }
+                    }
+                }
+                mergeRequests{
+                    edges{
+                    node {
+                        author{
+                        id
+                        name
+                        username
+                        publicEmail
+                        webUrl
+                        }
+                    }
+                    }
+                }
+                releases {
+                    edges {
+                    node {
+                        name
+                    }
+                    }
+                }
+        }
+        }
+        """
+        response = query_graphql(api=GL_API_GRAPHQL, project_query, data, self._set_auth())
         if "errors" in response:
             raise ValueError(response["errors"])
 

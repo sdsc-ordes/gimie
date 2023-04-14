@@ -15,9 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Utility functions used throughout gimie."""
-import os
-import re
-import uuid
+
 from typing import List, Literal
 from urllib.parse import urlparse
 
@@ -66,47 +64,3 @@ def generate_uri(ref: str):
     'https://sdsc-ord.github.io/gimie/abc'
     """
     return str(GIMIE[ref])
-
-
-def locate_licenses(path: str) -> List[str]:
-    """Returns valid potential paths to license files in the project.
-    This uses pattern-matching on file names.
-
-    Parameters
-    ----------
-    path:
-        The root path to search for license files.
-
-    Returns
-    -------
-    license_files:
-        The list of relative paths (from input path) to files which
-        potentially contain license text.
-
-    Examples
-    --------
-    >>> locate_licenses('.')
-    ['./LICENSE']
-    """
-    license_files = []
-    pattern = r".*(license(s)?|reus(e|ing)|copy(ing)?)(\.(txt|md|rst))?$"
-    for root, _, files in os.walk(path):
-        # skip toplevel hidden dirs (e.g. .git/)
-        subdir = os.path.relpath(root, path)
-        if subdir.startswith(".") and subdir != ".":
-            continue
-        for file in files:
-            # skip hidden files
-            if file.startswith("."):
-                continue
-
-            if re.match(pattern, file, flags=re.IGNORECASE):
-                license_path = os.path.join(root, file)
-                license_files.append(license_path)
-
-    return license_files
-
-
-def get_spdx_url(name: str) -> str:
-    """Given an SPDX license identifier, return the full URL."""
-    return f"https://spdx.org/licenses/{name}"
