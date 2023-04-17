@@ -20,7 +20,7 @@ from tempfile import gettempdir, TemporaryDirectory
 from typing import Iterable, List, Optional, Union
 from gimie.graph.operations import combine_graphs
 from gimie.utils import validate_url
-from gimie.sources.helpers import (
+from gimie.sources.helpers_project import (
     get_extractor,
     get_git_provider,
     is_local_source,
