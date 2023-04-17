@@ -194,10 +194,6 @@ class GitlabExtractor(Extractor):
         try:
             if not self.token:
                 self.token = os.environ.get("GITLAB_TOKEN")
-
-                print("This is the token:")
-                print(self.token)
-
                 assert self.token
             headers = {"Authorization": f"token {self.token}"}
 
