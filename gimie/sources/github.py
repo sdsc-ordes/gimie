@@ -34,14 +34,19 @@ from gimie.models import (
     OrganizationSchema,
     Person,
     PersonSchema,
-    IRI
+    IRI,
 )
 from gimie.graph.namespaces import SDO
 from gimie.sources.helpers_license import get_spdx_url
-from gimie.sources.helpers_queries import send_rest_query, query_graphql,send_graphql_query
+from gimie.sources.helpers_queries import (
+    send_rest_query,
+    query_graphql,
+    send_graphql_query,
+)
 
 GH_API = "https://api.github.com"
 load_dotenv()
+
 
 def query_contributors(
     url: str, headers: Dict[str, str]
@@ -52,9 +57,7 @@ def query_contributors(
     owner, name = urlparse(url).path.strip("/").split("/")
     # Get contributors (available in the REST API but not GraphQL)
     data = f"repos/{owner}/{name}/contributors"
-    contributors = send_rest_query(
-        GH_API, data, headers=headers
-    )
+    contributors = send_rest_query(GH_API, data, headers=headers)
     ids = [contributor["node_id"] for contributor in contributors]
     # Get all contributors' metadata in 1 GraphQL query
     users_query = """
@@ -228,7 +231,7 @@ class GithubExtractor(Extractor):
         try:
             if not self.token:
                 self.token = os.environ.get("GITHUB_TOKEN")
-                
+
                 print("This is the token:")
                 print(self.token)
 

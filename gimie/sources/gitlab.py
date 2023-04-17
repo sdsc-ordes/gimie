@@ -13,11 +13,11 @@ from rdflib import Graph
 
 from gimie.sources.abstract import Extractor
 from gimie.models import (
-    Organization, 
-    OrganizationSchema, 
-    Person, 
+    Organization,
+    OrganizationSchema,
+    Person,
     PersonSchema,
-    IRI
+    IRI,
 )
 from gimie.graph.namespaces import SDO
 from gimie.sources.helpers_queries import query_graphql
@@ -25,6 +25,7 @@ from gimie.sources.helpers_queries import query_graphql
 GL_API_REST = "https://gitlab.com/api/v4/"
 GL_API_GRAPHQL = "https://gitlab.com/api"
 load_dotenv()
+
 
 @dataclass
 class GitlabExtractor(Extractor):
@@ -119,7 +120,7 @@ class GitlabExtractor(Extractor):
         """Fetch repository metadata from GraphQL endpoint."""
         group, name = urlparse(url).path.strip("/").split("/")
         path = f"{group}/{name}"
-        data={"path": path}
+        data = {"path": path}
         project_query = """
         query project_query($path: ID!){
             project(fullPath: $path) {
@@ -180,7 +181,9 @@ class GitlabExtractor(Extractor):
         }
         }
         """
-        response = query_graphql(GL_API_GRAPHQL, project_query, data, self._set_auth())
+        response = query_graphql(
+            GL_API_GRAPHQL, project_query, data, self._set_auth()
+        )
         if "errors" in response:
             raise ValueError(response["errors"])
 
@@ -191,7 +194,7 @@ class GitlabExtractor(Extractor):
         try:
             if not self.token:
                 self.token = os.environ.get("GITLAB_TOKEN")
-                
+
                 print("This is the token:")
                 print(self.token)
 

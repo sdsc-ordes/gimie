@@ -4,6 +4,7 @@ from typing import List
 
 from gimie.graph.namespaces import GIMIE
 
+
 def locate_licenses(path: str) -> List[str]:
     """Returns valid potential paths to license files in the project.
     This uses pattern-matching on file names.
