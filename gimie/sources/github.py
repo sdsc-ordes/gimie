@@ -228,6 +228,10 @@ class GithubExtractor(Extractor):
         try:
             if not self.token:
                 self.token = os.environ.get("GITHUB_TOKEN")
+                
+                print("This is the token:")
+                print(self.token)
+
                 assert self.token
             headers = {"Authorization": f"token {self.token}"}
 
