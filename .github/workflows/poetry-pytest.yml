@@ -32,5 +32,5 @@ jobs:
       - name: Test with pytest
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_GITHUB_TOKEN }}
-          GITLAB_TOKEN: ${{ secrets.ACCESS_GITLAB_ACCESS_TOKEN }}
+          GITLAB_TOKEN: ${{ secrets.GITLAB_ACCESS_TOKEN }}
         run: poetry run pytest
