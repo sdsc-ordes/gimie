@@ -5,6 +5,7 @@ from gimie.sources.git import GitExtractor
 from gimie.project import Project
 import datetime
 import pytest
+from gimie.graph.namespaces import GIMIE
 
 LOCAL_REPOSITORY = os.getcwd()
 RENKU_REPOSITORY = "https://github.com/SwissDataScienceCenter/renku"
@@ -30,6 +31,7 @@ def test_git_authors(local_meta):
     ]
     assert all([n in contribs for n in names])
     assert local_meta.author.name == "Cyril Matthey-Doret"
+    assert local_meta._id.startswith(GIMIE), "ID should be a Gimie URI"
 
 
 def test_git_creation_date(local_meta):
@@ -39,6 +41,12 @@ def test_git_creation_date(local_meta):
     ) == datetime.datetime(
         2022, 12, 7, 10, 19, 31, tzinfo=datetime.timezone.utc
     )
+
+
+def test_set_uri():
+    meta = GitExtractor(LOCAL_REPOSITORY, _id="https://example.com/test")
+    meta.extract()
+    assert meta._id == "https://example.com/test"
 
 
 def test_clone_extract_github():

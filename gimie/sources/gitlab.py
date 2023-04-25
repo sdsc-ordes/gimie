@@ -20,7 +20,7 @@ from gimie.models import (
     IRI,
 )
 from gimie.graph.namespaces import SDO
-from gimie.sources.helpers_queries import query_graphql
+from gimie.sources.common.queries import query_graphql
 
 GL_API_REST = "https://gitlab.com/api/v4/"
 GL_API_GRAPHQL = "https://gitlab.com/api"
@@ -33,6 +33,7 @@ class GitlabExtractor(Extractor):
     extract metadata into linked data."""
 
     path: str
+    _id: Optional[str] = None
     token: Optional[str] = None
 
     name: Optional[str] = None
@@ -58,7 +59,8 @@ class GitlabExtractor(Extractor):
 
     def extract(self):
         """Extract metadata from target Gitlab repository."""
-        self._id = self.path
+        if self._id is None:
+            self._id = self.path
         self.name = urlparse(self.path).path.strip("/")
 
         # change fetch project or group

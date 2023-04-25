@@ -82,7 +82,7 @@ class Project:
             if is_remote_source(src):
                 extractor = get_extractor(self.url, src)  # type: ignore
             else:
-                extractor = get_extractor(self.project_dir, src)
+                extractor = get_extractor(self.project_dir, src, _id=self.url)
             extractors.append(extractor)
 
         return extractors
@@ -156,25 +156,43 @@ def normalize_sources(
     return norm
 
 
-def get_extractor(path: str, source: str) -> Extractor:
-    return SOURCES[source].extractor(path)
+def get_extractor(
+    path: str, source: str, _id: Optional[str] = None
+) -> Extractor:
+    """Instantiate the correct extractor for a given source.
+
+    Parameters
+    -----------
+    path
+        Where the repository metadata is extracted from.
+    source
+        The source of the repository (git, gitlab, github, ...).
+    _id
+        The identifier to use for the repository. If not provided,
+        it will be determined automatically by the extractor
+    """
+    return SOURCES[source].extractor(path, _id=_id)
 
 
 def is_valid_source(source: str) -> bool:
+    """Check if input is a valid source for gimie."""
     return source in SOURCES
 
 
 def is_remote_source(source: str) -> bool:
+    """Check if input is a valid remote source for gimie."""
     if is_valid_source(source):
         return SOURCES[source].remote
     return False
 
 
 def is_local_source(source: str) -> bool:
+    """Check if input is a valid local source for gimie."""
     return not is_remote_source(source)
 
 
 def is_git_provider(source: str) -> bool:
+    """Check if input is a valid git provider for gimie."""
     if is_valid_source(source):
         return SOURCES[source].git
     return False
