@@ -20,7 +20,7 @@ from gimie.models import (
     IRI,
 )
 from gimie.graph.namespaces import SDO
-from gimie.sources.helpers_queries import query_graphql
+from gimie.sources.common.queries import query_graphql
 
 GL_API_REST = "https://gitlab.com/api/v4/"
 GL_API_GRAPHQL = "https://gitlab.com/api"

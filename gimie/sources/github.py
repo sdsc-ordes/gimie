@@ -37,8 +37,8 @@ from gimie.models import (
     IRI,
 )
 from gimie.graph.namespaces import SDO
-from gimie.sources.helpers_license import get_spdx_url
-from gimie.sources.helpers_queries import (
+from gimie.sources.common.license import get_spdx_url
+from gimie.sources.common.queries import (
     send_rest_query,
     query_graphql,
     send_graphql_query,
