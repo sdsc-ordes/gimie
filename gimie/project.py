@@ -30,8 +30,6 @@ from gimie.sources.abstract import Extractor
 from gimie.utils import validate_url
 
 
-
-
 class Project:
     """A class to represent a project's git repository.
 
@@ -157,6 +155,7 @@ def normalize_sources(
         raise ValueError("Cannot use a remote source with a local project.")
     return norm
 
+
 def get_extractor(path: str, source: str) -> Extractor:
     return SOURCES[source].extractor(path)
 
@@ -192,4 +191,3 @@ def get_git_provider(url: str) -> str:
                 return name
     # Fall back to local git if local path of unsupported provider
     return "git"
-
