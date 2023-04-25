@@ -18,8 +18,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
-import requests
 import os
+import requests
 from typing import Any, Dict, List, Optional, Set, Union
 from urllib.parse import urlparse
 from dotenv import load_dotenv
@@ -37,40 +37,15 @@ from gimie.models import (
     IRI,
 )
 from gimie.graph.namespaces import SDO
-from gimie.utils import get_spdx_url
+from gimie.sources.helpers_license import get_spdx_url
+from gimie.sources.helpers_queries import (
+    send_rest_query,
+    query_graphql,
+    send_graphql_query,
+)
 
 GH_API = "https://api.github.com"
 load_dotenv()
-
-
-def send_rest_query(query: str, headers: Dict[str, str]) -> Dict[str, Any]:
-    """Generic function to send a GraphQL query to the GitHub API."""
-    resp = requests.get(
-        url=f"{GH_API}/{query}",
-        headers=headers,
-    )
-
-    if resp.status_code != 200:
-        raise ConnectionError(resp.json()["message"])
-    return resp.json()
-
-
-def send_graphql_query(
-    query: str, data: Dict[str, Any], headers: Dict[str, str]
-) -> Dict[str, Any]:
-    """Generic function to send a GraphQL query to the GitHub API."""
-    resp = requests.post(
-        url=f"{GH_API}/graphql",
-        json={
-            "query": query,
-            "variables": data,
-        },
-        headers=headers,
-    )
-
-    if resp.status_code != 200:
-        raise ConnectionError(resp.json()["message"])
-    return resp.json()
 
 
 def query_contributors(
@@ -81,9 +56,8 @@ def query_contributors(
     NOTE: This is a workaround for the lack of a contributors field in the GraphQL API."""
     owner, name = urlparse(url).path.strip("/").split("/")
     # Get contributors (available in the REST API but not GraphQL)
-    contributors = send_rest_query(
-        f"repos/{owner}/{name}/contributors", headers=headers
-    )
+    data = f"repos/{owner}/{name}/contributors"
+    contributors = send_rest_query(GH_API, data, headers=headers)
     ids = [contributor["node_id"] for contributor in contributors]
     # Get all contributors' metadata in 1 GraphQL query
     users_query = """
@@ -109,93 +83,10 @@ def query_contributors(
     }"""
 
     contributors = send_graphql_query(
-        users_query, data={"ids": ids}, headers=headers
+        GH_API, users_query, data={"ids": ids}, headers=headers
     )
     # Drop empty users (e.g. dependabot)
     return [user for user in contributors["data"]["nodes"] if user]
-
-
-def query_repo_graphql(url: str, headers: Dict[str, str]) -> Dict[str, Any]:
-    """Queries the GitHub GraphQL API to extract metadata about
-    target repository.
-
-    Parameters
-    ----------
-    url:
-        URL of the repository to query.
-    """
-    owner, name = urlparse(url).path.strip("/").split("/")
-    repo_query = """
-    query repo($owner: String!, $name: String!) {
-        repository(name: $name, owner: $owner) {
-            createdAt
-            description
-            latestRelease {
-                name
-            }
-            licenseInfo {
-                spdxId
-            }
-            mentionableUsers(first: 100) {
-                nodes {
-                    login
-                    name
-                    avatarUrl
-                    company
-                    organizations(first: 100) {
-                        nodes {
-                            avatarUrl
-                            description
-                            login
-                            name
-                            url
-                        }
-                    }
-                    url
-                }
-            }
-            name
-            owner {
-                avatarUrl
-                login
-                url
-                ... on User {
-                    company
-                    name
-                    organizations(first: 100) {
-                        nodes {
-                            avatarUrl
-                            description
-                            login
-                            name
-                            url
-                        }
-                    }
-                }
-                ... on Organization {
-                    name
-                    description
-                }
-            }
-            primaryLanguage {
-                name
-            }
-            repositoryTopics(first: 10) {
-                nodes {
-                    topic {
-                        name
-                    }
-                }
-            }
-            updatedAt
-            url
-        }
-    }
-    """
-    repo = send_graphql_query(
-        repo_query, data={"owner": owner, "name": name}, headers=headers
-    )
-    return repo
 
 
 @dataclass
@@ -205,7 +96,7 @@ class GithubExtractor(Extractor):
 
     path: str
     _id: Optional[str] = None
-    github_token: Optional[str] = None
+    token: Optional[str] = None
 
     name: Optional[str] = None
     author: Optional[Union[Organization, Person]] = None
@@ -252,7 +143,76 @@ class GithubExtractor(Extractor):
 
     def _fetch_repo_data(self, url: str) -> Dict[str, Any]:
         """Fetch repository metadata from GraphQL endpoint."""
-        response = query_repo_graphql(url, self._set_auth())
+        owner, name = urlparse(url).path.strip("/").split("/")
+        data = {"owner": owner, "name": name}
+        repo_query = """
+        query repo($owner: String!, $name: String!) {
+            repository(name: $name, owner: $owner) {
+                createdAt
+                description
+                latestRelease {
+                    name
+                }
+                licenseInfo {
+                    spdxId
+                }
+                mentionableUsers(first: 100) {
+                    nodes {
+                        login
+                        name
+                        avatarUrl
+                        company
+                        organizations(first: 100) {
+                            nodes {
+                                avatarUrl
+                                description
+                                login
+                                name
+                                url
+                            }
+                        }
+                        url
+                    }
+                }
+                name
+                owner {
+                    avatarUrl
+                    login
+                    url
+                    ... on User {
+                        company
+                        name
+                        organizations(first: 100) {
+                            nodes {
+                                avatarUrl
+                                description
+                                login
+                                name
+                                url
+                            }
+                        }
+                    }
+                    ... on Organization {
+                        name
+                        description
+                    }
+                }
+                primaryLanguage {
+                    name
+                }
+                repositoryTopics(first: 10) {
+                    nodes {
+                        topic {
+                            name
+                        }
+                    }
+                }
+                updatedAt
+                url
+            }
+        }
+        """
+        response = query_graphql(GH_API, repo_query, data, self._set_auth())
         if "errors" in response:
             raise ValueError(response["errors"])
 
@@ -271,10 +231,10 @@ class GithubExtractor(Extractor):
     def _set_auth(self) -> Any:
         """Set authentication headers for GitHub API requests."""
         try:
-            if not self.github_token:
-                self.github_token = os.environ.get("ACCESS_TOKEN")
-                assert self.github_token
-            headers = {"Authorization": f"token {self.github_token}"}
+            if not self.token:
+                self.token = os.environ.get("GITHUB_TOKEN")
+                assert self.token
+            headers = {"Authorization": f"token {self.token}"}
 
             login = requests.get(f"{GH_API}/user", headers=headers)
             assert login.json().get("login")

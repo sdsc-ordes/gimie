@@ -18,20 +18,16 @@
 This is the main entry point for end-to-end analysis."""
 from tempfile import gettempdir, TemporaryDirectory
 from typing import Iterable, List, Optional, Union
-from gimie.graph.operations import combine_graphs
-from gimie.utils import validate_url
-from gimie.sources.helpers import (
-    get_extractor,
-    get_git_provider,
-    is_local_source,
-    is_remote_source,
-    is_valid_source,
-    Extractor,
-)
-import shutil
 
+import shutil
 import git
 from rdflib import Graph
+
+from gimie.graph.operations import combine_graphs
+from gimie.utils import validate_url
+from gimie.sources import SOURCES
+from gimie.sources.abstract import Extractor
+from gimie.utils import validate_url
 
 
 class Project:
@@ -158,3 +154,40 @@ def normalize_sources(
     if (not validate_url(path)) and any(map(is_remote_source, norm)):
         raise ValueError("Cannot use a remote source with a local project.")
     return norm
+
+
+def get_extractor(path: str, source: str) -> Extractor:
+    return SOURCES[source].extractor(path)
+
+
+def is_valid_source(source: str) -> bool:
+    return source in SOURCES
+
+
+def is_remote_source(source: str) -> bool:
+    if is_valid_source(source):
+        return SOURCES[source].remote
+    return False
+
+
+def is_local_source(source: str) -> bool:
+    return not is_remote_source(source)
+
+
+def is_git_provider(source: str) -> bool:
+    if is_valid_source(source):
+        return SOURCES[source].git
+    return False
+
+
+def get_git_provider(url: str) -> str:
+    """Given a git repository URL, return the corresponding git provider.
+    Local path or unsupported git providers will return "git"."""
+    # NOTE: We just check if the provider name is in the URL.
+    # There may be a more robust way.
+    if validate_url(url):
+        for name, prov in SOURCES.items():
+            if prov.git and prov.remote and name in url:
+                return name
+    # Fall back to local git if local path of unsupported provider
+    return "git"
