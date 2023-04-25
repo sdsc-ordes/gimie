@@ -32,6 +32,8 @@ class Extractor(ABC):
 
     def __init__(self, path: str, _id: Optional[str] = None):
         self.path = path
+        if _id is not None:
+            self._id = _id
 
     @abstractmethod
     def extract(self):

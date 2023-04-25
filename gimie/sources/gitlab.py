@@ -124,6 +124,7 @@ class GitlabExtractor(Extractor):
     extract metadata into linked data."""
 
     path: str
+    _id: Optional[str] = None
     token: Optional[str] = None
 
     name: Optional[str] = None
@@ -149,7 +150,8 @@ class GitlabExtractor(Extractor):
 
     def extract(self):
         """Extract metadata from target Gitlab repository."""
-        self._id = self.path
+        if self._id is None:
+            self._id = self.path
         self.name = urlparse(self.path).path.strip("/")
 
         # change fetch project or group

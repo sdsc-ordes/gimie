@@ -204,6 +204,7 @@ class GithubExtractor(Extractor):
     extract metadata into linked data."""
 
     path: str
+    _id: Optional[str] = None
     github_token: Optional[str] = None
 
     name: Optional[str] = None
@@ -227,7 +228,8 @@ class GithubExtractor(Extractor):
 
     def extract(self):
         """Extract metadata from target GitHub repository."""
-        self._id = self.path
+        if self._id is None:
+            self._id = self.path
         self.name = urlparse(self.path).path.strip("/")
         data = self._fetch_repo_data(self.path)
         self.author = self._get_author(data["owner"])
