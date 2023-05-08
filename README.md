@@ -107,8 +107,8 @@ gh.serialize(format='ttl')
 
 ## Outputs
 
-The default output is JSON-ld, a JSON serialization of the [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework) data model. We follow the schema recommended by [codemeta](https://codemeta.github.io/).
-Supported formats are json-ld, turtle and n-triples (by specifying the `--format` argument in your call i.e. `gimie data https://github.com/numpy/numpy --format 'ttl'`).
+The default output is [Turtle](https://www.w3.org/TR/turtle/), a textual syntax for [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework) data model. We follow the schema recommended by [codemeta](https://codemeta.github.io/).
+Supported formats are turtle, json-ld and n-triples (by specifying the `--format` argument in your call i.e. `gimie data https://github.com/numpy/numpy --format 'ttl'`).
 
 With no specifications, Gimie will print results in the terminal. Want to save Gimie output to a file? Add your file path to the end : `gimie data https://github.com/numpy/numpy > path_to_output/gimie_output.ttl`
 
