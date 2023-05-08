@@ -15,7 +15,11 @@ Scientific code repositories contain valuable metadata which can be used to enri
 * [ ] Free text in README
 * [ ] Renku project metadata
 
-## Installation
+----------------------------------------------------------------------
+
+Using Gimie: easy peasy, it's a 3 step process. 
+
+## STEP 1: Installation
 
 To install the stable version on PyPI:
 
@@ -38,65 +42,43 @@ docker pull ghcr.io/sdsc-ord/gimie:latest
 docker run -e ACCESS_TOKEN=$ACCESS_TOKEN ghcr.io/sdsc-ord/gimie:latest gimie data <repo>
 ```
 
-
-### For development:
-
-activate a conda or virtual environment with Python 3.8 or higher
-
-```shell
-git clone https://github.com/SDSC-ORD/gimie && cd gimie
-make install
-```
-
-run tests:
-
-```shell
-make test
-```
-
-run checks:
-
-```shell
-make check
-```
-
-## Usage
-
-### Set your github credentials
+## STEP 2 : Set your credentials
 
 In order to avoid rate limits with the github api, you need to provide your github
-username and a github token with the `read:org` scope: see
-[here ](https://docs.github.com/en/enterprise-server@3.4/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
-on how to generate a github token.
+username and a github token with the `read:org` scope. 
 
-There are 2 options for setting up your github token in your local environment:
+### A. Create access tokens
 
-**Option 1:**
+New to access tokens? Or don't know how to get your Github / Gitlab token ? 
 
-```
-cp .env.dist .env
-```
+Have no fear, see
+[here for Github tokens](https://docs.github.com/en/enterprise-server@3.4/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) and [here for Gitlab tokens](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html).
+(Note: tokens are as precious as passwords! Treat them as such.)
 
-And then edit the `.env` file and put your github token in.
+### B. Set your access tokens via the Terminal
 
-**Option 2:**
+Gimie will use your access tokens to gather information for you. If you want info about a Github repo, Gimie needs your Github token; if you want info about a Gitlab Project then Gimie needs your Gitlab token.
 
-Add your github token in your terminal:
-
+Add your tokens one by one in your terminal:
+your Github token:
 ```bash
-export ACCESS_TOKEN=
+export GITHUB_TOKEN=
+```
+and/or your Gitlab token:
+```bash
+export GITLAB_TOKEN=
 ```
 
-After the github token has been added, you can run the command without running into an github api limit.
-Otherwise you can still run the command, but might hit that limit after running the command several times.
+## STEP 3: GIMIE info ! Run Gimie
 
-### Run the command
+### As a command line tool
 
-As a command line tool:
 ```shell
 gimie data https://github.com/numpy/numpy
 ```
-As a python library:
+(want a Gitlab project instead? Just replace the URL in the command line) 
+
+### As a python library
 
 ```python
 from gimie.project import Project
@@ -133,11 +115,39 @@ Supported formats are json-ld, turtle and n-triples.
 * Currently, gimie will only the first 100 contributors of a repository (in arbitrary order), and for each users, at most 100 affiliations.
 * If a Github repository is owned by an organization, all "mentionable users" are reported as contributors. This will include all members of the organization in addition to contributors.
 
+----------------------------------------------------------------------
+
 ## Contributing
 
 All contributions are welcome. New functions and classes should have associated tests and docstrings following the [numpy style guide](https://numpydoc.readthedocs.io/en/latest/format.html).
 
 The code formatting standard we use is [black](https://github.com/psf/black), with `--line-length=79` to follow [PEP8](https://peps.python.org/pep-0008/) recommendations. We use [pytest](https://docs.pytest.org/en/7.2.x/) as our testing framework. This project uses [pyproject.toml](https://pip.pypa.io/en/stable/reference/build-system/pyproject-toml/) to define package information, requirements and tooling configuration.
+
+### For development:
+
+activate a conda or virtual environment with Python 3.8 or higher
+
+```shell
+git clone https://github.com/SDSC-ORD/gimie && cd gimie
+make install
+```
+
+run tests:
+
+```shell
+make test
+```
+
+run checks:
+
+```shell
+make check
+```
+for an easier use Github/Gitlab APIs, place your access tokens in the `.env` file: (and don't worry, the `.gitignore` will ignore them when you push to GitHub) 
+
+```
+cp .env.dist .env
+```
 
 ## Releases and Publishing on Pypi
 
