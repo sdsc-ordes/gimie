@@ -68,7 +68,9 @@ class GitlabExtractor(Extractor):
 
         # unique to Gitlab Extractor
         self.identifier = urlparse(data["id"]).path.split("/")[2]
-        #api only fetches group in immediate hierarchy, does not give nested groups
+        #at the moment, Gimie fetches only the group directly related to the project
+        #any mother groups are present in the group name in the form: mother_group/subgroup/project
+        data["group"]["name"] = "/".join(self.name.split("/")[0:-1])
         self.sourceOrganization = self._get_organization(data["group"])
 
         # Below are standard extracts
