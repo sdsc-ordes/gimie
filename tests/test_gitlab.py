@@ -4,7 +4,8 @@ import pytest
 TEST_REPOS = [
     "https://gitlab.com/inkscape/inkscape",  # Owned by multiple persons, has releases
     "https://gitlab.com/openrgb-pvazny/OpenRGB",  # No user owner so group owner, no releases
-    "https://gitlab.com/gitlab-org/gitlab-runner",  # No user owner so group owner, has releases
+    "https://gitlab.com/gitlab-org/gitlab-runner", # No user owner so group owner, has releases
+    "https://gitlab.com/commonground/haven/haven", # Nested groups 
 ]
 
 

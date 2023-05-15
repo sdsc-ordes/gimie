@@ -63,11 +63,12 @@ class GitlabExtractor(Extractor):
             self._id = self.path
         self.name = urlparse(self.path).path.strip("/")
 
-        # change fetch project or group
-        data = self._fetch_repo_data(self.path)
+        # fetch metadata
+        data = self._fetch_repo_data(self.name)
 
         # unique to Gitlab Extractor
         self.identifier = urlparse(data["id"]).path.split("/")[2]
+        #api only fetches group in immediate hierarchy, does not give nested groups
         self.sourceOrganization = self._get_organization(data["group"])
 
         # Below are standard extracts
@@ -118,10 +119,8 @@ class GitlabExtractor(Extractor):
         # if resp.status_code == 200:
         #     self.license = resp.json()
 
-    def _fetch_repo_data(self, url: str) -> Dict[str, Any]:
+    def _fetch_repo_data(self, path: str) -> Dict[str, Any]:
         """Fetch repository metadata from GraphQL endpoint."""
-        group, name = urlparse(url).path.strip("/").split("/")
-        path = f"{group}/{name}"
         data = {"path": path}
         project_query = """
         query project_query($path: ID!){
