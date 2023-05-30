@@ -46,7 +46,7 @@ class GitlabExtractor(Extractor):
     date_modified: Optional[datetime] = None
     version: Optional[str] = None
     keywords: Optional[List[str]] = None
-    sourceOrganization: Optional[Organization] = None
+    source_organization: Optional[Organization] = None
     download_url: Optional[str] = None
     # license: Optional[str] = None
 
@@ -70,7 +70,7 @@ class GitlabExtractor(Extractor):
         self.identifier = urlparse(data["id"]).path.split("/")[2]
         # at the moment, Gimie fetches only the group directly related to the project
         # the group name will take the form: parent/subgroup
-        self.sourceOrganization = self._safe_extract_group(data)
+        self.source_organization = self._safe_extract_group(data)
         self.description = data["description"]
         self.prog_langs = [lang["name"] for lang in data["languages"]]
         self.date_created = datetime.fromisoformat(data["createdAt"][:-1])
@@ -115,7 +115,9 @@ class GitlabExtractor(Extractor):
                 lambda m: m["node"]["accessLevel"]["stringValue"] == "OWNER",
                 members,
             )
-            return [self._get_author(owner) for owner in owners]
+            return [
+                self._get_author(owner["node"]["user"]) for owner in owners
+            ]
 
         if repo["group"] is not None:
             return [self._get_author(repo["group"])]
@@ -239,12 +241,15 @@ class GitlabExtractor(Extractor):
 
     def _get_organization(self, node: Dict[str, Any]) -> Organization:
         """Extract details from a GraphQL organization node."""
-        return Organization(
-            _id=node["webUrl"],
-            name=node["name"],
-            description=node.get("description"),
-            logo=node.get("avatarUrl"),
-        )
+        try:
+            return Organization(
+                _id=node["webUrl"],
+                name=node["name"],
+                description=node.get("description"),
+                logo=node.get("avatarUrl"),
+            )
+        except KeyError:
+            breakpoint()
 
     def _get_user(self, node: Dict[str, Any]) -> Person:
         """Extract details from a GraphQL user node."""
@@ -262,7 +267,7 @@ class GitlabExtractorSchema(JsonLDSchema):
     _id = fields.Id()
     name = fields.String(SDO.name)
     identifier = fields.String(SDO.identifier)
-    sourceOrganization = fields.Nested(SDO.isPartOf, OrganizationSchema)
+    source_organization = fields.Nested(SDO.isPartOf, OrganizationSchema)
     author = fields.Nested(
         SDO.author, [PersonSchema, OrganizationSchema], many=True
     )
