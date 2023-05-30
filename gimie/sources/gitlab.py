@@ -241,15 +241,12 @@ class GitlabExtractor(Extractor):
 
     def _get_organization(self, node: Dict[str, Any]) -> Organization:
         """Extract details from a GraphQL organization node."""
-        try:
-            return Organization(
-                _id=node["webUrl"],
-                name=node["name"],
-                description=node.get("description"),
-                logo=node.get("avatarUrl"),
-            )
-        except KeyError:
-            breakpoint()
+        return Organization(
+            _id=node["webUrl"],
+            name=node["name"],
+            description=node.get("description"),
+            logo=node.get("avatarUrl"),
+        )
 
     def _get_user(self, node: Dict[str, Any]) -> Person:
         """Extract details from a GraphQL user node."""
