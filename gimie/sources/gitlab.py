@@ -66,14 +66,11 @@ class GitlabExtractor(Extractor):
         # fetch metadata
         data = self._fetch_repo_data(self.name)
 
-        # unique to Gitlab Extractor
+        # Each Gitlab project has a unique identifier (integer)
         self.identifier = urlparse(data["id"]).path.split("/")[2]
         # at the moment, Gimie fetches only the group directly related to the project
-        # any mother groups are present in the group name in the form: mother_group/subgroup/project
-        data["group"]["name"] = "/".join(self.name.split("/")[0:-1])
-        self.sourceOrganization = self._get_organization(data["group"])
-
-        # Below are standard extracts
+        # the group name will take the form: parent/subgroup
+        self.sourceOrganization = self._safe_extract_group(data)
         self.description = data["description"]
         self.prog_langs = [lang["name"] for lang in data["languages"]]
         self.date_created = datetime.fromisoformat(data["createdAt"][:-1])
@@ -84,31 +81,9 @@ class GitlabExtractor(Extractor):
 
         # Get contributors as the project members that are not owners and those that have written merge requests
         # owners are either multiple individuals or a group, if not user is marked as owner
-        user_author = [
-            user["node"]["user"]
-            for user in data["projectMembers"]["edges"]
-            if user["node"]["accessLevel"]["stringValue"] == "OWNER"
-        ]
-        authors = user_author if len(user_author) > 0 else [data["group"]]
-        self.author = [self._get_author(author) for author in authors]
+        self.author = self._safe_extract_author(data)
         # contributors are project members or merge request authors
-        project_members = [
-            user["node"]["user"]
-            for user in data["projectMembers"]["edges"]
-            if user["node"]["accessLevel"]["stringValue"] != "OWNER"
-        ]
-        merge_request_authors = [
-            author["node"]["author"]
-            for author in data["mergeRequests"]["edges"]
-        ]
-        duplicate_contributors = project_members + merge_request_authors
-        self.contributors = [
-            self._get_user(dict(unique))
-            for unique in set(
-                tuple(sorted(contrib.items()))
-                for contrib in duplicate_contributors
-            )
-        ]
+        self.contributors = self._safe_extract_contributors(data)
 
         if data["releases"] and (len(data["releases"]["edges"]) > 0):
             # go into releases and take the name from the first node (most recent)
@@ -121,11 +96,58 @@ class GitlabExtractor(Extractor):
         # if resp.status_code == 200:
         #     self.license = resp.json()
 
+    def _safe_extract_group(self, repo: dict[str, Any]) -> Organization | None:
+        """Extract the group from a GraphQL repository node if it has one."""
+        if (self.name is not None) and (repo["group"] is not None):
+            repo["group"]["name"] = "/".join(self.name.split("/")[0:-1])
+            return self._get_organization(repo["group"])
+        return None
+
+    def _safe_extract_author(
+        self, repo: dict[str, Any]
+    ) -> list[Person | Organization]:
+        """Extract the author from a GraphQL repository node.
+        projectMembers is used if available, otherwise the author
+        is inferred from the project url."""
+        members = repo["projectMembers"]["edges"]
+        if len(members) > 0:
+            owners = filter(
+                lambda m: m["node"]["accessLevel"]["stringValue"] == "OWNER",
+                members,
+            )
+            return [self._get_author(owner) for owner in owners]
+
+        if repo["group"] is not None:
+            return [self._get_author(repo["group"])]
+
+        author = {
+            "webUrl": "/".join(self.path.split("/")[:-1]),
+            "username": self.name.split("/")[0],
+        }
+        return [self._get_author(author)]
+
+    def _safe_extract_contributors(
+        self, repo: dict[str, Any]
+    ) -> list[Person] | None:
+        members = [
+            user["node"]["user"]
+            for user in repo["projectMembers"]["edges"]
+            if user["node"]["accessLevel"]["stringValue"] != "OWNER"
+        ]
+        merge_request_authors = [
+            author["node"]["author"]
+            for author in repo["mergeRequests"]["edges"]
+        ]
+        contributors = members + merge_request_authors
+        # Drop duplicate (unhashable) dicts by "id" key
+        uniq_contrib = list({c["id"]: c for c in contributors}.values())
+        return [self._get_user(contrib) for contrib in uniq_contrib]
+
     def _fetch_repo_data(self, path: str) -> Dict[str, Any]:
         """Fetch repository metadata from GraphQL endpoint."""
         data = {"path": path}
         project_query = """
-        query project_query($path: ID!){
+        query project_query($path: ID!) {
             project(fullPath: $path) {
                 name
                 id
@@ -162,9 +184,9 @@ class GitlabExtractor(Extractor):
                     }
                 }
                 mergeRequests{
-                    edges{
+                    edges {
                     node {
-                        author{
+                        author {
                         id
                         name
                         username
@@ -220,8 +242,8 @@ class GitlabExtractor(Extractor):
         return Organization(
             _id=node["webUrl"],
             name=node["name"],
-            description=node["description"],
-            logo=node["avatarUrl"],
+            description=node.get("description"),
+            logo=node.get("avatarUrl"),
         )
 
     def _get_user(self, node: Dict[str, Any]) -> Person:
@@ -229,8 +251,8 @@ class GitlabExtractor(Extractor):
         return Person(
             _id=node["webUrl"],
             identifier=node["username"],
-            name=node["name"],
-            email=node["publicEmail"],
+            name=node.get("name"),
+            email=node.get("publicEmail"),
         )
 
 
