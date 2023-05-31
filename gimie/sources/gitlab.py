@@ -20,7 +20,7 @@ from gimie.models import (
     IRI,
 )
 from gimie.graph.namespaces import SDO
-from gimie.sources.common.queries import query_graphql
+from gimie.sources.common.queries import send_graphql_query, send_rest_query
 
 GL_API_REST = "https://gitlab.com/api/v4/"
 GL_API_GRAPHQL = "https://gitlab.com/api"
@@ -96,7 +96,9 @@ class GitlabExtractor(Extractor):
         # if resp.status_code == 200:
         #     self.license = resp.json()
 
-    def _safe_extract_group(self, repo: dict[str, Any]) -> Organization | None:
+    def _safe_extract_group(
+        self, repo: Dict[str, Any]
+    ) -> Optional[Organization]:
         """Extract the group from a GraphQL repository node if it has one."""
         if (self.name is not None) and (repo["group"] is not None):
             repo["group"]["name"] = "/".join(self.name.split("/")[0:-1])
@@ -104,8 +106,8 @@ class GitlabExtractor(Extractor):
         return None
 
     def _safe_extract_author(
-        self, repo: dict[str, Any]
-    ) -> list[Person | Organization]:
+        self, repo: Dict[str, Any]
+    ) -> List[Union[Person, Organization]]:
         """Extract the author from a GraphQL repository node.
         projectMembers is used if available, otherwise the author
         is inferred from the project url."""
@@ -122,11 +124,23 @@ class GitlabExtractor(Extractor):
         if repo["group"] is not None:
             return [self._get_author(repo["group"])]
 
-        author = {
-            "webUrl": "/".join(self.path.split("/")[:-1]),
-            "username": self.name.split("/")[0],
-        }
-        return [self._get_author(author)]
+        # If the author is absent from the GraphQL response (permission bug),
+        # fallback to the REST API
+        author = send_rest_query(
+            GL_API_REST,
+            f"/users?username={self.name.split('/')[0]}",
+            self._set_auth(),
+        )[0]
+
+        return [
+            self._get_author(
+                {
+                    "webUrl": author["web_url"],
+                    "username": author["username"],
+                    "name": author.get("name"),
+                }
+            )
+        ]
 
     def _safe_extract_contributors(
         self, repo: dict[str, Any]
@@ -208,7 +222,7 @@ class GitlabExtractor(Extractor):
         }
         }
         """
-        response = query_graphql(
+        response = send_graphql_query(
             GL_API_GRAPHQL, project_query, data, self._set_auth()
         )
         if "errors" in response:
