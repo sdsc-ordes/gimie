@@ -126,21 +126,7 @@ class GitlabExtractor(Extractor):
 
         # If the author is absent from the GraphQL response (permission bug),
         # fallback to the REST API
-        author = send_rest_query(
-            GL_API_REST,
-            f"/users?username={self.name.split('/')[0]}",
-            self._set_auth(),
-        )[0]
-
-        return [
-            self._get_author(
-                {
-                    "webUrl": author["web_url"],
-                    "username": author["username"],
-                    "name": author.get("name"),
-                }
-            )
-        ]
+        return [self._user_from_rest(self.name.split("/")[0])]
 
     def _safe_extract_contributors(
         self, repo: dict[str, Any]
@@ -269,6 +255,23 @@ class GitlabExtractor(Extractor):
             identifier=node["username"],
             name=node.get("name"),
             email=node.get("publicEmail"),
+        )
+
+    def _user_from_rest(self, username: str) -> Person:
+        """Given a username, use the REST API to retrieve the Person object."""
+
+        author = send_rest_query(
+            GL_API_REST,
+            f"/users?username={username}",
+            self._set_auth(),
+        )
+        if isinstance(author, list):
+            author = author[0]
+
+        return Person(
+            _id=author["web_url"],
+            identifier=author["username"],
+            name=author.get("name"),
         )
 
 
