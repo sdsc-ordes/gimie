@@ -11,6 +11,13 @@ check: ## Run code quality tools.
 	@echo "🚀 Linting code: Running pre-commit"
 	@poetry run pre-commit run -a
 
+.PHONY: doc
+doc: ## Build sphinx documentation website locally
+	@echo "📖 Building documentation"
+	@cd docs
+	@sphinx-apidoc -f -o docs/api gimie
+	@sphinx-build docs/ docs/_build
+
 .PHONY: docker-build
 docker-build: ## Build the gimie Docker image
 	@echo "🐋 Building docker image"
