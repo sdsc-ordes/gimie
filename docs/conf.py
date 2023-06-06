@@ -28,7 +28,7 @@ extensions = [
 ]
 
 templates_path = ["_templates"]
-source_suffic = [".rst", ".md"]
+source_suffix = [".rst", ".md"]
 
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
