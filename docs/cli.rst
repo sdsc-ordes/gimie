@@ -1,5 +1,5 @@
-CLI Documentation
-*****************
+Command Line Interface
+**********************
 
 .. click:: gimie.cli:cli
    :prog: gimie

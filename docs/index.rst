@@ -5,7 +5,7 @@
 
 Welcome to gimie's documentation!
 =================================
-gimie (Git Meta Information Extractor) is a python library and command line toolto extract structured metadata from git repositories.
+gimie (Git Meta Information Extractor) is a python library and command line tool to extract structured metadata from git repositories.
 
 .. toctree::
    :maxdepth: 2
@@ -13,16 +13,18 @@ gimie (Git Meta Information Extractor) is a python library and command line tool
 
 Introduction
 ============
+
 .. toctree::
     :maxdepth: 3
 
+    intro/quickstart
     intro/linked_data
     intro/git
     intro/tokens
     intro/usage_python
 
 
-Reference API
+API Reference
 =============
 
 .. toctree::
@@ -31,8 +33,8 @@ Reference API
     api/modules
 
 
-Command Line Interface
-======================
+CLI Reference
+=============
 
 .. toctree::
     :maxdepth: 2
