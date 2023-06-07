@@ -25,7 +25,9 @@ extensions = [
     "sphinx.ext.coverage",
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
+    "sphinx.ext.autosectionlabel",
     "sphinx_click",
+    "sphinx_tabs.tabs",
 ]
 
 templates_path = ["_templates"]
