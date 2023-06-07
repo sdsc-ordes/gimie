@@ -9,15 +9,15 @@ Install using pip or docker:
 
     .. tab:: pip
 
-        .. code-block:: bash
+        .. code-block::
 
-            $ pip install gimie
+            pip install gimie
 
    .. tab:: docker
 
-        .. code-block:: bash
+        .. code-block::
 
-            $ docker pull ghcr.io/sdsc-ord/gimie:latest
+            docker pull ghcr.io/sdsc-ord/gimie:latest
 
 
 
@@ -25,13 +25,13 @@ Before running gimie, you will need to obtain a personal access token for the Gi
 
 Gimie can then be used as follows to extract repository metadata:
 
-.. code-block:: bash
+.. code-block:: console
 
-    $ gimie data <repository-url> > output.ttl
+    gimie data <repository-url> > output.ttl
 
 If running gimie in a container, you would have to pass your github or gitlab token as an environment variable inside the container:
 
 
-.. code-block:: bash
+.. code-block:: console
 
-    $ docker run -e GITHUB_TOKEN=${GITHUB_TOKEN} ghcr.io/sdsc-ord/gimie:latest <repository-url> > output.ttl
+    docker run -e GITHUB_TOKEN=${GITHUB_TOKEN} ghcr.io/sdsc-ord/gimie:latest data <repository-url> > output.ttl

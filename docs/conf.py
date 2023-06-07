@@ -28,6 +28,7 @@ extensions = [
     "sphinx.ext.autosectionlabel",
     "sphinx_click",
     "sphinx_tabs.tabs",
+    "sphinx_copybutton",
 ]
 
 templates_path = ["_templates"]
