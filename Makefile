@@ -15,7 +15,7 @@ check: ## Run code quality tools.
 doc: ## Build sphinx documentation website locally
 	@echo "📖 Building documentation"
 	@cd docs
-	@poetry run sphinx-apidoc -f -o docs/api gimie
+	@poetry run sphinx-apidoc -d 3 -f -o docs/api gimie
 	@poetry run sphinx-build docs/ docs/_build
 
 .PHONY: docker-build
