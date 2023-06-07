@@ -363,23 +363,6 @@ files = [
 ]
 
 [[package]]
-name = "furo"
-version = "2023.5.20"
-description = "A clean customisable Sphinx documentation theme."
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "furo-2023.5.20-py3-none-any.whl", hash = "sha256:594a8436ddfe0c071f3a9e9a209c314a219d8341f3f1af33fdf7c69544fab9e6"},
-    {file = "furo-2023.5.20.tar.gz", hash = "sha256:40e09fa17c6f4b22419d122e933089226dcdb59747b5b6c79363089827dea16f"},
-]
-
-[package.dependencies]
-beautifulsoup4 = "*"
-pygments = ">=2.7"
-sphinx = ">=6.0,<8.0"
-sphinx-basic-ng = "*"
-
-[[package]]
 name = "gitdb"
 version = "4.0.10"
 description = "Git Object Database"
@@ -1232,23 +1215,6 @@ lint = ["docutils-stubs", "flake8 (>=3.5.0)", "flake8-simplify", "isort", "mypy 
 test = ["cython", "filelock", "html5lib", "pytest (>=4.6)"]
 
 [[package]]
-name = "sphinx-basic-ng"
-version = "1.0.0b1"
-description = "A modern skeleton for Sphinx themes."
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "sphinx_basic_ng-1.0.0b1-py3-none-any.whl", hash = "sha256:ade597a3029c7865b24ad0eda88318766bcc2f9f4cef60df7e28126fde94db2a"},
-    {file = "sphinx_basic_ng-1.0.0b1.tar.gz", hash = "sha256:89374bd3ccd9452a301786781e28c8718e99960f2d4f411845ea75fc7bb5a9b0"},
-]
-
-[package.dependencies]
-sphinx = ">=4.0"
-
-[package.extras]
-docs = ["furo", "ipython", "myst-parser", "sphinx-copybutton", "sphinx-inline-tabs"]
-
-[[package]]
 name = "sphinx-click"
 version = "4.4.0"
 description = "Sphinx extension that automatically documents click applications"
@@ -1283,6 +1249,22 @@ sphinx = "*"
 [package.extras]
 code-style = ["pre-commit (==2.13.0)"]
 testing = ["bs4", "coverage", "pygments", "pytest (>=7.1,<8)", "pytest-cov", "pytest-regressions", "rinohtype", "sphinx-testing"]
+
+[[package]]
+name = "sphinxawesome-theme"
+version = "4.1.0"
+description = "An awesome theme for the Sphinx documentation generator"
+optional = false
+python-versions = ">=3.8,<4.0"
+files = [
+    {file = "sphinxawesome_theme-4.1.0-py3-none-any.whl", hash = "sha256:fb6b4ba63583199d6c1d837ffc0fea8d63e4bc3537be9b27c563d82dcf3b25c2"},
+    {file = "sphinxawesome_theme-4.1.0.tar.gz", hash = "sha256:827b810ce314adb3146ccbce4787d6a6fa94de6dea7c61ef081a239ba70a1d25"},
+]
+
+[package.dependencies]
+beautifulsoup4 = ">=4.9.1,<5.0.0"
+python-dotenv = ">=0.19,<1.1"
+sphinx = ">4"
 
 [[package]]
 name = "sphinxcontrib-applehelp"
@@ -1502,4 +1484,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "15e8b3760c94990ad15076e0026a1ce43661c7eae6f15df846b76406310cbe06"
+content-hash = "e3931f7b9276951829226c163159af0ba17d2d6cae33934a7912497bd83d4a36"

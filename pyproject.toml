@@ -41,10 +41,10 @@ black = "^22.10.0"
 
 [tool.poetry.group.doc.dependencies]
 sphinx = "^7.0.1"
-furo = "^2023.5.20"
 recommonmark = "^0.7.1"
 sphinx-click = "^4.4.0"
 sphinx-tabs = "^3.4.1"
+sphinxawesome-theme = "^4.1.0"
 
 [build-system]
 requires = ["poetry-core"]
