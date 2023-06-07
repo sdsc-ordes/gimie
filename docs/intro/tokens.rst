@@ -20,4 +20,6 @@ Generating tokens can usually be done via the web interface of the service provi
    GITHUB_TOKEN=<your-github-token>
 
 
-While the latter approach can be convenient to persist your token locally, it is generally not recommended to store your tokens in plain text as they are sensitive information. Hence the first approach should be preferred in most cases.
+.. tip::
+
+   While the latter approach can be convenient to persist your token locally, it is generally not recommended to store your tokens in plain text as they are sensitive information. Hence the first approach should be preferred in most cases.

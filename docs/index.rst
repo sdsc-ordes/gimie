@@ -7,6 +7,10 @@ Welcome to gimie's documentation!
 =================================
 gimie (Git Meta Information Extractor) is a python library and command line tool to extract structured metadata from git repositories.
 
+.. card:: :octicon:`mark-github;2em` `GitHub repository <https://github.com/SDSC-ORD/gimie>`_
+
+   Visit gimie's GitHub repository to follow the latest developments!
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:

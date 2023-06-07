@@ -29,6 +29,7 @@ extensions = [
     "sphinx_click",
     "sphinx_tabs.tabs",
     "sphinx_copybutton",
+    "sphinx_design",
 ]
 
 templates_path = ["_templates"]
