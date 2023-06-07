@@ -27,13 +27,18 @@ extensions = [
     "sphinx.ext.githubpages",
     "sphinx.ext.autosectionlabel",
     "sphinx_click",
-    "sphinx_tabs.tabs",
     "sphinx_copybutton",
     "sphinx_design",
+    "myst_parser",
 ]
 
 templates_path = ["_templates"]
-source_suffix = [".rst", ".md"]
+
+source_suffix = {
+    ".rst": "restructuredtext",
+    ".md": "markdown",
+}
+
 
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
@@ -54,5 +59,3 @@ intersphinx_mapping = {
     "rdflib": ("https://rdflib.readthedocs.io/en/stable/", None),
     "calamus": ("https://calamus.readthedocs.io/en/latest/", None),
 }
-
-source_parsers = {".md": "recommonmark.parser.CommonMarkParser"}
