@@ -27,6 +27,15 @@ Reference API
 
     api/modules
 
+
+Command Line Interface
+======================
+
+.. toctree::
+    :maxdepth: 2
+
+    cli
+
 Indices and tables
 ==================
 
