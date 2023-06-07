@@ -15,6 +15,11 @@ gimie (Git Meta Information Extractor) is a python library and command line tool
    :maxdepth: 2
    :caption: Contents:
 
+.. toctree::
+   :maxdepth: 2
+
+   changelog_link
+
 Introduction
 ============
 
@@ -44,6 +49,7 @@ CLI Reference
     :maxdepth: 2
 
     cli
+
 
 Indices and tables
 ==================

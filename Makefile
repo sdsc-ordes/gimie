@@ -28,6 +28,10 @@ test: ## Test the code with pytest
 	@echo "🚀 Testing code: Running pytest"
 	@poetry run pytest
 
+.PHONY: changelog
+changelog: ## Generate the changelog
+	@git-cliff -l -c pyproject.toml || echo "git-cliff must be installed"
+
 .PHONY: help
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
