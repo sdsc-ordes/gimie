@@ -92,8 +92,8 @@ class Project:
         combined_graph = combine_graphs(*graphs)
         return combined_graph
 
-    def serialize(self, format: str = "ttl"):
-        return self.to_graph().serialize(format=format)
+    def serialize(self, format: str = "ttl", **kwargs):
+        return self.to_graph().serialize(format=format, **kwargs)
 
     def cleanup(self):
         """Recursively delete the project. Only works
