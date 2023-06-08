@@ -34,7 +34,6 @@ from gimie.models import (
     OrganizationSchema,
     Person,
     PersonSchema,
-    IRI,
 )
 from gimie.graph.namespaces import SDO
 from gimie.sources.common.license import get_spdx_url
@@ -294,8 +293,8 @@ class GithubExtractorSchema(JsonLDSchema):
     description = fields.String(SDO.description)
     date_created = fields.Date(SDO.dateCreated)
     date_modified = fields.Date(SDO.dateModified)
-    license = IRI(SDO.license)
-    path = IRI(SDO.CodeRepository)
+    license = fields.IRI(SDO.license)
+    path = fields.IRI(SDO.CodeRepository)
     keywords = fields.List(SDO.keywords, fields.String)
     version = fields.String(SDO.version)
 

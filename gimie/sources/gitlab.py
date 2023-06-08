@@ -17,7 +17,6 @@ from gimie.models import (
     OrganizationSchema,
     Person,
     PersonSchema,
-    IRI,
 )
 from gimie.graph.namespaces import SDO
 from gimie.sources.common.queries import send_graphql_query, send_rest_query
@@ -292,7 +291,7 @@ class GitlabExtractorSchema(JsonLDSchema):
     date_created = fields.Date(SDO.dateCreated)
     date_modified = fields.Date(SDO.dateModified)
     # license = IRI(SDO.license)
-    path = IRI(SDO.CodeRepository)
+    path = fields.IRI(SDO.CodeRepository)
     keywords = fields.List(SDO.keywords, fields.String)
     version = fields.String(SDO.version)
 
