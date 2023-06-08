@@ -7,10 +7,26 @@ Generating tokens can usually be done via the web interface of the service provi
 
 1. Set the corresponding Environment variable. The token will only be accessible for the current session:
 
-.. code-block::
 
-   export GITLAB_TOKEN=<your-gitlab-token>
-   export GITHUB_TOKEN=<your-github-token>
+.. tab-set::
+
+    .. tab-item:: Linux/Mac/BSD
+        :selected:
+
+        .. code-block:: console
+            :emphasize-text: <repository-url>
+
+            export GITLAB_TOKEN=<your-gitlab-token>
+            export GITHUB_TOKEN=<your-github-token>
+
+    .. tab-item:: Windows
+
+        .. code-block:: console
+            :emphasize-text: <repository-url>
+
+            set GITLAB_TOKEN=<your-gitlab-token>
+            set GITHUB_TOKEN=<your-github-token>
+
 
 2. Use a ``.env`` file in the current directory. Gimie will look for a file named ``.env`` and source it. The file contents should be as follows:
 
