@@ -5,7 +5,7 @@ from typing import List
 from gimie.graph.namespaces import GIMIE
 
 
-def locate_licenses(path: str) -> List[str]:
+def locate_licenses(path: str, recurse: bool = False) -> List[str]:
     """Returns valid potential paths to license files in the project.
     This uses pattern-matching on file names.
 
@@ -13,6 +13,8 @@ def locate_licenses(path: str) -> List[str]:
     ----------
     path:
         The root path to search for license files.
+    recurse:
+        Whether to look into subdirectories.
 
     Returns
     -------
@@ -27,6 +29,7 @@ def locate_licenses(path: str) -> List[str]:
     """
     license_files = []
     pattern = r".*(license(s)?|reus(e|ing)|copy(ing)?)(\.(txt|md|rst))?$"
+
     for root, _, files in os.walk(path):
         # skip toplevel hidden dirs (e.g. .git/)
         subdir = os.path.relpath(root, path)
@@ -40,6 +43,10 @@ def locate_licenses(path: str) -> List[str]:
             if re.match(pattern, file, flags=re.IGNORECASE):
                 license_path = os.path.join(root, file)
                 license_files.append(license_path)
+
+        # The first root of os.walk is the current dir
+        if not recurse:
+            return license_files
 
     return license_files
 
