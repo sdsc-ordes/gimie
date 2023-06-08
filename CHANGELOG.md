@@ -1,7 +1,5 @@
 Notable changes introduced in gimie releases are documented in this file
 
-# Changelog
-
 ## [0.3.0] - 2023-02-24
 
 ### Bug Fixes
