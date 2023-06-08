@@ -30,6 +30,7 @@ extensions = [
     "sphinx_copybutton",
     "sphinx_design",
     "myst_parser",
+    "sphinxawesome_theme.highlighting",
 ]
 
 templates_path = ["_templates"]

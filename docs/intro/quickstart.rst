@@ -37,6 +37,7 @@ Gimie can then be used as follows to extract repository metadata:
         :selected:
 
         .. code-block:: console
+            :emphasize-text: <repository-url>
 
             gimie data <repository-url> > output.ttl
 
@@ -44,6 +45,7 @@ Gimie can then be used as follows to extract repository metadata:
         :sync: docker
 
         .. code-block:: console
+            :emphasize-text: <repository-url>
 
             docker run -e GITHUB_TOKEN=${GITHUB_TOKEN} ghcr.io/sdsc-ord/gimie:latest data <repository-url> > output.ttl
 
