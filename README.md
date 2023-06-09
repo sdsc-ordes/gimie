@@ -1,19 +1,12 @@
-# Gimie
+[![gimie](docs/logo.svg)](https://github.com/SDSC-ORD/gimie)
 
-[![PyPI version](https://badge.fury.io/py/gimie.svg)](https://badge.fury.io/py/gimie) [![Python Poetry Test](https://github.com/SDSC-ORD/gimie/actions/workflows/poetry-pytest.yml/badge.svg)](https://github.com/SDSC-ORD/gimie/actions/workflows/poetry-pytest.yml)
+[![PyPI version](https://badge.fury.io/py/gimie.svg)](https://badge.fury.io/py/gimie) [![Python Poetry Test](https://github.com/SDSC-ORD/gimie/actions/workflows/poetry-pytest.yml/badge.svg)](https://github.com/SDSC-ORD/gimie/actions/workflows/poetry-pytest.yml) [![docs](https://github.com/SDSC-ORD/gimie/actions/workflows/sphinx-docs.yml/badge.svg)](https://sdsc-ord.github.io/gimie)
 
 Gimie (GIt Meta Information Extractor) is a python library and command line tool to extract structured metadata from git repositories.
 
 
 ## Context
-Scientific code repositories contain valuable metadata which can be used to enrich existing catalogues, platforms or databases. This tool aims to easily extract structured metadata from a generic git repositories. The following sources of information are used:
-
-* [x] Github API
-* [x] Gitlab API
-* [x] Git index
-* [ ] License text
-* [ ] Free text in README
-* [ ] Renku project metadata
+Scientific code repositories contain valuable metadata which can be used to enrich existing catalogues, platforms or databases. This tool aims to easily extract structured metadata from a generic git repositories. It can extract extract metadata from the Git provider (GitHub or GitLab) or from the git index itself.
 
 ## Installation
 
@@ -58,6 +51,12 @@ run checks:
 
 ```shell
 make check
+```
+
+build documentation:
+
+```shell
+make doc
 ```
 
 ## Usage
