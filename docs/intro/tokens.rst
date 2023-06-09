@@ -46,7 +46,7 @@ Encrypting tokens
 
 If you are serious about security, you should use a tool like `sops <https://github.com/mozilla/sops>`_ or `pass <https://www.passwordstore.org/>`_ to encrypt your secrets.
 
-Below is a quick guide on how to use ``sops`` to store encrypted tokens, and decrypt them on the file when using gimie.
+Below is a quick guide on how to use ``sops`` to store encrypted tokens, and decrypt them on the fly when using gimie.
 
 .. dropdown:: Generating PGP key
 
