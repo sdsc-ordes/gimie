@@ -24,18 +24,63 @@ Generating tokens can usually be done via the web interface of the service provi
         .. code-block:: console
             :emphasize-text: <repository-url>
 
-            set GITLAB_TOKEN=<your-gitlab-token>
-            set GITHUB_TOKEN=<your-github-token>
+            # You may need to restart windows after this
+            setx GITLAB_TOKEN <your-gitlab-token>
+            setx GITHUB_TOKEN <your-github-token>
 
 
 2. Use a ``.env`` file in the current directory. Gimie will look for a file named ``.env`` and source it. The file contents should be as follows:
 
 .. code-block::
 
-   GITLAB_TOKEN=<your-gitlab-token>
-   GITHUB_TOKEN=<your-github-token>
-
+    GITLAB_TOKEN=<your-gitlab-token>
+    GITHUB_TOKEN=<your-github-token>
 
 .. tip::
 
-   While the latter approach can be convenient to persist your token locally, it is generally not recommended to store your tokens in plain text as they are sensitive information. Hence the first approach should be preferred in most cases.
+    To persist (unencrypted) tokens on windows, you can also use `setx` command instead of `set`.
+
+
+While the latter approach can be convenient to persist your token locally, it is generally not recommended to store your tokens in plain text as they are sensitive information. Hence the first approach should be preferred in most cases.
+
+Encrypting tokens
+=================
+
+If you are serious about security, you should use a tool like `sops <https://github.com/mozilla/sops>`_ or `pass <https://www.passwordstore.org/>`_ to encrypt your secrets.
+
+Below is a quick guide on how to use ``sops`` to store encrypted tokens, and decrypt them on the file when using gimie.
+
+.. dropdown:: Generating PGP key
+
+    PGP is a public key encryption system. If you don't already have one, you will need to generate a key pair to encrypt your secrets.
+    You can use the following command to generate a key pair. You will be prompted for a passphrase, but you may leave it empty if you wish.
+
+    .. code-block:: bash
+
+        gpg --gen-key
+
+.. dropdown:: Set up SOPS
+
+    SOPS needs to be configured to use your PGP key. You can do so by running the following command:
+    Replace ``<FINGERPRINT>`` with the fingerprint of your PGP key (it looks like ``69AB B75E ...``). You can find it by running ``gpg --fingerprint``
+    Upon running the command below, `sops` will open a `vim` buffer where you can enter the desired content of your .env file.
+    Upon saving the file (``:wq``), ``sops`` will encrypt the file and save it as ``.enc.env``.
+
+    .. code-block:: bash
+
+        sops --pgp "${FINGERPRINT}" .enc.env
+
+.. dropdown:: Source tokens
+
+    Whenever you want to run gimie, you can decrypt secrets on the fly and pass them to gimie using the following command:
+
+    .. code-block:: bash
+        :emphasize-text: <repository-url>
+
+        sops exec-env .enc.env 'gimie data <repository-url>'
+
+    Or if you just want to inspect the decrypted file:
+
+    .. code-block:: bash
+
+        sops --decrypt .enc.env
