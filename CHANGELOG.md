@@ -1,6 +1,5 @@
 Notable changes introduced in gimie releases are documented in this file
 
-# Changelog
 
 ## [0.4.0] - 2023-06-09
 
@@ -51,7 +50,6 @@ Notable changes introduced in gimie releases are documented in this file
 - disallow local paths (#46)
 
 
-# Changelog
 
 ## [0.3.0] - 2023-02-24
 

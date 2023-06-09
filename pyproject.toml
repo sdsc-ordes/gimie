@@ -72,7 +72,6 @@ reportUntypedBaseClass = false
 [tool.git-cliff.changelog]
 header = "Notable changes introduced in gimie releases are documented in this file\n\n"
 body = """
-# Changelog
 
 {% if version %}\
     ## [{{ version | trim_start_matches(pat="v") }}] - {{ timestamp | date(format="%Y-%m-%d") }}
