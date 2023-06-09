@@ -3,6 +3,11 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. image:: logo.svg
+   :width: 200
+   :alt: gimie logo
+
+
 Welcome to gimie's documentation!
 =================================
 gimie (Git Meta Information Extractor) is a python library and command line tool to extract structured metadata from git repositories.
