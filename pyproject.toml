@@ -2,20 +2,20 @@
 
 [tool.poetry]
 name = "gimie"
-version = "0.3.0"
+version = "0.4.0"
 description = "Extract structured metadata from git repositories."
 authors = ["Swiss Data Science Center <contact@datascience.ch>"]
-license = "GPLv3"
+license = "Apache-2.0"
 homepage = "https://github.com/SDSC-ORD/gimie"
 keywords = ["metadata", "git", "extraction", "linked-data"]
 readme = "README.md"
 classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Intended Audience :: Science/Research",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
 ]
 
