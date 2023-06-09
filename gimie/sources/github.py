@@ -40,7 +40,6 @@ from gimie.graph.namespaces import SDO
 from gimie.sources.common.license import get_spdx_url
 from gimie.sources.common.queries import (
     send_rest_query,
-    query_graphql,
     send_graphql_query,
 )
 
@@ -212,7 +211,9 @@ class GithubExtractor(Extractor):
             }
         }
         """
-        response = query_graphql(GH_API, repo_query, data, self._set_auth())
+        response = send_graphql_query(
+            GH_API, repo_query, data, self._set_auth()
+        )
         if "errors" in response:
             raise ValueError(response["errors"])
 
