@@ -32,13 +32,11 @@ Generating tokens can usually be done via the web interface of the service provi
 2. Use a ``.env`` file in the current directory. Gimie will look for a file named ``.env`` and source it. The file contents should be as follows:
 
 .. code-block::
+    :emphasize-text: <repository-url>
+    :caption: File: .env
 
     GITLAB_TOKEN=<your-gitlab-token>
     GITHUB_TOKEN=<your-github-token>
-
-.. tip::
-
-    To persist (unencrypted) tokens on windows, you can also use `setx` command instead of `set`.
 
 
 While the latter approach can be convenient to persist your token locally, it is generally not recommended to store your tokens in plain text as they are sensitive information. Hence the first approach should be preferred in most cases.
