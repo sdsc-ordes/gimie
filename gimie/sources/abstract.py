@@ -45,9 +45,9 @@ class Extractor(ABC):
         """Generate an RDF graph from the instance"""
         return Graph()
 
-    def serialize(self, format: str = "ttl") -> str:
+    def serialize(self, format: str = "ttl", **kwargs) -> str:
         """Serialize the RDF graph representing the instance."""
-        return self.to_graph().serialize(format=format)  # type: ignore
+        return self.to_graph().serialize(format=format, **kwargs)  # type: ignore
 
     def jsonld(self) -> str:
         """Alias for jsonld serialization."""

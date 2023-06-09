@@ -11,6 +11,13 @@ check: ## Run code quality tools.
 	@echo "🚀 Linting code: Running pre-commit"
 	@poetry run pre-commit run -a
 
+.PHONY: doc
+doc: ## Build sphinx documentation website locally
+	@echo "📖 Building documentation"
+	@cd docs
+	@poetry run sphinx-apidoc -d 3 -f -o docs/api gimie
+	@poetry run sphinx-build docs/ docs/_build
+
 .PHONY: docker-build
 docker-build: ## Build the gimie Docker image
 	@echo "🐋 Building docker image"
@@ -20,6 +27,10 @@ docker-build: ## Build the gimie Docker image
 test: ## Test the code with pytest
 	@echo "🚀 Testing code: Running pytest"
 	@poetry run pytest
+
+.PHONY: changelog
+changelog: ## Generate the changelog
+	@git-cliff -l -c pyproject.toml || echo "git-cliff must be installed"
 
 .PHONY: help
 help:
