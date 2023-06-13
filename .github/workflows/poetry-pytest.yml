@@ -41,5 +41,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_GITHUB_TOKEN }}
           GITLAB_TOKEN: ${{ secrets.GITLAB_ACCESS_TOKEN }}
           COVERALLS_PARALLEL: true
-        run: coveralls --service=github-actions
+        run: |
+          pip install coveralls
+          coveralls --service=github-actions
         continue-on-error: true
