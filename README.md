@@ -1,19 +1,12 @@
-# Gimie
+[![gimie](docs/logo.svg)](https://github.com/SDSC-ORD/gimie)
 
-[![PyPI version](https://badge.fury.io/py/gimie.svg)](https://badge.fury.io/py/gimie) [![Python Poetry Test](https://github.com/SDSC-ORD/gimie/actions/workflows/poetry-pytest.yml/badge.svg)](https://github.com/SDSC-ORD/gimie/actions/workflows/poetry-pytest.yml)
+[![PyPI version](https://badge.fury.io/py/gimie.svg)](https://badge.fury.io/py/gimie) [![Python Poetry Test](https://github.com/SDSC-ORD/gimie/actions/workflows/poetry-pytest.yml/badge.svg)](https://github.com/SDSC-ORD/gimie/actions/workflows/poetry-pytest.yml) [![docs](https://github.com/SDSC-ORD/gimie/actions/workflows/sphinx-docs.yml/badge.svg)](https://sdsc-ord.github.io/gimie) [![Coverage Status](https://coveralls.io/repos/github/SDSC-ORD/gimie/badge.svg?branch=main)](https://coveralls.io/github/SDSC-ORD/gimie?branch=main)
 
 Gimie (GIt Meta Information Extractor) is a python library and command line tool to extract structured metadata from git repositories.
 
 
 ## Context
-Scientific code repositories contain valuable metadata which can be used to enrich existing catalogues, platforms or databases. This tool aims to easily extract structured metadata from a generic git repositories. The following sources of information are used:
-
-* [x] Github API
-* [x] Gitlab API
-* [x] Git index
-* [ ] License text
-* [ ] Free text in README
-* [ ] Renku project metadata
+Scientific code repositories contain valuable metadata which can be used to enrich existing catalogues, platforms or databases. This tool aims to easily extract structured metadata from a generic git repositories. It can extract extract metadata from the Git provider (GitHub or GitLab) or from the git index itself.
 
 ----------------------------------------------------------------------
 
@@ -44,8 +37,7 @@ docker run -e ACCESS_TOKEN=$ACCESS_TOKEN ghcr.io/sdsc-ord/gimie:latest gimie dat
 
 ## STEP 2 : Set your credentials
 
-In order to avoid rate limits with the github api, you need to provide your github
-username and a github token with the `read:org` scope. 
+In order to access the github api, you need to provide a github token with the `read:org` scope. 
 
 ### A. Create access tokens
 
@@ -144,6 +136,12 @@ for an easier use Github/Gitlab APIs, place your access tokens in the `.env` fil
 
 ```
 cp .env.dist .env
+```
+
+build documentation:
+
+```shell
+make doc
 ```
 
 ## Releases and Publishing on Pypi

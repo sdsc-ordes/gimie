@@ -18,14 +18,23 @@
 from enum import Enum
 from typing import Optional
 from gimie import __version__
+import click
 import typer
 
 from gimie.project import Project
 
 app = typer.Typer(add_completion=False)
 
+# Used to autogenerate docs with sphinx-click
+@click.group()
+def cli():
+    """Command line group"""
+    pass
+
 
 class SerializationFormat(str, Enum):
+    """Enumeration of valid RDF serialization formats for project graphs"""
+
     ttl = "ttl"
     jsonld = "json-ld"
     nt = "nt"
@@ -41,12 +50,8 @@ def version_callback(value: bool):
 @app.command()
 def data(
     url: str,
-    only: str = typer.Option(False, "--only", help="Only use these sources."),
-    exclude: str = typer.Option(
-        False, "--exclude", help="Do not use these sources."
-    ),
     format: SerializationFormat = typer.Option(
-        SerializationFormat.ttl,
+        "ttl",
         "--format",
         show_choices=True,
         help="Output serialization format for the RDF graph.",
@@ -58,18 +63,25 @@ def data(
         callback=version_callback,
     ),
 ):
-    """Extract metadata from a Git repository at the target URL."""
+    """Extract linked metadata from a Git repository at the target URL.
+
+    The output is sent to stdout, and turtle is used as the default serialization format."""
     proj = Project(url)
     print(proj.serialize(format=format))
 
 
 @app.command()
-def advice(path: str):
+def advice(url: str):
     """Show a metadata completion report for a Git repository
-    at the target URL."""
+    at the target URL.
+
+    NOTE: Not implemented yet"""
     ...
     raise typer.Exit()
 
+
+typer_cli = typer.main.get_command(app)
+cli.add_command(typer_cli, "cli")
 
 # This callback is triggered when gimie is called without subcommand
 @app.callback()

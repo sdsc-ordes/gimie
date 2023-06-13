@@ -46,10 +46,6 @@ class GitExtractor(Extractor):
     ----------
     uri: Optional[str]
         The URI to assign the repository in RDF.
-    author
-    contributors
-    date_created
-    date_modified
     repository: Repository
         The repository we are extracting metadata from.
     """
