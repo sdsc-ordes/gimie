@@ -1,6 +1,6 @@
 [![gimie](docs/logo.svg)](https://github.com/SDSC-ORD/gimie)
 
-[![PyPI version](https://badge.fury.io/py/gimie.svg)](https://badge.fury.io/py/gimie) [![Python Poetry Test](https://github.com/SDSC-ORD/gimie/actions/workflows/poetry-pytest.yml/badge.svg)](https://github.com/SDSC-ORD/gimie/actions/workflows/poetry-pytest.yml) [![docs](https://github.com/SDSC-ORD/gimie/actions/workflows/sphinx-docs.yml/badge.svg)](https://sdsc-ord.github.io/gimie)
+[![PyPI version](https://badge.fury.io/py/gimie.svg)](https://badge.fury.io/py/gimie) [![Python Poetry Test](https://github.com/SDSC-ORD/gimie/actions/workflows/poetry-pytest.yml/badge.svg)](https://github.com/SDSC-ORD/gimie/actions/workflows/poetry-pytest.yml) [![docs](https://github.com/SDSC-ORD/gimie/actions/workflows/sphinx-docs.yml/badge.svg)](https://sdsc-ord.github.io/gimie) [![Coverage Status](https://coveralls.io/repos/github/SDSC-ORD/gimie/badge.svg?branch=main)](https://coveralls.io/github/SDSC-ORD/gimie?branch=main)
 
 Gimie (GIt Meta Information Extractor) is a python library and command line tool to extract structured metadata from git repositories.
 
