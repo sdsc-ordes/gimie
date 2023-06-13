@@ -45,3 +45,13 @@ jobs:
           pip install coveralls
           coveralls --service=github-actions
         continue-on-error: true
+
+  finish:
+    needs: test
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@master
+      with:
+        parallel-finished: true
