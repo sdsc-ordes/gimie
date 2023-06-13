@@ -33,4 +33,25 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_GITHUB_TOKEN }}
           GITLAB_TOKEN: ${{ secrets.GITLAB_ACCESS_TOKEN }}
-        run: poetry run pytest
+        run: make test
+
+      - name: Upload coverage report
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACCESS_GITHUB_TOKEN }}
+          GITLAB_TOKEN: ${{ secrets.GITLAB_ACCESS_TOKEN }}
+          COVERALLS_PARALLEL: true
+        run: |
+          pip install coveralls
+          coveralls --service=github-actions
+        continue-on-error: true
+
+  finish:
+    needs: test
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: coverallsapp/github-action@master
+      with:
+        parallel-finished: true
