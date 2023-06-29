@@ -56,6 +56,11 @@ def data(
         show_choices=True,
         help="Output serialization format for the RDF graph.",
     ),
+    base_url: Optional[str] = typer.Option(
+        None,
+        "--base-url",
+        help="Specify the base URL of the git provider. Inferred by default.",
+    ),
     version: Optional[bool] = typer.Option(
         None,
         "--version",
@@ -66,7 +71,7 @@ def data(
     """Extract linked metadata from a Git repository at the target URL.
 
     The output is sent to stdout, and turtle is used as the default serialization format."""
-    proj = Project(url)
+    proj = Project(url, base_url=base_url)
     print(proj.serialize(format=format))
 
 
