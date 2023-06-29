@@ -57,7 +57,7 @@ class GitlabExtractor(Extractor):
 
     def extract(self):
         """Extract metadata from target Gitlab repository."""
-        self.name = urlparse(self.url).path.strip("/")
+        self.name = self.path
 
         # fetch metadata
         data = self._fetch_repo_data(self.name)

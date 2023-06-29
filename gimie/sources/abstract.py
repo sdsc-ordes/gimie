@@ -66,10 +66,10 @@ class Extractor(ABC):
 
     @property
     def path(self) -> str:
-        """Path to the repository."""
-        if self.local_path is None:
-            return self.url
-        return self.local_path
+        """Path to the repository without the base URL."""
+        if self.base_url is None:
+            return urlparse(self.url).path.strip("/")
+        return self.url.removeprefix(self.base_url).strip("/")
 
     @property
     def base(self) -> str:

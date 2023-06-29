@@ -117,7 +117,7 @@ class GithubExtractor(Extractor):
 
     def extract(self):
         """Extract metadata from target GitHub repository."""
-        self.name = urlparse(self.url).path.strip("/")
+        self.name = self.path
         data = self._fetch_repo_data()
         self.author = self._get_author(data["owner"])
         self.contributors = self._fetch_contributors()
