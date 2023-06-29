@@ -84,7 +84,7 @@ class GitlabExtractor(Extractor):
         if data["releases"] and (len(data["releases"]["edges"]) > 0):
             # go into releases and take the name from the first node (most recent)
             self.version = data["releases"]["edges"][0]["node"]["name"]
-            self.download_url = f"{self.path}/-/archive/{self.version}/{self.name.split('/')[-1]}-{self.version}.tar.gz"
+            self.download_url = f"{self.url}/-/archive/{self.version}/{self.name.split('/')[-1]}-{self.version}.tar.gz"
 
         # for the license, we need to query the rest API
         # the code below does not work, returns - if you have permission- the GitLab specific licence

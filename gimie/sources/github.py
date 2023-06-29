@@ -134,7 +134,7 @@ class GithubExtractor(Extractor):
         if last_release is not None:
             self.version = last_release["name"]
             self.download_url = (
-                f"{self.path}/archive/refs/tags/{self.version}.tar.gz"
+                f"{self.url}/archive/refs/tags/{self.version}.tar.gz"
             )
 
     def _fetch_repo_data(self) -> Dict[str, Any]:
@@ -221,7 +221,7 @@ class GithubExtractor(Extractor):
         NOTE: This is a workaround for the lack of a contributors field in the GraphQL API."""
         headers = self._set_auth()
         contributors = []
-        resp = query_contributors(self.path, headers)
+        resp = query_contributors(self.url, headers)
         for user in resp:
             contributors.append(self._get_user(user))
         return list(contributors)
