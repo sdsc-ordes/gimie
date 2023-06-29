@@ -39,8 +39,12 @@ class GitExtractor(Extractor):
 
     Parameters
     ----------
-    path: str
-        The path to the git repository.
+    url: str
+        The url of the git repository.
+    base_url: Optional[str]
+        The base url of the git remote.
+    local_path: Optional[str]
+        The local path where the cloned git repository is located.
 
     Attributes
     ----------
@@ -60,7 +64,9 @@ class GitExtractor(Extractor):
     date_modified: Optional[datetime] = None
 
     def extract(self):
-        self.repository = pydriller.Repository(self.path)
+        if self.local_path is None:
+            raise ValueError("Local path must be provided for extraction.")
+        self.repository = pydriller.Repository(self.local_path)
         # Assuming author is the first person to commit
         self.author = self._get_creator()
         self.contributors = self._get_contributors()
