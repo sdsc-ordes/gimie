@@ -17,11 +17,12 @@
 """Orchestration of multiple extractors for a given project.
 This is the main entry point for end-to-end analysis."""
 from tempfile import gettempdir, TemporaryDirectory
-from typing import Iterable, List, Optional, Union
+from typing import Iterable, List, Optional, Tuple, Union
 
 import shutil
 import git
 from rdflib import Graph
+from urllib.parse import urlparse
 
 from gimie.graph.operations import combine_graphs
 from gimie.utils import validate_url
@@ -36,8 +37,11 @@ class Project:
 
     Parameters
     ----------
-    path :
-        The path to the repository, either a file path or a URL.
+    path:
+        The full path (URL) of the repository.
+    base_url:
+        The base URL of the git remote. Can be used to
+        specify delimitation between base URL and project name.
     sources:
         The metadata sources to use.
 
@@ -47,11 +51,15 @@ class Project:
     """
 
     def __init__(
-        self, path: str, sources: Optional[Union[str, Iterable[str]]] = None
+        self,
+        path: str,
+        base_url: Optional[str] = None,
+        sources: Optional[Union[Iterable[str], str]] = None,
     ):
 
         sources = normalize_sources(path, sources)
-        # Remember if we cloned to cleanup at the end
+        self.base_url = base_url
+        self.project_dir = None
         self._cloned = False
         if validate_url(path):
             self.url = path
@@ -60,7 +68,6 @@ class Project:
             if any(map(is_local_source, sources)):
                 self.project_dir = self.clone(path)
         else:
-            self.url = None
             self.project_dir = path
 
         self.extractors = self.get_extractors(sources)
@@ -79,10 +86,12 @@ class Project:
 
         extractors: List[Extractor] = []
         for src in sources:
-            if is_remote_source(src):
-                extractor = get_extractor(self.url, src)  # type: ignore
-            else:
-                extractor = get_extractor(self.project_dir, src, _id=self.url)
+            extractor = get_extractor(
+                self.url,
+                src,
+                base_url=self.base_url,
+                local_path=self.project_dir,
+            )
             extractors.append(extractor)
 
         return extractors
@@ -100,14 +109,21 @@ class Project:
         for remote (i.e. cloned) projects."""
         try:
             tempdir = gettempdir()
-            in_temp = self.project_dir.startswith(tempdir)
-            if self._cloned and in_temp:
-                shutil.rmtree(self.project_dir)
+            if self.project_dir is not None:
+                in_temp = self.project_dir.startswith(tempdir)
+                if self._cloned and in_temp:
+                    shutil.rmtree(self.project_dir)
         except AttributeError:
             pass
 
     def __del__(self):
         self.cleanup()
+
+
+def split_git_url(url) -> Tuple[str, str]:
+    base_url = urlparse(url).scheme + "://" + urlparse(url).netloc
+    project = urlparse(url).path.strip("/")
+    return base_url, project
 
 
 def normalize_sources(
@@ -157,21 +173,28 @@ def normalize_sources(
 
 
 def get_extractor(
-    path: str, source: str, _id: Optional[str] = None
+    url: str,
+    source: str,
+    base_url: Optional[str] = None,
+    local_path: Optional[str] = None,
 ) -> Extractor:
     """Instantiate the correct extractor for a given source.
 
     Parameters
     -----------
-    path
+    URL
         Where the repository metadata is extracted from.
     source
         The source of the repository (git, gitlab, github, ...).
-    _id
-        The identifier to use for the repository. If not provided,
-        it will be determined automatically by the extractor
+    base_url
+        The base URL of the git remote.
+    local_path
+        If applicable, the path to the directory where the
+        repository is cloned.
     """
-    return SOURCES[source].extractor(path, _id=_id)
+    return SOURCES[source].extractor(
+        url, base_url=base_url, local_path=local_path
+    )
 
 
 def is_valid_source(source: str) -> bool:
@@ -202,7 +225,7 @@ def get_git_provider(url: str) -> str:
     """Given a git repository URL, return the corresponding git provider.
     Local path or unsupported git providers will return "git"."""
     # NOTE: We just check if the provider name is in the URL.
-    # There may be a more robust way.
+    # We may want to use a more robust check.
     if validate_url(url):
         for name, prov in SOURCES.items():
             if prov.git and prov.remote and name in url:
