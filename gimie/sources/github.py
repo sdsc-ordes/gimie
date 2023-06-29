@@ -92,11 +92,11 @@ class GithubExtractor(Extractor):
     """Extractor for GitHub repositories. Uses the GitHub GraphQL API to
     extract metadata into linked data."""
 
-    path: str
-    _id: Optional[str] = None
-    token: Optional[str] = None
+    url: str
+    base_url: Optional[str] = None
+    local_path: Optional[str] = None
 
-    name: Optional[str] = None
+    token: Optional[str] = None
     author: Optional[Union[Organization, Person]] = None
     contributors: Optional[List[Person]] = None
     prog_langs: Optional[List[str]] = None
@@ -117,12 +117,10 @@ class GithubExtractor(Extractor):
 
     def extract(self):
         """Extract metadata from target GitHub repository."""
-        if self._id is None:
-            self._id = self.path
-        self.name = urlparse(self.path).path.strip("/")
-        data = self._fetch_repo_data(self.path)
+        self.name = urlparse(self.url).path.strip("/")
+        data = self._fetch_repo_data()
         self.author = self._get_author(data["owner"])
-        self.contributors = self._fetch_contributors(self.path)
+        self.contributors = self._fetch_contributors()
         self.description = data["description"]
         self.date_created = datetime.fromisoformat(data["createdAt"][:-1])
         self.date_modified = datetime.fromisoformat(data["updatedAt"][:-1])
@@ -139,9 +137,9 @@ class GithubExtractor(Extractor):
                 f"{self.path}/archive/refs/tags/{self.version}.tar.gz"
             )
 
-    def _fetch_repo_data(self, url: str) -> Dict[str, Any]:
+    def _fetch_repo_data(self) -> Dict[str, Any]:
         """Fetch repository metadata from GraphQL endpoint."""
-        owner, name = urlparse(url).path.strip("/").split("/")
+        owner, name = self.name.split("/")
         data = {"owner": owner, "name": name}
         repo_query = """
         query repo($owner: String!, $name: String!) {
@@ -218,12 +216,12 @@ class GithubExtractor(Extractor):
 
         return response["data"]["repository"]
 
-    def _fetch_contributors(self, url: str) -> List[Person]:
+    def _fetch_contributors(self) -> List[Person]:
         """Queries the GitHub GraphQL API to extract contributors through the commit list.
         NOTE: This is a workaround for the lack of a contributors field in the GraphQL API."""
         headers = self._set_auth()
         contributors = []
-        resp = query_contributors(url, headers)
+        resp = query_contributors(self.path, headers)
         for user in resp:
             contributors.append(self._get_user(user))
         return list(contributors)

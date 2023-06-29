@@ -50,8 +50,10 @@ class GitExtractor(Extractor):
         The repository we are extracting metadata from.
     """
 
-    path: str
-    _id: Optional[str] = None
+    url: str
+    base_url: Optional[str] = None
+    local_path: Optional[str] = None
+
     author: Optional[Person] = None
     contributors: Optional[List[Person]] = None
     date_created: Optional[datetime] = None
@@ -59,9 +61,6 @@ class GitExtractor(Extractor):
 
     def extract(self):
         self.repository = pydriller.Repository(self.path)
-        if self._id is None:
-            head_commit_hash = git.Repo(self.path).head.commit.hexsha[:7]
-            self._id = generate_uri(head_commit_hash)
         # Assuming author is the first person to commit
         self.author = self._get_creator()
         self.contributors = self._get_contributors()
