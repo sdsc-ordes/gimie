@@ -21,8 +21,6 @@ from gimie.models import (
 from gimie.graph.namespaces import SDO
 from gimie.sources.common.queries import send_graphql_query, send_rest_query
 
-GL_API_REST = "https://gitlab.com/api/v4/"
-GL_API_GRAPHQL = "https://gitlab.com/api"
 load_dotenv()
 
 
@@ -31,10 +29,11 @@ class GitlabExtractor(Extractor):
     """Extractor for Gitlab repositories. Uses the Gitlab GraphQL API to
     extract metadata into linked data."""
 
-    path: str
-    _id: Optional[str] = None
-    token: Optional[str] = None
+    url: str
+    base_url: Optional[str] = None
+    local_path: Optional[str] = None
 
+    token: Optional[str] = None
     name: Optional[str] = None
     identifier: Optional[str] = None
     author: Optional[List[Union[Organization, Person]]] = None
@@ -58,9 +57,7 @@ class GitlabExtractor(Extractor):
 
     def extract(self):
         """Extract metadata from target Gitlab repository."""
-        if self._id is None:
-            self._id = self.path
-        self.name = urlparse(self.path).path.strip("/")
+        self.name = urlparse(self.url).path.strip("/")
 
         # fetch metadata
         data = self._fetch_repo_data(self.name)
@@ -68,7 +65,7 @@ class GitlabExtractor(Extractor):
         # Each Gitlab project has a unique identifier (integer)
         self.identifier = urlparse(data["id"]).path.split("/")[2]
         # at the moment, Gimie fetches only the group directly related to the project
-        # the group name will take the form: parent/subgroup
+        # the group takes the form: parent/subgroup
         self.source_organization = self._safe_extract_group(data)
         self.description = data["description"]
         self.prog_langs = [lang["name"] for lang in data["languages"]]
@@ -91,7 +88,7 @@ class GitlabExtractor(Extractor):
 
         # for the license, we need to query the rest API
         # the code below does not work, returns - if you have permission- the GitLab specific licence
-        # resp = requests.get(url=f"{GL_API_rest}/license/{self.identifier}")
+        # resp = requests.get(url=f"{self.graphql_endpoint}/license/{self.identifier}")
         # if resp.status_code == 200:
         #     self.license = resp.json()
 
@@ -208,7 +205,7 @@ class GitlabExtractor(Extractor):
         }
         """
         response = send_graphql_query(
-            GL_API_GRAPHQL, project_query, data, self._set_auth()
+            self.graphql_endpoint, project_query, data, self._set_auth()
         )
         if "errors" in response:
             raise ValueError(response["errors"])
@@ -223,7 +220,7 @@ class GitlabExtractor(Extractor):
                 assert self.token
             headers = {"Authorization": f"token {self.token}"}
 
-            login = requests.get(f"{GL_API_REST}/user", headers=headers)
+            login = requests.get(f"{self.rest_endpoint}/user", headers=headers)
             assert login.json().get("login")
         except AssertionError:
             return {}
@@ -260,7 +257,7 @@ class GitlabExtractor(Extractor):
         """Given a username, use the REST API to retrieve the Person object."""
 
         author = send_rest_query(
-            GL_API_REST,
+            self.rest_endpoint,
             f"/users?username={username}",
             self._set_auth(),
         )
@@ -272,6 +269,14 @@ class GitlabExtractor(Extractor):
             identifier=author["username"],
             name=author.get("name"),
         )
+
+    @property
+    def rest_endpoint(self) -> str:
+        return f"{self.base}/api/v4/"
+
+    @property
+    def graphql_endpoint(self) -> str:
+        return f"{self.base}/api"
 
 
 class GitlabExtractorSchema(JsonLDSchema):
