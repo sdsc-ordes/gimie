@@ -27,7 +27,13 @@ load_dotenv()
 @dataclass
 class GitlabExtractor(Extractor):
     """Extractor for Gitlab repositories. Uses the Gitlab GraphQL API to
-    extract metadata into linked data."""
+    extract metadata into linked data.
+    url: str
+        The url of the git repository.
+    base_url: Optional[str]
+        The base url of the git remote.
+
+    """
 
     url: str
     base_url: Optional[str] = None

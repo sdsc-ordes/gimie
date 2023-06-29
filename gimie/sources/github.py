@@ -90,7 +90,12 @@ def query_contributors(
 @dataclass
 class GithubExtractor(Extractor):
     """Extractor for GitHub repositories. Uses the GitHub GraphQL API to
-    extract metadata into linked data."""
+    extract metadata into linked data.
+    url: str
+        The url of the git repository.
+    base_url: Optional[str]
+        The base url of the git remote.
+    """
 
     url: str
     base_url: Optional[str] = None
