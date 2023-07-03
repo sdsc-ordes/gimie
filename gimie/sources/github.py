@@ -18,6 +18,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
+from dateutil.parser import isoparse
 import os
 import requests
 from typing import Any, Dict, List, Optional, Set, Union
@@ -127,8 +128,8 @@ class GithubExtractor(Extractor):
         self.author = self._get_author(data["owner"])
         self.contributors = self._fetch_contributors()
         self.description = data["description"]
-        self.date_created = datetime.fromisoformat(data["createdAt"][:-1])
-        self.date_modified = datetime.fromisoformat(data["updatedAt"][:-1])
+        self.date_created = isoparse(data["createdAt"][:-1])
+        self.date_modified = isoparse(data["updatedAt"][:-1])
         # If license is available, convert to standard SPDX URL
         if data["licenseInfo"] is not None:
             self.license = get_spdx_url(data["licenseInfo"]["spdxId"])

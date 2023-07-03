@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import os
 import requests
 from datetime import datetime
+from dateutil.parser import isoparse
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
 
@@ -75,10 +76,8 @@ class GitlabExtractor(Extractor):
         self.source_organization = self._safe_extract_group(data)
         self.description = data["description"]
         self.prog_langs = [lang["name"] for lang in data["languages"]]
-        self.date_created = datetime.fromisoformat(data["createdAt"][:-1])
-        self.date_modified = datetime.fromisoformat(
-            data["lastActivityAt"][:-1]
-        )
+        self.date_created = isoparse(data["createdAt"][:-1])
+        self.date_modified = isoparse(data["lastActivityAt"][:-1])
         self.keywords = data["topics"]
 
         # Get contributors as the project members that are not owners and those that have written merge requests
