@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import os
 import requests
 from datetime import datetime
+from dateutil.parser import isoparse
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
 
@@ -21,20 +22,25 @@ from gimie.models import (
 from gimie.graph.namespaces import SDO
 from gimie.sources.common.queries import send_graphql_query, send_rest_query
 
-GL_API_REST = "https://gitlab.com/api/v4/"
-GL_API_GRAPHQL = "https://gitlab.com/api"
 load_dotenv()
 
 
 @dataclass
 class GitlabExtractor(Extractor):
     """Extractor for Gitlab repositories. Uses the Gitlab GraphQL API to
-    extract metadata into linked data."""
+    extract metadata into linked data.
+    url: str
+        The url of the git repository.
+    base_url: Optional[str]
+        The base url of the git remote.
 
-    path: str
-    _id: Optional[str] = None
+    """
+
+    url: str
+    base_url: Optional[str] = None
+    local_path: Optional[str] = None
+
     token: Optional[str] = None
-
     name: Optional[str] = None
     identifier: Optional[str] = None
     author: Optional[List[Union[Organization, Person]]] = None
@@ -58,24 +64,19 @@ class GitlabExtractor(Extractor):
 
     def extract(self):
         """Extract metadata from target Gitlab repository."""
-        if self._id is None:
-            self._id = self.path
-        self.name = urlparse(self.path).path.strip("/")
 
         # fetch metadata
-        data = self._fetch_repo_data(self.name)
+        data = self._fetch_repo_data(self.path)
 
         # Each Gitlab project has a unique identifier (integer)
         self.identifier = urlparse(data["id"]).path.split("/")[2]
         # at the moment, Gimie fetches only the group directly related to the project
-        # the group name will take the form: parent/subgroup
+        # the group takes the form: parent/subgroup
         self.source_organization = self._safe_extract_group(data)
         self.description = data["description"]
         self.prog_langs = [lang["name"] for lang in data["languages"]]
-        self.date_created = datetime.fromisoformat(data["createdAt"][:-1])
-        self.date_modified = datetime.fromisoformat(
-            data["lastActivityAt"][:-1]
-        )
+        self.date_created = isoparse(data["createdAt"][:-1])
+        self.date_modified = isoparse(data["lastActivityAt"][:-1])
         self.keywords = data["topics"]
 
         # Get contributors as the project members that are not owners and those that have written merge requests
@@ -87,11 +88,11 @@ class GitlabExtractor(Extractor):
         if data["releases"] and (len(data["releases"]["edges"]) > 0):
             # go into releases and take the name from the first node (most recent)
             self.version = data["releases"]["edges"][0]["node"]["name"]
-            self.download_url = f"{self.path}/-/archive/{self.version}/{self.name.split('/')[-1]}-{self.version}.tar.gz"
+            self.download_url = f"{self.url}/-/archive/{self.version}/{self.path.split('/')[-1]}-{self.version}.tar.gz"
 
         # for the license, we need to query the rest API
         # the code below does not work, returns - if you have permission- the GitLab specific licence
-        # resp = requests.get(url=f"{GL_API_rest}/license/{self.identifier}")
+        # resp = requests.get(url=f"{self.graphql_endpoint}/license/{self.identifier}")
         # if resp.status_code == 200:
         #     self.license = resp.json()
 
@@ -99,8 +100,8 @@ class GitlabExtractor(Extractor):
         self, repo: Dict[str, Any]
     ) -> Optional[Organization]:
         """Extract the group from a GraphQL repository node if it has one."""
-        if (self.name is not None) and (repo["group"] is not None):
-            repo["group"]["name"] = "/".join(self.name.split("/")[0:-1])
+        if (self.path is not None) and (repo["group"] is not None):
+            repo["group"]["name"] = "/".join(self.path.split("/")[0:-1])
             return self._get_organization(repo["group"])
         return None
 
@@ -125,7 +126,7 @@ class GitlabExtractor(Extractor):
 
         # If the author is absent from the GraphQL response (permission bug),
         # fallback to the REST API
-        return [self._user_from_rest(self.name.split("/")[0])]
+        return [self._user_from_rest(self.path.split("/")[0])]
 
     def _safe_extract_contributors(
         self, repo: dict[str, Any]
@@ -208,7 +209,7 @@ class GitlabExtractor(Extractor):
         }
         """
         response = send_graphql_query(
-            GL_API_GRAPHQL, project_query, data, self._set_auth()
+            self.graphql_endpoint, project_query, data, self._set_auth()
         )
         if "errors" in response:
             raise ValueError(response["errors"])
@@ -223,7 +224,7 @@ class GitlabExtractor(Extractor):
                 assert self.token
             headers = {"Authorization": f"token {self.token}"}
 
-            login = requests.get(f"{GL_API_REST}/user", headers=headers)
+            login = requests.get(f"{self.rest_endpoint}/user", headers=headers)
             assert login.json().get("login")
         except AssertionError:
             return {}
@@ -260,7 +261,7 @@ class GitlabExtractor(Extractor):
         """Given a username, use the REST API to retrieve the Person object."""
 
         author = send_rest_query(
-            GL_API_REST,
+            self.rest_endpoint,
             f"/users?username={username}",
             self._set_auth(),
         )
@@ -273,12 +274,20 @@ class GitlabExtractor(Extractor):
             name=author.get("name"),
         )
 
+    @property
+    def rest_endpoint(self) -> str:
+        return f"{self.base}/api/v4/"
+
+    @property
+    def graphql_endpoint(self) -> str:
+        return f"{self.base}/api"
+
 
 class GitlabExtractorSchema(JsonLDSchema):
     """This defines the schema used for json-ld serialization."""
 
     _id = fields.Id()
-    name = fields.String(SDO.name)
+    path = fields.String(SDO.name)
     identifier = fields.String(SDO.identifier)
     source_organization = fields.Nested(SDO.isPartOf, OrganizationSchema)
     author = fields.Nested(

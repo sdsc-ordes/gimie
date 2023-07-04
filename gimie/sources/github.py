@@ -18,6 +18,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime
+from dateutil.parser import isoparse
 import os
 import requests
 from typing import Any, Dict, List, Optional, Set, Union
@@ -90,13 +91,18 @@ def query_contributors(
 @dataclass
 class GithubExtractor(Extractor):
     """Extractor for GitHub repositories. Uses the GitHub GraphQL API to
-    extract metadata into linked data."""
+    extract metadata into linked data.
+    url: str
+        The url of the git repository.
+    base_url: Optional[str]
+        The base url of the git remote.
+    """
 
-    path: str
-    _id: Optional[str] = None
+    url: str
+    base_url: Optional[str] = None
+    local_path: Optional[str] = None
+
     token: Optional[str] = None
-
-    name: Optional[str] = None
     author: Optional[Union[Organization, Person]] = None
     contributors: Optional[List[Person]] = None
     prog_langs: Optional[List[str]] = None
@@ -117,15 +123,12 @@ class GithubExtractor(Extractor):
 
     def extract(self):
         """Extract metadata from target GitHub repository."""
-        if self._id is None:
-            self._id = self.path
-        self.name = urlparse(self.path).path.strip("/")
-        data = self._fetch_repo_data(self.path)
+        data = self._fetch_repo_data()
         self.author = self._get_author(data["owner"])
-        self.contributors = self._fetch_contributors(self.path)
+        self.contributors = self._fetch_contributors()
         self.description = data["description"]
-        self.date_created = datetime.fromisoformat(data["createdAt"][:-1])
-        self.date_modified = datetime.fromisoformat(data["updatedAt"][:-1])
+        self.date_created = isoparse(data["createdAt"][:-1])
+        self.date_modified = isoparse(data["updatedAt"][:-1])
         # If license is available, convert to standard SPDX URL
         if data["licenseInfo"] is not None:
             self.license = get_spdx_url(data["licenseInfo"]["spdxId"])
@@ -136,12 +139,12 @@ class GithubExtractor(Extractor):
         if last_release is not None:
             self.version = last_release["name"]
             self.download_url = (
-                f"{self.path}/archive/refs/tags/{self.version}.tar.gz"
+                f"{self.url}/archive/refs/tags/{self.version}.tar.gz"
             )
 
-    def _fetch_repo_data(self, url: str) -> Dict[str, Any]:
+    def _fetch_repo_data(self) -> Dict[str, Any]:
         """Fetch repository metadata from GraphQL endpoint."""
-        owner, name = urlparse(url).path.strip("/").split("/")
+        owner, name = self.path.split("/")
         data = {"owner": owner, "name": name}
         repo_query = """
         query repo($owner: String!, $name: String!) {
@@ -218,12 +221,12 @@ class GithubExtractor(Extractor):
 
         return response["data"]["repository"]
 
-    def _fetch_contributors(self, url: str) -> List[Person]:
+    def _fetch_contributors(self) -> List[Person]:
         """Queries the GitHub GraphQL API to extract contributors through the commit list.
         NOTE: This is a workaround for the lack of a contributors field in the GraphQL API."""
         headers = self._set_auth()
         contributors = []
-        resp = query_contributors(url, headers)
+        resp = query_contributors(self.url, headers)
         for user in resp:
             contributors.append(self._get_user(user))
         return list(contributors)
@@ -285,7 +288,7 @@ class GithubExtractorSchema(JsonLDSchema):
     """This defines the schema used for json-ld serialization."""
 
     _id = fields.Id()
-    name = fields.String(SDO.name)
+    path = fields.String(SDO.name)
     author = fields.Nested(SDO.author, [PersonSchema, OrganizationSchema])
     contributors = fields.Nested(SDO.contributor, PersonSchema, many=True)
     prog_langs = fields.List(SDO.programmingLanguage, fields.String)

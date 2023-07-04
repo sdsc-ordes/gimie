@@ -20,6 +20,7 @@ from typing import Optional
 
 
 from rdflib import Graph
+from urllib.parse import urlparse
 
 
 class Extractor(ABC):
@@ -30,10 +31,15 @@ class Extractor(ABC):
     they are free to override the default serialize() and jsonld()
     """
 
-    def __init__(self, path: str, _id: Optional[str] = None):
-        self.path = path
-        if _id is not None:
-            self._id = _id
+    def __init__(
+        self,
+        url: str,
+        base_url: Optional[str] = None,
+        local_path: Optional[str] = None,
+    ):
+        self.url = url
+        self.base_url = base_url
+        self.local_path = local_path
 
     @abstractmethod
     def extract(self):
@@ -52,3 +58,23 @@ class Extractor(ABC):
     def jsonld(self) -> str:
         """Alias for jsonld serialization."""
         return self.serialize(format="json-ld")
+
+    @property
+    def _id(self) -> str:
+        """Unique identifier for the repository."""
+        return self.url
+
+    @property
+    def path(self) -> str:
+        """Path to the repository without the base URL."""
+        if self.base_url is None:
+            return urlparse(self.url).path.strip("/")
+        return self.url.removeprefix(self.base_url).strip("/")
+
+    @property
+    def base(self) -> str:
+        """Base URL of the remote."""
+        if self.base_url is None:
+            url = urlparse(self.url)
+            return f"{url.scheme}://{url.netloc}"
+        return self.base_url
