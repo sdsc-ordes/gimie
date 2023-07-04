@@ -64,10 +64,9 @@ class GitlabExtractor(Extractor):
 
     def extract(self):
         """Extract metadata from target Gitlab repository."""
-        self.name = self.path
 
         # fetch metadata
-        data = self._fetch_repo_data(self.name)
+        data = self._fetch_repo_data(self.path)
 
         # Each Gitlab project has a unique identifier (integer)
         self.identifier = urlparse(data["id"]).path.split("/")[2]
@@ -89,7 +88,7 @@ class GitlabExtractor(Extractor):
         if data["releases"] and (len(data["releases"]["edges"]) > 0):
             # go into releases and take the name from the first node (most recent)
             self.version = data["releases"]["edges"][0]["node"]["name"]
-            self.download_url = f"{self.url}/-/archive/{self.version}/{self.name.split('/')[-1]}-{self.version}.tar.gz"
+            self.download_url = f"{self.url}/-/archive/{self.version}/{self.path.split('/')[-1]}-{self.version}.tar.gz"
 
         # for the license, we need to query the rest API
         # the code below does not work, returns - if you have permission- the GitLab specific licence
@@ -101,8 +100,8 @@ class GitlabExtractor(Extractor):
         self, repo: Dict[str, Any]
     ) -> Optional[Organization]:
         """Extract the group from a GraphQL repository node if it has one."""
-        if (self.name is not None) and (repo["group"] is not None):
-            repo["group"]["name"] = "/".join(self.name.split("/")[0:-1])
+        if (self.path is not None) and (repo["group"] is not None):
+            repo["group"]["name"] = "/".join(self.path.split("/")[0:-1])
             return self._get_organization(repo["group"])
         return None
 
@@ -127,7 +126,7 @@ class GitlabExtractor(Extractor):
 
         # If the author is absent from the GraphQL response (permission bug),
         # fallback to the REST API
-        return [self._user_from_rest(self.name.split("/")[0])]
+        return [self._user_from_rest(self.path.split("/")[0])]
 
     def _safe_extract_contributors(
         self, repo: dict[str, Any]
@@ -288,7 +287,7 @@ class GitlabExtractorSchema(JsonLDSchema):
     """This defines the schema used for json-ld serialization."""
 
     _id = fields.Id()
-    name = fields.String(SDO.name)
+    path = fields.String(SDO.name)
     identifier = fields.String(SDO.identifier)
     source_organization = fields.Nested(SDO.isPartOf, OrganizationSchema)
     author = fields.Nested(

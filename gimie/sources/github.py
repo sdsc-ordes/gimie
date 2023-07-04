@@ -123,7 +123,6 @@ class GithubExtractor(Extractor):
 
     def extract(self):
         """Extract metadata from target GitHub repository."""
-        self.name = self.path
         data = self._fetch_repo_data()
         self.author = self._get_author(data["owner"])
         self.contributors = self._fetch_contributors()
@@ -145,7 +144,7 @@ class GithubExtractor(Extractor):
 
     def _fetch_repo_data(self) -> Dict[str, Any]:
         """Fetch repository metadata from GraphQL endpoint."""
-        owner, name = self.name.split("/")
+        owner, name = self.path.split("/")
         data = {"owner": owner, "name": name}
         repo_query = """
         query repo($owner: String!, $name: String!) {
@@ -289,7 +288,7 @@ class GithubExtractorSchema(JsonLDSchema):
     """This defines the schema used for json-ld serialization."""
 
     _id = fields.Id()
-    name = fields.String(SDO.name)
+    path = fields.String(SDO.name)
     author = fields.Nested(SDO.author, [PersonSchema, OrganizationSchema])
     contributors = fields.Nested(SDO.contributor, PersonSchema, many=True)
     prog_langs = fields.List(SDO.programmingLanguage, fields.String)
