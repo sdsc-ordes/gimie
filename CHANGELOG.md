@@ -1,5 +1,18 @@
 Notable changes introduced in gimie releases are documented in this file
 
+## [0.5.0] - 2023-07-04
+
+### Bug Fixes
+
+- *(gitlab)* extraction of author on user-owned projects (#57)
+
+### Documentation
+- add docs website (#58)
+
+
+### Features
+
+- *(gitlab)* support private instances (#62)
 
 ## [0.4.0] - 2023-06-09
 
