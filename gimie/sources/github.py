@@ -297,7 +297,7 @@ class GithubExtractorSchema(JsonLDSchema):
     date_created = fields.Date(SDO.dateCreated)
     date_modified = fields.Date(SDO.dateModified)
     license = fields.IRI(SDO.license)
-    path = fields.IRI(SDO.CodeRepository)
+    url = fields.IRI(SDO.codeRepository)
     keywords = fields.List(SDO.keywords, fields.String)
     version = fields.String(SDO.version)
 
