@@ -1,5 +1,10 @@
 Notable changes introduced in gimie releases are documented in this file
 
+## [0.5.1] - 2023-07-10
+
+### Bug Fixes
+- incorrect mapping for schema:codeRepository (#64)
+
 ## [0.5.0] - 2023-07-04
 
 ### Bug Fixes
