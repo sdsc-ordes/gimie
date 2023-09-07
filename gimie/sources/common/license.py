@@ -13,10 +13,10 @@ from typing import List
 from gimie.graph.namespaces import GIMIE
 import requests
 import json
-github_token = os.environ.get('GITHUB_TOKEN')
-headers = {'Authorization': f'token {github_token}'}
-username = 'rmfranken'
 
+headers = {'Authorization': 'token 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'}
+username = 'rmfranken'
+github_token = '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'
 def get_files_in_repository_root(repo_url):
     # Extract the username and repository name from the URL
     parts = repo_url.strip("/").split("/")
