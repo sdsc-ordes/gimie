@@ -13,6 +13,7 @@ from typing import List
 from gimie.graph.namespaces import GIMIE
 import requests
 import json
+
 github_token = os.environ.get('GITHUB_TOKEN')
 headers = {'Authorization': f'token {github_token}'}
 username = 'rmfranken'
