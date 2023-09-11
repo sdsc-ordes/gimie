@@ -2,8 +2,11 @@ import os
 import re
 from typing import List
 
-from gimie.graph.namespaces import GIMIE
+import spdx_matcher
+import subprocess
 
+from gimie.graph.namespaces import GIMIE
+import spdx_matcher as lookup
 
 import base64
 import os
@@ -58,17 +61,15 @@ pattern = r".*(license(s)?|reus(e|ing)|copy(ing)?)(\.(txt|md|rst))?$"
 def return_license_path(files):
     if files:
         for file in files:
-            print(file)
             if file.startswith("."):
                 continue
 
             if re.match(pattern, file, flags=re.IGNORECASE):
                 license_path = repo_url+"/blob/main/"+file
                 license_files.append(license_path)
+                print(license_path + " is the license path gimie found, starting extraction of license..." )
     for license_file in license_files:
         return license_file
-
-print(return_license_path(get_files_in_repository_root(repo_url)))
 
 url = (return_license_path(get_files_in_repository_root(repo_url)))
 def github_read_file(url, github_token=None):
@@ -79,69 +80,20 @@ def github_read_file(url, github_token=None):
     r = requests.get(url, headers=headers)
     r.raise_for_status()
     data = r.json()
-    print(data)
     return data
 
 
-my_data = github_read_file(url)
-# json.load(my_data)
 file1= open("myfile.json", 'w', encoding='utf-8')
-
-file1.write(str(my_data))
+json_object1 = json.dump(github_read_file(url),file1)
 file1.close()
-
-#     print(json.dump())
-
-
-# def locate_licenses(path: str, recurse: bool = False) -> List[str]:
-#     """Returns valid potential paths to license files in the project.
-#     This uses pattern-matching on file names.
-#
-#     Parameters
-#     ----------
-#     path:
-#         The root path to search for license files.
-#     recurse:
-#         Whether to look into subdirectories.
-#
-#     Returns
-#     -------
-#     license_files:
-#         The list of relative paths (from input path) to files which
-#         potentially contain license text.
-#
-#     Examples
-#     --------
-#     >>> locate_licenses('.')
-#     ['./LICENSE']
-#     """
-#     license_files = []
-#     pattern = r".*(license(s)?|reus(e|ing)|copy(ing)?)(\.(txt|md|rst))?$"
-#
-#     for root, _, files in os.walk(path):
-#         # skip toplevel hidden dirs (e.g. .git/)
-#         subdir = os.path.relpath(root, path)
-#         if subdir.startswith(".") and subdir != ".":
-#             continue
-#         for file in files:
-#             # skip hidden files
-#             if file.startswith("."):
-#                 continue
-#
-#             if re.match(pattern, file, flags=re.IGNORECASE):
-#                 license_path = os.path.join(root, file)
-#                 license_files.append(license_path)
-#
-#         # The first root of os.walk is the current dir
-#         if not recurse:
-#             return license_files
-#
-#     return license_files
+# json_object = json.dumps(github_read_file(url))
+with open(r"C:\Users\franken\gimie\gimie\sources\common\myfile.json", 'r') as json_object:
+    json_object = json.load(json_object)
+    print(json_object)
+    license_string = (str(json_object['payload']['blob']['rawLines']))
 
 
-def get_spdx_url(name: str) -> str:
-    """Given an SPDX license identifier, return the full URL."""
-    return f"https://spdx.org/licenses/{name}"
+subprocess.run(f'scancode --json-pp -  --license ./myfile.json')
 
 def get_spdx_url(name: str) -> str:
     """Given an SPDX license identifier, return the full URL."""

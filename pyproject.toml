@@ -34,6 +34,9 @@ python-dotenv = "^0.21.1"
 pre-commit = "^3.0.0"
 importlib = "^1.0.4"
 python-dateutil = "^2.8.2"
+spdx-lookup = "^0.3.3"
+spdx-matcher = "^0.0.11"
+scancode-toolkit = "^32.0.6"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.0"
