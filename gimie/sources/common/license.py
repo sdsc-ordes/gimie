@@ -89,11 +89,18 @@ file1.close()
 # json_object = json.dumps(github_read_file(url))
 with open(r"C:\Users\franken\gimie\gimie\sources\common\myfile.json", 'r') as json_object:
     json_object = json.load(json_object)
-    print(json_object)
+    # print(json_object)
     license_string = (str(json_object['payload']['blob']['rawLines']))
 
 
-subprocess.run(f'scancode --json-pp -  --license ./myfile.json')
+subprocess.run(f'scancode --json-pp ./output.json  --license ./myfile.json ' )
+
+with open("output.json", 'r') as file2:
+    json_object2 = json.load(file2)
+    # print(json_object2)
+    license_identifier = json_object2['files'][0]['licenses'][0]['spdx_url']
+    print(license_identifier)
+
 
 def get_spdx_url(name: str) -> str:
     """Given an SPDX license identifier, return the full URL."""
