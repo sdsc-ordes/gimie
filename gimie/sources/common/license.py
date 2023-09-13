@@ -12,7 +12,7 @@ import base64
 import os
 import re
 from typing import List
-
+from scancode.api import get_licenses
 from gimie.graph.namespaces import GIMIE
 import requests
 import json
@@ -130,32 +130,18 @@ def extract_license_string(url):
     """Runs the spdx license matcher (Scancode-toolkit) against the license_string"""
 
     file1 = open("myfile.json", "w", encoding="utf-8")
-    json_object1 = json.dump(github_read_file(url), file1)
+    json.dump(github_read_file(url), file1)
     file1.close()
-
-    with open(r"myfile.json", "r") as json_object1:
-        json_object = json.load(json_object1)
-        # license_string = str(json_object["payload"]["blob"]["rawLines"])
-        subprocess.run(
-            f"scancode --json-pp ./output.json  --license ./myfile.json "
-        )
-        json_object1.close()
-
-    print("license string extracted")
-
-
-def extract_spdx_url():
-    """Parses the scancode-toolkit output to extract the full SPDX URL of found license"""
-    print("parsing license string to match against SPDX Licenses")
-    with open("output.json", "r") as file2:
-        json_object2 = json.load(file2)
-        license_identifier = json_object2["files"][0]["licenses"][0][
-            "spdx_url"
-        ]
-        print("found license:" + license_identifier)
-    os.remove("output.json")
+    found_spdx_license_id = get_licenses("myfile.json")[
+        "detected_license_expression_spdx"
+    ]
     os.remove("myfile.json")
-    return license_identifier
+    return found_spdx_license_id
+
+
+def get_spdx_url(name: str) -> str:
+    """Given an SPDX license identifier, return the full URL."""
+    return f"https://spdx.org/licenses/{name}.html"
 
 
 def get_license(repo_url, headers, license_files=[]):
@@ -165,8 +151,7 @@ def get_license(repo_url, headers, license_files=[]):
         license_files=license_files,
     )
     github_read_file(url)
-    extract_license_string(url)
-    extract_spdx_url()
+    print(get_spdx_url(extract_license_string(url)))
 
 
 get_license(repo_url, headers=headers)
