@@ -29,7 +29,7 @@ def get_default_branch_name(repo_url):
         "https://github.com", "https://api.github.com/repos"
     )
     # Send a GET request to the GitHub API to get repository information
-    response = requests.get(url)
+    response = requests.get(url, headers=headers)
 
     # Check if the request was successful (status code 200)
     if response.status_code == 200:
@@ -59,24 +59,20 @@ def get_files_in_repository_root(repo_url, headers):
     repo_name = parts[-1]
 
     # Construct the GitHub API URL for the repository's contents
-    api_url = f"https://api.github.com/repos/{username}/{repo_name}/contents/"
+    api_url = f"https://api.github.com/repos/{username}/{repo_name}/git/trees/{get_default_branch_name(repo_url)}"
 
     try:
         # Make a GET request to the GitHub API
         response = requests.get(api_url, headers=headers)
-
         # Check if the request was successful (status code 200)
         if response.status_code == 200:
             # Parse the JSON response
             contents = response.json()
-
-            # Filter out only the files (exclude directories)
-            files = [
-                item["name"] for item in contents if item["type"] == "file"
+            files_dict = [
+                {"path": item["path"], "url": item["url"]}
+                for item in contents["tree"]
             ]
-
-            return files
-
+            return files_dict
         else:
             # If the request was not successful, raise an exception
             response.raise_for_status()
@@ -86,20 +82,21 @@ def get_files_in_repository_root(repo_url, headers):
         return None
 
 
-def get_license_path(files, license_files):
+def get_license_path(files_dict, license_files):
     """Given a list of files, returns the URL filepath which contains the license"""
-    if files:
-        for file in files:
-            if file.startswith("."):
+    if files_dict:
+        for file in files_dict:
+            if file["path"].startswith("."):
                 continue
             pattern = (
                 r".*(license(s)?|reus(e|ing)|copy(ing)?)(\.(txt|md|rst))?$"
             )
-            if re.match(pattern, file, flags=re.IGNORECASE):
+            if re.match(pattern, file["path"], flags=re.IGNORECASE):
+                print(file["url"], file["path"])
                 license_path = (
                     repo_url
                     + f"/blob/{get_default_branch_name(repo_url)}/"
-                    + file
+                    + file["path"]
                 )
                 license_files.append(license_path)
                 print(
