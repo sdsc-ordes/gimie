@@ -21,6 +21,7 @@ github_token = os.environ.get("GITHUB_TOKEN")
 headers = {"Authorization": f"token {github_token}"}
 repo_url = "https://github.com/comfyanonymous/ComfyUI"
 repo_url = repo_url.rstrip("/")
+license_files = []
 
 
 def get_default_branch_name(repo_url):
@@ -49,9 +50,6 @@ def get_default_branch_name(repo_url):
             f"Failed to retrieve repository information. Status code: {response.status_code}"
         )
         return None
-
-
-get_default_branch_name(repo_url)
 
 
 def get_files_in_repository_root(repo_url):
@@ -89,11 +87,7 @@ def get_files_in_repository_root(repo_url):
         return None
 
 
-files_in_root = get_files_in_repository_root(repo_url)
-license_files = []
-
-
-def return_license_path(files):
+def get_license_path(files):
     """Given a list of files, returns the URL filepath which contains the license"""
     if files:
         for file in files:
@@ -121,9 +115,6 @@ def return_license_path(files):
             return license_file
 
 
-url = return_license_path(get_files_in_repository_root(repo_url))
-
-
 def github_read_file(url, github_token=None):
     """Uses the Github API to download the license file using its URL"""
     headers = {}
@@ -136,13 +127,13 @@ def github_read_file(url, github_token=None):
     return data
 
 
-file1 = open("myfile.json", "w", encoding="utf-8")
-json_object1 = json.dump(github_read_file(url), file1)
-file1.close()
-
-
-def extract_license_string():
+def extract_license_string(url):
     """Runs the spdx license matcher (Scancode-toolkit) against the license_string"""
+
+    file1 = open("myfile.json", "w", encoding="utf-8")
+    json_object1 = json.dump(github_read_file(url), file1)
+    file1.close()
+
     with open(r"myfile.json", "r") as json_object1:
         json_object = json.load(json_object1)
         # license_string = str(json_object["payload"]["blob"]["rawLines"])
@@ -152,9 +143,6 @@ def extract_license_string():
         json_object1.close()
 
     print("license string extracted")
-
-
-extract_license_string()
 
 
 def extract_spdx_url():
@@ -167,13 +155,16 @@ def extract_spdx_url():
         ]
         print("found license:" + license_identifier)
     os.remove("output.json")
+    os.remove("myfile.json")
     return license_identifier
 
 
-extract_spdx_url()
-os.remove("myfile.json")
+def get_license(repo_url):
+    get_default_branch_name(repo_url)
+    url = get_license_path(get_files_in_repository_root(repo_url))
+    github_read_file(url)
+    extract_license_string(url)
+    extract_spdx_url()
 
 
-def get_spdx_url(name: str) -> str:
-    """Given an SPDX license identifier, return the full URL."""
-    return f"https://spdx.org/licenses/{name}"
+get_license(repo_url)
