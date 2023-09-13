@@ -19,7 +19,39 @@ import json
 
 github_token = os.environ.get("GITHUB_TOKEN")
 headers = {"Authorization": f"token {github_token}"}
-repo_url = "https://github.com/SDSC-ORD/gimie"
+repo_url = "https://github.com/comfyanonymous/ComfyUI"
+repo_url = repo_url.rstrip("/")
+
+
+def get_default_branch_name(repo_url):
+    # Construct the URL for the GitHub repository
+    url = repo_url.replace(
+        "https://github.com", "https://api.github.com/repos"
+    )
+    # Send a GET request to the GitHub API to get repository information
+    response = requests.get(url)
+
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        repository_info = response.json()
+        # Check if "master" exists as a branch name
+        if "master" == repository_info["default_branch"]:
+            return "master"
+
+        # Check if "main" exists as a branch name
+        if "main" == repository_info["default_branch"]:
+            return "main"
+
+        # If neither "master" nor "main" exists, return None
+        return None
+    else:
+        print(
+            f"Failed to retrieve repository information. Status code: {response.status_code}"
+        )
+        return None
+
+
+get_default_branch_name(repo_url)
 
 
 def get_files_in_repository_root(repo_url):
@@ -71,7 +103,11 @@ def return_license_path(files):
                 r".*(license(s)?|reus(e|ing)|copy(ing)?)(\.(txt|md|rst))?$"
             )
             if re.match(pattern, file, flags=re.IGNORECASE):
-                license_path = repo_url + "/blob/main/" + file
+                license_path = (
+                    repo_url
+                    + f"/blob/{get_default_branch_name(repo_url)}/"
+                    + file
+                )
                 license_files.append(license_path)
                 print(
                     license_path
@@ -103,14 +139,15 @@ file1.close()
 
 def extract_license_string():
     """Runs the spdx license matcher (Scancode-toolkit) against the license_string"""
-    with open(r"myfile.json", "r") as json_object:
-        json_object = json.load(json_object)
-        # print(json_object)
-        license_string = str(json_object["payload"]["blob"]["rawLines"])
-    subprocess.run(
-        f"scancode --json-pp ./output.json  --license ./myfile.json "
-    )
-    os.remove("myfile.json")
+    with open(r"myfile.json", "r") as json_object1:
+        json_object = json.load(json_object1)
+        # license_string = str(json_object["payload"]["blob"]["rawLines"])
+        subprocess.run(
+            f"scancode --json-pp ./output.json  --license ./myfile.json "
+        )
+        json_object1.close()
+
+    print("license string extracted")
 
 
 extract_license_string()
@@ -118,17 +155,19 @@ extract_license_string()
 
 def extract_spdx_url():
     """Parses the scancode-toolkit output to extract the full SPDX URL of found license"""
+    print("parsing license string to match against SPDX Licenses")
     with open("output.json", "r") as file2:
         json_object2 = json.load(file2)
         license_identifier = json_object2["files"][0]["licenses"][0][
             "spdx_url"
         ]
-        print(license_identifier)
+        print("found license:" + license_identifier)
     os.remove("output.json")
     return license_identifier
 
 
 extract_spdx_url()
+os.remove("myfile.json")
 
 
 def get_spdx_url(name: str) -> str:
