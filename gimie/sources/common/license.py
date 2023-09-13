@@ -18,7 +18,7 @@ import requests
 import json
 github_token = os.environ.get('GITHUB_TOKEN')
 headers = {'Authorization': f'token {github_token}'}
-username = 'rmfranken'
+repo_url = "https://github.com/SDSC-ORD/gimie"
 
 def get_files_in_repository_root(repo_url):
     # Extract the username and repository name from the URL
@@ -51,18 +51,15 @@ def get_files_in_repository_root(repo_url):
         print(f"Error: {e}")
         return None
 
-# https://github.com/SDSC-ORD/gimie/blob/main/LICENSE
-# Example usage:
-repo_url = "https://github.com/SDSC-ORD/gimie"
 files_in_root = get_files_in_repository_root(repo_url)
 license_files = []
-pattern = r".*(license(s)?|reus(e|ing)|copy(ing)?)(\.(txt|md|rst))?$"
+
 def return_license_path(files):
     if files:
         for file in files:
             if file.startswith("."):
                 continue
-
+            pattern = r".*(license(s)?|reus(e|ing)|copy(ing)?)(\.(txt|md|rst))?$"
             if re.match(pattern, file, flags=re.IGNORECASE):
                 license_path = repo_url+"/blob/main/"+file
                 license_files.append(license_path)
@@ -86,7 +83,7 @@ file1= open("myfile.json", 'w', encoding='utf-8')
 json_object1 = json.dump(github_read_file(url),file1)
 file1.close()
 # json_object = json.dumps(github_read_file(url))
-with open(r"C:\Users\franken\gimie\gimie\sources\common\myfile.json", 'r') as json_object:
+with open(r"myfile.json", 'r') as json_object:
     json_object = json.load(json_object)
     # print(json_object)
     license_string = (str(json_object['payload']['blob']['rawLines']))
