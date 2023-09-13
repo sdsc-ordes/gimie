@@ -113,8 +113,12 @@ def return_license_path(files):
                     license_path
                     + " is the license path gimie found, starting extraction of license..."
                 )
-    for license_file in license_files:
-        return license_file
+
+    if len(license_files) > 1:
+        return "More than 1 license file was found, please make sure you only have one license."
+    else:
+        for license_file in license_files:
+            return license_file
 
 
 url = return_license_path(get_files_in_repository_root(repo_url))
