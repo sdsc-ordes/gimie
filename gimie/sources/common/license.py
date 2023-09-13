@@ -17,11 +17,10 @@ from gimie.graph.namespaces import GIMIE
 import requests
 import json
 
+repo_url = "https://github.com/comfyanonymous/ComfyUI"
 github_token = os.environ.get("GITHUB_TOKEN")
 headers = {"Authorization": f"token {github_token}"}
-repo_url = "https://github.com/comfyanonymous/ComfyUI"
 repo_url = repo_url.rstrip("/")
-license_files = []
 
 
 def get_default_branch_name(repo_url):
@@ -52,7 +51,7 @@ def get_default_branch_name(repo_url):
         return None
 
 
-def get_files_in_repository_root(repo_url):
+def get_files_in_repository_root(repo_url, headers):
     """Given a GitHub repository URL, outputs a list of files present in the root folder"""
     # Extract the username and repository name from the URL
     parts = repo_url.strip("/").split("/")
@@ -87,7 +86,7 @@ def get_files_in_repository_root(repo_url):
         return None
 
 
-def get_license_path(files):
+def get_license_path(files, license_files):
     """Given a list of files, returns the URL filepath which contains the license"""
     if files:
         for file in files:
@@ -159,12 +158,15 @@ def extract_spdx_url():
     return license_identifier
 
 
-def get_license(repo_url):
+def get_license(repo_url, headers, license_files=[]):
     get_default_branch_name(repo_url)
-    url = get_license_path(get_files_in_repository_root(repo_url))
+    url = get_license_path(
+        get_files_in_repository_root(repo_url, headers),
+        license_files=license_files,
+    )
     github_read_file(url)
     extract_license_string(url)
     extract_spdx_url()
 
 
-get_license(repo_url)
+get_license(repo_url, headers=headers)
