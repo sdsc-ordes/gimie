@@ -2,11 +2,9 @@ import os
 import re
 from typing import List
 
-import spdx_matcher
 import subprocess
-
+from tempfile import TemporaryFile
 from gimie.graph.namespaces import GIMIE
-import spdx_matcher as lookup
 
 import base64
 import os
@@ -35,20 +33,10 @@ def get_default_branch_name(repo_url):
     if response.status_code == 200:
         repository_info = response.json()
         # Check if "master" exists as a branch name
-        if "master" == repository_info["default_branch"]:
-            return "master"
-
-        # Check if "main" exists as a branch name
-        if "main" == repository_info["default_branch"]:
-            return "main"
-
-        # If neither "master" nor "main" exists, return None
-        return None
-    else:
-        print(
-            f"Failed to retrieve repository information. Status code: {response.status_code}"
-        )
-        return None
+        try:
+            return repository_info["default_branch"]
+        except KeyError:
+            print("Could not identify default branch")
 
 
 def get_files_in_repository_root(repo_url, headers):
@@ -92,7 +80,6 @@ def get_license_path(files_dict, license_files):
                 r".*(license(s)?|reus(e|ing)|copy(ing)?)(\.(txt|md|rst))?$"
             )
             if re.match(pattern, file["path"], flags=re.IGNORECASE):
-                print(file["url"], file["path"])
                 license_path = (
                     repo_url
                     + f"/blob/{get_default_branch_name(repo_url)}/"
@@ -125,14 +112,14 @@ def github_read_file(url, github_token=None):
 
 def extract_license_string(url):
     """Runs the spdx license matcher (Scancode-toolkit) against the license_string"""
-
-    file1 = open("myfile.json", "w", encoding="utf-8")
-    json.dump(github_read_file(url), file1)
+    file1 = TemporaryFile(delete=False)
     file1.close()
-    found_spdx_license_id = get_licenses("myfile.json")[
+    with open(file1.name, "w", encoding="utf-8") as license_handler:
+        json.dump(github_read_file(url), license_handler)
+
+    found_spdx_license_id = get_licenses(file1.name)[
         "detected_license_expression_spdx"
     ]
-    os.remove("myfile.json")
     return found_spdx_license_id
 
 
