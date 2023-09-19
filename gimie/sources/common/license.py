@@ -1,17 +1,7 @@
-import os
-import re
-from typing import List
-
-import subprocess
 from tempfile import TemporaryFile
-from gimie.graph.namespaces import GIMIE
-
-import base64
 import os
 import re
-from typing import List
 from scancode.api import get_licenses
-from gimie.graph.namespaces import GIMIE
 import requests
 import json
 
