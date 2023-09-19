@@ -21,8 +21,7 @@ headers = {"Authorization": f"token {github_token}"}
 repo_url = repo_url.rstrip("/")
 
 
-def get_default_branch_name(repo_url):
-    # Construct the URL for the GitHub repository
+def graph_ql_query_bit(repo_url):
     url = repo_url.replace(
         "https://github.com", "https://api.github.com/repos"
     )
@@ -30,14 +29,22 @@ def get_default_branch_name(repo_url):
     username = parts[-2]
     repo_name = parts[-1]
     url = "https://api.github.com/graphql"
-    query = """query {
-  repository(owner: "%s", name: "%s") {
-    defaultBranchRef {
-      name
-    }
-  }
-}
-""" % (
+    query = """
+       query {
+         repository(owner: "%s", name: "%s") {
+           defaultBranchRef {
+             name
+           }
+           object(expression: "HEAD:") {
+             ... on Tree {
+               entries {
+                 name
+               }
+             }
+           }
+         }
+       }
+       """ % (
         username,
         repo_name,
     )
@@ -46,65 +53,15 @@ def get_default_branch_name(repo_url):
 
     # Check if the request was successful (status code 200)
     if response.status_code == 200:
-        # print(response.headers)
         repository_info = response.json()
-        # print(repository_info)
-        # Check if "master" exists as a branch name
+        default_branch_name = repository_info["data"]["repository"][
+            "defaultBranchRef"
+        ]["name"]
+        files_dict = repository_info["data"]["repository"]["object"]["entries"]
         try:
-            return repository_info["data"]["repository"]["defaultBranchRef"][
-                "name"
-            ]
+            return default_branch_name, files_dict
         except KeyError:
             print("Could not identify default branch")
-
-
-def get_files_in_repository_root(repo_url, headers):
-    """Given a GitHub repository URL, outputs a list of files present in the root folder"""
-    # Extract the username and repository name from the URL
-    parts = repo_url.strip("/").split("/")
-    username = parts[-2]
-    repo_name = parts[-1]
-
-    # Construct the GitHub API URL for the repository's contents
-    api_url = f"https://api.github.com/repos/{username}/{repo_name}/git/trees/{get_default_branch_name(repo_url)}"
-    # For GRAPH QL
-    api_url = f"https://api.github.com/graphql"
-
-    query = """
-    query {
-      repository(owner: "%s", name: "%s") {
-        object(expression: "HEAD:") {
-          ... on Tree {
-            entries {
-              name
-            }
-          }
-        }
-      }
-    }
-    """ % (
-        username,
-        repo_name,
-    )
-
-    try:
-        # Make a GET request to the GitHub API
-        response = requests.post(
-            api_url, json={"query": query}, headers=headers
-        )
-        # Check if the request was successful (status code 200)
-        if response.status_code == 200:
-            # Parse the JSON response
-            contents = response.json()
-            files_dict = contents["data"]["repository"]["object"]["entries"]
-            return files_dict
-        else:
-            # If the request was not successful, raise an exception
-            response.raise_for_status()
-
-    except requests.exceptions.RequestException as e:
-        print(f"Error: {e}")
-        return None
 
 
 def get_license_path(files_dict, license_files):
@@ -119,7 +76,7 @@ def get_license_path(files_dict, license_files):
             if re.match(pattern, file["name"], flags=re.IGNORECASE):
                 license_path = (
                     repo_url
-                    + f"/blob/{get_default_branch_name(repo_url)}/"
+                    + f"/blob/{graph_ql_query_bit(repo_url)[0]}/"
                     + file["name"]
                 )
                 license_files.append(license_path)
@@ -166,10 +123,8 @@ def get_spdx_url(name: str) -> str:
 
 
 def get_license(repo_url, headers, license_files=[]):
-    get_default_branch_name(repo_url)
     url = get_license_path(
-        get_files_in_repository_root(repo_url, headers),
-        license_files=license_files,
+        graph_ql_query_bit(repo_url)[1], license_files=license_files
     )
     github_read_file(url)
     print(get_spdx_url(extract_license_string(url)))
