@@ -131,7 +131,8 @@ class GithubExtractor(Extractor):
         self.date_modified = isoparse(data["updatedAt"][:-1])
         # If license is available, convert to standard SPDX URL
         if data["licenseInfo"] is not None:
-            self.license = get_spdx_url(data["licenseInfo"]["spdxId"])
+            if "NOASSERTION" not in str(data["licenseInfo"]):
+                self.license = get_spdx_url(data["licenseInfo"]["spdxId"])
         if data["primaryLanguage"] is not None:
             self.prog_langs = [data["primaryLanguage"]["name"]]
         self.keywords = self._get_keywords(*data["repositoryTopics"]["nodes"])
