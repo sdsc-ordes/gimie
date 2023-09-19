@@ -23,7 +23,8 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.8"
-PyDriller = "^2.3"
+gitpython = ">=3.1.35"
+PyDriller = "^2.5"
 pyshacl = "^0.20.0"
 # temporarily disabled due to installation problems
 # scancode-toolkit = "^31.2.4"
