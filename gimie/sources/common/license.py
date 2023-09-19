@@ -11,7 +11,7 @@ headers = {"Authorization": f"token {github_token}"}
 repo_url = repo_url.rstrip("/")
 
 
-def graph_ql_query_bit(repo_url):
+def get_default_branch_name_and_root_files_dict(repo_url):
     url = repo_url.replace(
         "https://github.com", "https://api.github.com/repos"
     )
@@ -66,7 +66,7 @@ def get_license_path(files_dict, license_files):
             if re.match(pattern, file["name"], flags=re.IGNORECASE):
                 license_path = (
                     repo_url
-                    + f"/blob/{graph_ql_query_bit(repo_url)[0]}/"
+                    + f"/blob/{get_default_branch_name_and_root_files_dict(repo_url)[0]}/"
                     + file["name"]
                 )
                 license_files.append(license_path)
@@ -114,7 +114,8 @@ def get_spdx_url(name: str) -> str:
 
 def get_license(repo_url, headers, license_files=[]):
     url = get_license_path(
-        graph_ql_query_bit(repo_url)[1], license_files=license_files
+        get_default_branch_name_and_root_files_dict(repo_url)[1],
+        license_files=license_files,
     )
     github_read_file(url)
     print(get_spdx_url(extract_license_string(url)))
