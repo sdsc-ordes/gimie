@@ -879,9 +879,8 @@ smmap = ">=3.0.1,<6"
 
 [[package]]
 name = "gitpython"
-version = "3.1.30"
-description = "GitPython is a python library used to interact with Git repositories"
-category = "main"
+version = "3.1.36"
+description = "GitPython is a Python library used to interact with Git repositories"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -2818,4 +2817,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "47cd7f21ab7eab1f84acfaa7f3fd81d0ef1a5e8e6bea2db2a99e9c21423c233b"
+content-hash = "9a3204cec6d910490f735ac287514b673867a0640e383ca757d2e1d229aadad8"
