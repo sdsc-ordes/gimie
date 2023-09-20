@@ -73,7 +73,7 @@ class GitExtractor(Extractor):
         self.date_created = self._get_creation_date()
         self.date_modified = self._get_modification_date()
 
-    def list_files(self) -> list[LocalResource]:
+    def list_files(self) -> List[LocalResource]:
         raise NotImplementedError
 
     def to_graph(self) -> Graph:

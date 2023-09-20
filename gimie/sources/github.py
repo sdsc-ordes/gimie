@@ -123,7 +123,7 @@ class GithubExtractor(Extractor):
         g.bind("schema", SDO)
         return g
 
-    def list_files(self) -> list[RemoteResource]:
+    def list_files(self) -> List[RemoteResource]:
         raise NotImplementedError
 
     def extract(self):

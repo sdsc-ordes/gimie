@@ -16,7 +16,7 @@
 # limitations under the License.
 """Abstract classes for gimie objects."""
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import List, Optional
 
 
 from rdflib import Graph
@@ -52,7 +52,7 @@ class Extractor(ABC):
         """Generate an RDF graph from the instance"""
         return Graph()
 
-    def list_files(self) -> list[Resource]:
+    def list_files(self) -> List[Resource]:
         """List all files in the repository HEAD."""
         ...
 
