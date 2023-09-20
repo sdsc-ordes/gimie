@@ -4,6 +4,7 @@ import re
 from scancode.api import get_licenses
 import requests
 import json
+from gimie import logger
 
 # from gimie.sources.github import GithubExtractor
 
@@ -52,7 +53,7 @@ def get_default_branch_name_and_root_files_dict(repo_url: str) -> tuple:
         try:
             return default_branch_name, files_dict
         except KeyError:
-            print("Could not identify default branch")
+            logger.error("Could not identify default branch")
 
 
 def get_license_path(repo_url, files_dict) -> str:
@@ -73,10 +74,6 @@ def get_license_path(repo_url, files_dict) -> str:
                     + file["name"]
                 )
                 license_files.append(license_path)
-                print(
-                    license_path
-                    + " is the license path gimie found, starting extraction of license..."
-                )
 
     if len(license_files) > 1:
         return "More than 1 license file was found, please make sure you only have one license."
