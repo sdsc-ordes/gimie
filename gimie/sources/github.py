@@ -21,7 +21,7 @@ from datetime import datetime
 from dateutil.parser import isoparse
 import os
 import requests
-from typing import Any, Dict, List, Optional, Set, Union
+from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
 from dotenv import load_dotenv
 
@@ -37,7 +37,7 @@ from gimie.models import (
     PersonSchema,
 )
 from gimie.graph.namespaces import SDO
-from gimie.sources.common.license import get_license
+from gimie.sources.common.license import get_license_path, extract_license_id
 from gimie.sources.common.queries import (
     send_rest_query,
     send_graphql_query,
@@ -129,7 +129,9 @@ class GithubExtractor(Extractor):
         self.description = data["description"]
         self.date_created = isoparse(data["createdAt"][:-1])
         self.date_modified = isoparse(data["updatedAt"][:-1])
-        self.license = self._get_license()
+        self.license = self._get_license(
+            data["defaultBranchRef"]["name"], data["object"]["entries"]
+        )
         if data["primaryLanguage"] is not None:
             self.prog_langs = [data["primaryLanguage"]["name"]]
         self.keywords = self._get_keywords(*data["repositoryTopics"]["nodes"])
@@ -152,9 +154,16 @@ class GithubExtractor(Extractor):
                 latestRelease {
                     name
                 }
-                licenseInfo {
-                    spdxId
+                defaultBranchRef {
+                    name
                 }
+                object(expression: "HEAD:") {
+                    ... on Tree {
+                        entries {
+                            name
+                            }
+                        }
+                    }
                 mentionableUsers(first: 100) {
                     nodes {
                         login
@@ -281,10 +290,17 @@ class GithubExtractor(Extractor):
             affiliations=orgs,
         )
 
-    def _get_license(self):
+    def _get_license(self, default_branch_name, files_dict):
         """Extract a SPDX License URL from a GitHub Repository"""
-        self.license = get_license(repo_url=self.url, headers=self._set_auth())
-        return self.license
+
+        license_file_path = get_license_path(
+            self.url, default_branch_name, files_dict
+        )
+        license_id = extract_license_id(
+            license_file_path, headers=self._set_auth()
+        )
+
+        return f"https://spdx.org/licenses/{license_id}.html"
 
 
 class GithubExtractorSchema(JsonLDSchema):
