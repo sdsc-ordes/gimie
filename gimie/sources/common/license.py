@@ -117,10 +117,11 @@ def get_spdx_url(name: str) -> str:
 
 def get_license(repo_url, headers, license_files=[]) -> str:
     """Gets a license from"""
-    url = get_license_path(
+    license_file_path = get_license_path(
         repo_url,
         get_default_branch_name_and_root_files_dict(repo_url)[1],
         license_files=license_files,
     )
-    github_read_file(url)
-    return get_spdx_url(extract_license_string(url))
+    license_string = extract_license_string(license_file_path)
+    spdx_url = get_spdx_url(license_string)
+    return spdx_url
