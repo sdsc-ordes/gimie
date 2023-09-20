@@ -286,7 +286,7 @@ class GithubExtractor(Extractor):
         )
 
     def _get_license(self):
-        """Extract a license match from a GithubRepository"""
+        """Extract a SPDX License URL from a GitHub Repository"""
         self.license = get_license(repo_url=self.url, headers=self._set_auth())
         return self.license
 
