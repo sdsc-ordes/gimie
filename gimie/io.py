@@ -8,7 +8,7 @@ from typing import Optional, Union
 
 
 class Resource:
-    """Abstract class for buffered access to local or remote resources via
+    """Abstract class for buffered read-only access to local or remote resources via
     a file-like interface."""
 
     def open(self) -> io.BufferedReader:
@@ -16,7 +16,7 @@ class Resource:
 
 
 class LocalResource(Resource):
-    """Providing buffered access to local data.
+    """Providing buffered read-only access to local data.
 
     Parameters
     ----------
