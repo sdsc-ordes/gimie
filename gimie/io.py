@@ -26,7 +26,7 @@ class LocalResource(Resource):
 
     Examples
     --------
-    >>> from gimie.io import RemoteResource
+    >>> from gimie.io import LocalResource
     >>> resource = LocalResource("README.md")
     """
 
