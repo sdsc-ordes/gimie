@@ -4,7 +4,7 @@ import io
 import os
 from pathlib import Path
 import requests
-from typing import Union
+from typing import Optional, Union
 
 
 class Resource:
