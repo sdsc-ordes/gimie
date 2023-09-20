@@ -110,7 +110,7 @@ def extract_license_id(url: str) -> str:
     return found_spdx_license_id
 
 
-def get_license(repo_url: str, headers: dict[str, str]) -> str:
+def get_license(repo_url: str, headers: dict) -> str:
     """Finds a license in a GitHub repository, extracts it, scans it and returns the result as an SPDX identifier URL"""
     license_file_path = get_license_path(
         repo_url, get_default_branch_name_and_root_files_dict(repo_url)[1]
