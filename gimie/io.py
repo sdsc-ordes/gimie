@@ -4,6 +4,7 @@ import io
 import os
 from pathlib import Path
 import requests
+from typing import Union
 
 
 class Resource:
@@ -29,7 +30,7 @@ class LocalResource(Resource):
     >>> resource = LocalResource("README.md")
     """
 
-    def __init__(self, path: str | os.PathLike):
+    def __init__(self, path: Union[str, os.PathLike]):
         self.path = Path(path)
 
     def open(self, mode="r") -> io.BufferedReader:
@@ -56,7 +57,7 @@ class RemoteResource(Resource):
     >>> resource = RemoteResource("README.md", url)
     """
 
-    def __init__(self, name: str, url: str, headers: dict | None = None):
+    def __init__(self, name: str, url: str, headers: Optional[dict] = None):
         self.name = name
         self.url = url
         self.headers = headers or {}
