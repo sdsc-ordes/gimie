@@ -21,6 +21,7 @@ from typing import Optional
 
 from rdflib import Graph
 from urllib.parse import urlparse
+from gimie.io import Resource
 
 
 class Extractor(ABC):
@@ -50,6 +51,10 @@ class Extractor(ABC):
     def to_graph(self) -> Graph:
         """Generate an RDF graph from the instance"""
         return Graph()
+
+    def list_files(self) -> list[Resource]:
+        """List all files in the repository HEAD."""
+        ...
 
     def serialize(self, format: str = "ttl", **kwargs) -> str:
         """Serialize the RDF graph representing the instance."""
