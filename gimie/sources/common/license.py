@@ -5,17 +5,16 @@ from scancode.api import get_licenses
 import requests
 import json
 
+# from gimie.sources.github import GithubExtractor
+
 
 github_token = os.environ.get("GITHUB_TOKEN")
 headers = {"Authorization": f"token {github_token}"}
 
 
-def get_default_branch_name_and_root_files_dict(repo_url: str):
+def get_default_branch_name_and_root_files_dict(repo_url: str) -> tuple:
     """Given a repository URL, returns a json document containing the repository default branch name and
     a dictionary of filenames which can be found in the root of the repository"""
-    url = repo_url.replace(
-        "https://github.com", "https://api.github.com/repos"
-    )
     repo_url = repo_url.rstrip("/")
     parts = repo_url.strip("/").split("/")
     username = parts[-2]
@@ -56,9 +55,10 @@ def get_default_branch_name_and_root_files_dict(repo_url: str):
             print("Could not identify default branch")
 
 
-def get_license_path(repo_url, files_dict, license_files):
+def get_license_path(repo_url, files_dict) -> str:
     """Given a list of files, returns the URL filepath which contains the license"""
     repo_url = repo_url.rstrip("/")
+    license_files = []
     if files_dict:
         for file in files_dict:
             if file["name"].startswith("."):
@@ -85,7 +85,7 @@ def get_license_path(repo_url, files_dict, license_files):
             return license_file
 
 
-def github_read_file(url, github_token=None):
+def github_read_file(url: str, github_token=None) -> dict:
     """Uses the Github API to download the license file using its URL"""
     headers = {}
     if github_token:
@@ -97,7 +97,7 @@ def github_read_file(url, github_token=None):
     return data
 
 
-def extract_license_string(url):
+def extract_license_string(url: str) -> str:
     """Runs the spdx license matcher (Scancode-toolkit) against the license_string"""
     file1 = TemporaryFile(delete=False)
     file1.close()
@@ -115,12 +115,10 @@ def get_spdx_url(name: str) -> str:
     return f"https://spdx.org/licenses/{name}.html"
 
 
-def get_license(repo_url, headers, license_files=[]) -> str:
-    """Gets a license from"""
+def get_license(repo_url: str, headers: dict[str, str]) -> str:
+    """Finds a license in a github repository, extracts it, scans it and returns the result as an SPDX identifier URL"""
     license_file_path = get_license_path(
-        repo_url,
-        get_default_branch_name_and_root_files_dict(repo_url)[1],
-        license_files=license_files,
+        repo_url, get_default_branch_name_and_root_files_dict(repo_url)[1]
     )
     license_string = extract_license_string(license_file_path)
     spdx_url = get_spdx_url(license_string)
