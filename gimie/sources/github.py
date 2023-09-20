@@ -37,7 +37,7 @@ from gimie.models import (
     PersonSchema,
 )
 from gimie.graph.namespaces import SDO
-from gimie.sources.common.license import get_spdx_url
+from gimie.sources.common.license import get_spdx_url, get_license
 from gimie.sources.common.queries import (
     send_rest_query,
     send_graphql_query,
@@ -129,10 +129,11 @@ class GithubExtractor(Extractor):
         self.description = data["description"]
         self.date_created = isoparse(data["createdAt"][:-1])
         self.date_modified = isoparse(data["updatedAt"][:-1])
+        self.license = self._get_license()
         # If license is available, convert to standard SPDX URL
-        if data["licenseInfo"] is not None:
-            if "NOASSERTION" not in str(data["licenseInfo"]):
-                self.license = get_spdx_url(data["licenseInfo"]["spdxId"])
+        # if data["licenseInfo"] is not None:
+        #     if "NOASSERTION" not in str(data["licenseInfo"]):
+        #         self.license = get_spdx_url(data["licenseInfo"]["spdxId"])
         if data["primaryLanguage"] is not None:
             self.prog_langs = [data["primaryLanguage"]["name"]]
         self.keywords = self._get_keywords(*data["repositoryTopics"]["nodes"])
@@ -283,6 +284,11 @@ class GithubExtractor(Extractor):
             name=node["name"],
             affiliations=orgs,
         )
+
+    def _get_license(self):
+        """Extract a license match from a GithubRepository"""
+        self.license = get_license(repo_url=self.url, headers=self._set_auth())
+        return self.license
 
 
 class GithubExtractorSchema(JsonLDSchema):

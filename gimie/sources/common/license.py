@@ -5,16 +5,18 @@ from scancode.api import get_licenses
 import requests
 import json
 
-repo_url = "https://github.com/comfyanonymous/ComfyUI"
+
 github_token = os.environ.get("GITHUB_TOKEN")
 headers = {"Authorization": f"token {github_token}"}
-repo_url = repo_url.rstrip("/")
 
 
-def get_default_branch_name_and_root_files_dict(repo_url):
+def get_default_branch_name_and_root_files_dict(repo_url: str):
+    """Given a repository URL, returns a json document containing the repository default branch name and
+    a dictionary of filenames which can be found in the root of the repository"""
     url = repo_url.replace(
         "https://github.com", "https://api.github.com/repos"
     )
+    repo_url = repo_url.rstrip("/")
     parts = repo_url.strip("/").split("/")
     username = parts[-2]
     repo_name = parts[-1]
@@ -54,8 +56,9 @@ def get_default_branch_name_and_root_files_dict(repo_url):
             print("Could not identify default branch")
 
 
-def get_license_path(files_dict, license_files):
+def get_license_path(repo_url, files_dict, license_files):
     """Given a list of files, returns the URL filepath which contains the license"""
+    repo_url = repo_url.rstrip("/")
     if files_dict:
         for file in files_dict:
             if file["name"].startswith("."):
@@ -112,13 +115,12 @@ def get_spdx_url(name: str) -> str:
     return f"https://spdx.org/licenses/{name}.html"
 
 
-def get_license(repo_url, headers, license_files=[]):
+def get_license(repo_url, headers, license_files=[]) -> str:
+    """Gets a license from"""
     url = get_license_path(
+        repo_url,
         get_default_branch_name_and_root_files_dict(repo_url)[1],
         license_files=license_files,
     )
     github_read_file(url)
-    print(get_spdx_url(extract_license_string(url)))
-
-
-get_license(repo_url, headers=headers)
+    return get_spdx_url(extract_license_string(url))
