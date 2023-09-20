@@ -1,4 +1,4 @@
-from tempfile import TemporaryFile
+from tempfile import NamedTemporaryFile
 import os
 import re
 from scancode.api import get_licenses
@@ -97,9 +97,9 @@ def github_read_file(url: str, github_token: str = None) -> dict:
     return data
 
 
-def extract_license_string(url: str) -> str:
+def extract_license_id(url: str) -> str:
     """Runs the SPDX license matcher (Scancode-toolkit) against the license_string and return a SPDX License ID"""
-    file1 = TemporaryFile(delete=False)
+    file1 = NamedTemporaryFile(delete=False)
     file1.close()
     with open(file1.name, "w", encoding="utf-8") as license_handler:
         json.dump(github_read_file(url), license_handler)
@@ -110,16 +110,10 @@ def extract_license_string(url: str) -> str:
     return found_spdx_license_id
 
 
-def get_spdx_url(name: str) -> str:
-    """Given an SPDX license identifier, return the full SPDX URL."""
-    return f"https://spdx.org/licenses/{name}.html"
-
-
 def get_license(repo_url: str, headers: dict[str, str]) -> str:
     """Finds a license in a GitHub repository, extracts it, scans it and returns the result as an SPDX identifier URL"""
     license_file_path = get_license_path(
         repo_url, get_default_branch_name_and_root_files_dict(repo_url)[1]
     )
-    license_string = extract_license_string(license_file_path)
-    spdx_url = get_spdx_url(license_string)
-    return spdx_url
+    license_id = extract_license_id(license_file_path)
+    return f"https://spdx.org/licenses/{license_id}.html"
