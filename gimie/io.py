@@ -34,7 +34,7 @@ class LocalResource(Resource):
         self.path = Path(path)
 
     def open(self, mode="r") -> io.BufferedReader:
-        return io.BufferedReader(io.FileIO(open(self.path, mode).fileno()))
+        return io.BufferedReader(io.FileIO(self.path, mode))
 
     @property
     def name(self) -> str:
