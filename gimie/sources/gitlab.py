@@ -4,6 +4,7 @@ import os
 import requests
 from datetime import datetime
 from dateutil.parser import isoparse
+from functools import cached_property
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
 
@@ -12,14 +13,15 @@ from calamus import fields
 from calamus.schema import JsonLDSchema
 from rdflib import Graph
 
-from gimie.sources.abstract import Extractor
+from gimie.graph.namespaces import SDO
+from gimie.io import RemoteResource
 from gimie.models import (
     Organization,
     OrganizationSchema,
     Person,
     PersonSchema,
 )
-from gimie.graph.namespaces import SDO
+from gimie.sources.abstract import Extractor
 from gimie.sources.common.queries import send_graphql_query, send_rest_query
 
 load_dotenv()
@@ -62,11 +64,14 @@ class GitlabExtractor(Extractor):
         g.bind("schema", SDO)
         return g
 
+    def list_files(self) -> List[RemoteResource]:
+        raise NotImplementedError
+
     def extract(self):
         """Extract metadata from target Gitlab repository."""
 
         # fetch metadata
-        data = self._fetch_repo_data(self.path)
+        data = self._repo_data
 
         # Each Gitlab project has a unique identifier (integer)
         self.identifier = urlparse(data["id"]).path.split("/")[2]
@@ -145,9 +150,10 @@ class GitlabExtractor(Extractor):
         uniq_contrib = list({c["id"]: c for c in contributors}.values())
         return [self._get_user(contrib) for contrib in uniq_contrib]
 
-    def _fetch_repo_data(self, path: str) -> Dict[str, Any]:
+    @cached_property
+    def _repo_data(self) -> Dict[str, Any]:
         """Fetch repository metadata from GraphQL endpoint."""
-        data = {"path": path}
+        data = {"path": self.path}
         project_query = """
         query project_query($path: ID!) {
             project(fullPath: $path) {

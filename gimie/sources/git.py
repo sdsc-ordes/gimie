@@ -26,10 +26,10 @@ import git
 import pydriller
 from rdflib import Graph
 
-from gimie.models import Person, PersonSchema
+from gimie.io import LocalResource
 from gimie.graph.namespaces import SDO
+from gimie.models import Person, PersonSchema
 from gimie.sources.abstract import Extractor
-from gimie.utils import generate_uri
 
 
 @dataclass
@@ -72,6 +72,9 @@ class GitExtractor(Extractor):
         self.contributors = self._get_contributors()
         self.date_created = self._get_creation_date()
         self.date_modified = self._get_modification_date()
+
+    def list_files(self) -> List[LocalResource]:
+        raise NotImplementedError
 
     def to_graph(self) -> Graph:
         """Generate an RDF graph from the instance"""

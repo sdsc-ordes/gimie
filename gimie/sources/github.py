@@ -19,6 +19,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import datetime
 from dateutil.parser import isoparse
+from functools import cached_property
 import os
 import requests
 from typing import Any, Dict, List, Optional, Union
@@ -38,6 +39,7 @@ from gimie.models import (
 )
 from gimie.graph.namespaces import SDO
 from gimie.sources.common.license import get_license_path, extract_license_id
+from gimie.io import RemoteResource
 from gimie.sources.common.queries import (
     send_rest_query,
     send_graphql_query,
@@ -121,9 +123,12 @@ class GithubExtractor(Extractor):
         g.bind("schema", SDO)
         return g
 
+    def list_files(self) -> List[RemoteResource]:
+        raise NotImplementedError
+
     def extract(self):
         """Extract metadata from target GitHub repository."""
-        data = self._fetch_repo_data()
+        data = self._repo_data
         self.author = self._get_author(data["owner"])
         self.contributors = self._fetch_contributors()
         self.description = data["description"]
@@ -142,8 +147,9 @@ class GithubExtractor(Extractor):
                 f"{self.url}/archive/refs/tags/{self.version}.tar.gz"
             )
 
-    def _fetch_repo_data(self) -> Dict[str, Any]:
-        """Fetch repository metadata from GraphQL endpoint."""
+    @cached_property
+    def _repo_data(self) -> Dict[str, Any]:
+        """Repository metadata fetched from GraphQL endpoint."""
         owner, name = self.path.split("/")
         data = {"owner": owner, "name": name}
         repo_query = """
