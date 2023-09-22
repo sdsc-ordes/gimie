@@ -140,7 +140,7 @@ class GithubExtractor(Extractor):
         self.date_created = isoparse(data["createdAt"][:-1])
         self.date_modified = isoparse(data["updatedAt"][:-1])
         self.license = self._get_license(
-            data["defaultBranchRef"]["name"], data["object"]["entries"]
+            data["defaultBranchRef"]["name"], self.list_files()
         )
         if data["primaryLanguage"] is not None:
             self.prog_langs = [data["primaryLanguage"]["name"]]
@@ -302,11 +302,11 @@ class GithubExtractor(Extractor):
             affiliations=orgs,
         )
 
-    def _get_license(self, default_branch_name, files_dict):
+    def _get_license(self, default_branch_name, file_list):
         """Extract a SPDX License URL from a GitHub Repository"""
 
         license_file_path = get_license_path(
-            self.url, default_branch_name, files_dict
+            self.url, default_branch_name, file_list
         )
         license_id = extract_license_id(
             license_file_path, headers=self._set_auth()

@@ -7,21 +7,21 @@ import os
 
 
 def get_license_path(
-    repo_url: str, default_branch_name: str, files_dict: dict
+    repo_url: str, default_branch_name: str, file_list: list
 ) -> str:
     """Given a list of files, returns the URL filepath which contains the license"""
     repo_url = repo_url.rstrip("/")
     license_files = []
-    if files_dict:
-        for file in files_dict:
-            if file["name"].startswith("."):
+    if file_list:
+        for file in file_list:
+            if file.startswith("."):
                 continue
             pattern = (
                 r".*(license(s)?|reus(e|ing)|copy(ing)?)(\.(txt|md|rst))?$"
             )
-            if re.match(pattern, file["name"], flags=re.IGNORECASE):
+            if re.match(pattern, file, flags=re.IGNORECASE):
                 license_path = (
-                    repo_url + f"/blob/{default_branch_name}/" + file["name"]
+                    repo_url + f"/blob/{default_branch_name}/" + file
                 )
                 license_files.append(license_path)
 
