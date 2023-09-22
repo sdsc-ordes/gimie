@@ -124,7 +124,12 @@ class GithubExtractor(Extractor):
         return g
 
     def list_files(self) -> List[RemoteResource]:
-        raise NotImplementedError
+        """Returns a list of files found in a GitHub repository root"""
+        file_list = []
+        file_dict = self._repo_data["object"]["entries"]
+        for item in file_dict:
+            file_list.append(item["name"])
+        return file_list
 
     def extract(self):
         """Extract metadata from target GitHub repository."""
@@ -146,6 +151,7 @@ class GithubExtractor(Extractor):
             self.download_url = (
                 f"{self.url}/archive/refs/tags/{self.version}.tar.gz"
             )
+        self.file_list = self.list_files()
 
     @cached_property
     def _repo_data(self) -> Dict[str, Any]:
