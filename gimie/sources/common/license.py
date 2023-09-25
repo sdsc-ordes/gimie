@@ -30,7 +30,7 @@ def get_license_path(
                     # this is not tested yet - but looking at the URL of the file, it seems structured the same as
                     # github except for the addition of a dash between repo url and blob.
                     license_path = (
-                        repo_url + f"-/blob/{default_branch_name}/" + file
+                        repo_url + f"/raw/{default_branch_name}/" + file
                     )
                     license_files.append(license_path)
 

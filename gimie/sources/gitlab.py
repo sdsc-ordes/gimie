@@ -22,6 +22,7 @@ from gimie.models import (
     PersonSchema,
 )
 from gimie.sources.abstract import Extractor
+from gimie.sources.common.license import get_license_path, extract_license_id
 from gimie.sources.common.queries import send_graphql_query, send_rest_query
 
 load_dotenv()
@@ -65,7 +66,12 @@ class GitlabExtractor(Extractor):
         return g
 
     def list_files(self) -> List[RemoteResource]:
-        raise NotImplementedError
+        file_list = []
+        file_dict = self._repo_data["repository"]["tree"]["blobs"]["nodes"]
+        print("file dictionary ################" + str(file_dict))
+        for item in file_dict:
+            file_list.append(item["name"])
+        return file_list
 
     def extract(self):
         """Extract metadata from target Gitlab repository."""
@@ -82,6 +88,9 @@ class GitlabExtractor(Extractor):
         self.prog_langs = [lang["name"] for lang in data["languages"]]
         self.date_created = isoparse(data["createdAt"][:-1])
         self.date_modified = isoparse(data["lastActivityAt"][:-1])
+        self.license = self._get_license(
+            data["repository"]["rootRef"], self.list_files()
+        )
         self.keywords = data["topics"]
 
         # Get contributors as the project members that are not owners and those that have written merge requests
@@ -204,6 +213,15 @@ class GitlabExtractor(Extractor):
                     }
                     }
                 }
+                repository {
+                    rootRef
+                    tree{
+                    blobs{
+                        nodes {
+                            name
+                            type
+                            flatPath
+                          }}}}
                 releases {
                     edges {
                     node {
@@ -217,6 +235,7 @@ class GitlabExtractor(Extractor):
         response = send_graphql_query(
             self.graphql_endpoint, project_query, data, self._set_auth()
         )
+        print(response)
         if "errors" in response:
             raise ValueError(response["errors"])
 
@@ -263,6 +282,17 @@ class GitlabExtractor(Extractor):
             email=node.get("publicEmail"),
         )
 
+    def _get_license(self, default_branch_name, file_list):
+        """Extract a SPDX License URL from a GitLab Repository"""
+
+        license_file = get_license_path(
+            self.url, default_branch_name, file_list
+        )
+        print(license_file)
+        license_id = extract_license_id(license_file, headers=self._set_auth())
+
+        return f"https://spdx.org/licenses/{license_id}.html"
+
     def _user_from_rest(self, username: str) -> Person:
         """Given a username, use the REST API to retrieve the Person object."""
 
@@ -305,7 +335,7 @@ class GitlabExtractorSchema(JsonLDSchema):
     description = fields.String(SDO.description)
     date_created = fields.Date(SDO.dateCreated)
     date_modified = fields.Date(SDO.dateModified)
-    # license = IRI(SDO.license)
+    license = fields.IRI(SDO.license)
     url = fields.IRI(SDO.codeRepository)
     keywords = fields.List(SDO.keywords, fields.String)
     version = fields.String(SDO.version)

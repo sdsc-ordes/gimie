@@ -235,6 +235,7 @@ class GithubExtractor(Extractor):
         response = send_graphql_query(
             GH_API, repo_query, data, self._set_auth()
         )
+
         if "errors" in response:
             raise ValueError(response["errors"])
 
