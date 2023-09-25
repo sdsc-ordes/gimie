@@ -305,12 +305,10 @@ class GithubExtractor(Extractor):
     def _get_license(self, default_branch_name, file_list):
         """Extract a SPDX License URL from a GitHub Repository"""
 
-        license_file_path = get_license_path(
+        license_file = get_license_path(
             self.url, default_branch_name, file_list
         )
-        license_id = extract_license_id(
-            license_file_path, headers=self._set_auth()
-        )
+        license_id = extract_license_id(license_file, headers=self._set_auth())
 
         return f"https://spdx.org/licenses/{license_id}.html"
 
