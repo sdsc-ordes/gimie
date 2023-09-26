@@ -7,7 +7,7 @@ from dateutil.parser import isoparse
 from functools import cached_property
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
-
+from scancode.api import get_licenses
 from dotenv import load_dotenv
 from calamus import fields
 from calamus.schema import JsonLDSchema
@@ -22,7 +22,7 @@ from gimie.models import (
     PersonSchema,
 )
 from gimie.sources.abstract import Extractor
-from gimie.sources.common.license import get_license_path, extract_license_id
+from gimie.sources.common.license import is_license_path
 from gimie.sources.common.queries import send_graphql_query, send_rest_query
 
 load_dotenv()
@@ -68,9 +68,11 @@ class GitlabExtractor(Extractor):
     def list_files(self) -> List[RemoteResource]:
         file_list = []
         file_dict = self._repo_data["repository"]["tree"]["blobs"]["nodes"]
-        print("file dictionary ################" + str(file_dict))
         for item in file_dict:
-            file_list.append(item["name"])
+            file = RemoteResource(
+                name=item["name"], url=item["webUrl"], headers=self._set_auth()
+            )
+            file_list.append(file)
         return file_list
 
     def extract(self):
@@ -88,9 +90,7 @@ class GitlabExtractor(Extractor):
         self.prog_langs = [lang["name"] for lang in data["languages"]]
         self.date_created = isoparse(data["createdAt"][:-1])
         self.date_modified = isoparse(data["lastActivityAt"][:-1])
-        self.license = self._get_license(
-            data["repository"]["rootRef"], self.list_files()
-        )
+        self.license = self._get_license()
         self.keywords = data["topics"]
 
         # Get contributors as the project members that are not owners and those that have written merge requests
@@ -105,7 +105,7 @@ class GitlabExtractor(Extractor):
             self.download_url = f"{self.url}/-/archive/{self.version}/{self.path.split('/')[-1]}-{self.version}.tar.gz"
 
         # for the license, we need to query the rest API
-        # the code below does not work, returns - if you have permission- the GitLab specific licence
+        # the code below does not work, returns - if you have permission - the GitLab specific licence
         # resp = requests.get(url=f"{self.graphql_endpoint}/license/{self.identifier}")
         # if resp.status_code == 200:
         #     self.license = resp.json()
@@ -219,8 +219,7 @@ class GitlabExtractor(Extractor):
                     blobs{
                         nodes {
                             name
-                            type
-                            flatPath
+                            webUrl
                           }}}}
                 releases {
                     edges {
@@ -235,7 +234,6 @@ class GitlabExtractor(Extractor):
         response = send_graphql_query(
             self.graphql_endpoint, project_query, data, self._set_auth()
         )
-        print(response)
         if "errors" in response:
             raise ValueError(response["errors"])
 
@@ -282,16 +280,19 @@ class GitlabExtractor(Extractor):
             email=node.get("publicEmail"),
         )
 
-    def _get_license(self, default_branch_name, file_list):
+    def _get_license(self):
         """Extract a SPDX License URL from a GitLab Repository"""
-
-        license_file = get_license_path(
-            self.url, default_branch_name, file_list
+        license_files = filter(is_license_path, self.list_files())
+        license_ids = map(
+            lambda file: get_licenses(file.open().read())[
+                "detected_license_expression_spdx"
+            ],
+            license_files,
         )
-        print(license_file)
-        license_id = extract_license_id(license_file, headers=self._set_auth())
-
-        return f"https://spdx.org/licenses/{license_id}.html"
+        return [
+            f"https://spdx.org/licenses/{license_id}.html"
+            for license_id in license_ids
+        ]
 
     def _user_from_rest(self, username: str) -> Person:
         """Given a username, use the REST API to retrieve the Person object."""
@@ -335,7 +336,7 @@ class GitlabExtractorSchema(JsonLDSchema):
     description = fields.String(SDO.description)
     date_created = fields.Date(SDO.dateCreated)
     date_modified = fields.Date(SDO.dateModified)
-    license = fields.IRI(SDO.license)
+    license = fields.IRI(SDO.license, many=True)
     url = fields.IRI(SDO.codeRepository)
     keywords = fields.List(SDO.keywords, fields.String)
     version = fields.String(SDO.version)

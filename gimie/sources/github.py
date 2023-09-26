@@ -25,7 +25,7 @@ import requests
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
 from dotenv import load_dotenv
-
+from scancode.api import get_licenses
 from calamus import fields
 from calamus.schema import JsonLDSchema
 from rdflib import Graph
@@ -38,8 +38,9 @@ from gimie.models import (
     PersonSchema,
 )
 from gimie.graph.namespaces import SDO
-from gimie.sources.common.license import get_license_path, extract_license_id
+
 from gimie.io import RemoteResource
+from gimie.sources.common.license import is_license_path
 from gimie.sources.common.queries import (
     send_rest_query,
     send_graphql_query,
@@ -124,11 +125,13 @@ class GithubExtractor(Extractor):
         return g
 
     def list_files(self) -> List[RemoteResource]:
-        """Returns a list of files found in a GitHub repository root"""
         file_list = []
         file_dict = self._repo_data["object"]["entries"]
         for item in file_dict:
-            file_list.append(item["name"])
+            file = RemoteResource(
+                name=item["name"], url=item["path"], headers=self._set_auth()
+            )
+            file_list.append(file)
         return file_list
 
     def extract(self):
@@ -139,9 +142,7 @@ class GithubExtractor(Extractor):
         self.description = data["description"]
         self.date_created = isoparse(data["createdAt"][:-1])
         self.date_modified = isoparse(data["updatedAt"][:-1])
-        self.license = self._get_license(
-            data["defaultBranchRef"]["name"], self.list_files()
-        )
+        self.license = self._get_license()
         if data["primaryLanguage"] is not None:
             self.prog_langs = [data["primaryLanguage"]["name"]]
         self.keywords = self._get_keywords(*data["repositoryTopics"]["nodes"])
@@ -173,6 +174,7 @@ class GithubExtractor(Extractor):
                     ... on Tree {
                         entries {
                             name
+                            path
                             }
                         }
                     }
@@ -303,15 +305,20 @@ class GithubExtractor(Extractor):
             affiliations=orgs,
         )
 
-    def _get_license(self, default_branch_name, file_list):
+    def _get_license(self):
         """Extract a SPDX License URL from a GitHub Repository"""
 
-        license_file = get_license_path(
-            self.url, default_branch_name, file_list
+        license_files = filter(is_license_path, self.list_files())
+        license_ids = map(
+            lambda file: get_licenses(file.open().read())[
+                "detected_license_expression_spdx"
+            ],
+            license_files,
         )
-        license_id = extract_license_id(license_file, headers=self._set_auth())
-
-        return f"https://spdx.org/licenses/{license_id}.html"
+        return [
+            f"https://spdx.org/licenses/{license_id}.html"
+            for license_id in license_ids
+        ]
 
 
 class GithubExtractorSchema(JsonLDSchema):
