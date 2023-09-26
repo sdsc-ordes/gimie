@@ -46,9 +46,8 @@ def extract_license_id(file: str, headers: dict) -> str:
     file1 = NamedTemporaryFile(delete=False)
 
     with open(file1.name, "w", encoding="utf-8") as license_handler:
-        data = requests.get(file, headers=headers).json()
-        json.dump(data, license_handler)
-
+        data = requests.get(file, headers=headers).text
+        license_handler.write(data)
     found_spdx_license_id = get_licenses(file1.name)[
         "detected_license_expression_spdx"
     ]
