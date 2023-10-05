@@ -12,7 +12,8 @@ from dotenv import load_dotenv
 from calamus import fields
 from calamus.schema import JsonLDSchema
 from rdflib import Graph
-
+from io import BytesIO
+import tempfile
 from gimie.graph.namespaces import SDO
 from gimie.io import RemoteResource
 from gimie.models import (
@@ -282,15 +283,69 @@ class GitlabExtractor(Extractor):
 
     def _get_license(self):
         """Extract a SPDX License URL from a GitLab Repository"""
+
         license_files = filter(is_license_path, self.list_files())
-        license_ids = map(
-            lambda file: get_licenses(file.open().read())[
-                "detected_license_expression_spdx"
-            ],
-            license_files,
-        )
+
+        # Extract license IDs using list comprehension and context managers
+        license_ids = []
+        for file in license_files:
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                temp_file.write(file.open().read())
+                license_detections = get_licenses(temp_file.name)[
+                    "license_detections"
+                ]
+                print(license_detections)
+
+                def get_license_with_highest_coverage(license_detections):
+                    highest_coverage = 0.0
+                    highest_license = None
+
+                    for detection in license_detections:
+                        matches = (
+                            detection["matches"]
+                            if "matches" in detection
+                            else []
+                        )
+                        for match in matches:
+                            match_coverage = (
+                                match["match_coverage"]
+                                if "match_coverage" in match
+                                else 0
+                            )
+                            if match_coverage > highest_coverage:
+                                highest_coverage = match_coverage
+                                highest_license = (
+                                    match["license_expression"]
+                                    if "license_expression" in match
+                                    else None
+                                )
+
+                    return highest_license
+
+                get_license_with_highest_coverage = (
+                    lambda license_detections: max(
+                        license_detections,
+                        key=lambda x: max(
+                            x.get("matches"),
+                            key=lambda y: y.get("match_coverage"),
+                        ).get("match_coverage"),
+                    )
+                    .get("matches")[0]
+                    .get("license_expression")
+                )
+                license_id = get_license_with_highest_coverage(
+                    license_detections
+                )
+                license_ids.append(license_id)
+                print(license_id)
+                print(
+                    [
+                        f"https://spdx.org/licenses/{str(license_id)}.html"
+                        for license_id in license_ids
+                    ]
+                )
         return [
-            f"https://spdx.org/licenses/{license_id}.html"
+            f"https://spdx.org/licenses/{str(license_id)}.html"
             for license_id in license_ids
         ]
 
