@@ -344,10 +344,8 @@ class GitlabExtractor(Extractor):
                         for license_id in license_ids
                     ]
                 )
-        return [
-            f"https://spdx.org/licenses/{str(license_id)}.html"
-            for license_id in license_ids
-        ]
+            for license_id in license_ids:
+                return f"https://spdx.org/licenses/{str(license_id)}.html"
 
     def _user_from_rest(self, username: str) -> Person:
         """Given a username, use the REST API to retrieve the Person object."""
