@@ -23,7 +23,10 @@ from gimie.models import (
     PersonSchema,
 )
 from gimie.sources.abstract import Extractor
-from gimie.sources.common.license import is_license_path
+from gimie.sources.common.license import (
+    get_license_with_highest_coverage,
+    is_license_path,
+)
 from gimie.sources.common.queries import send_graphql_query, send_rest_query
 
 load_dotenv()
@@ -287,32 +290,6 @@ class GitlabExtractor(Extractor):
                 license_detections = get_licenses(temp_file.name)[
                     "license_detections"
                 ]
-
-                def get_license_with_highest_coverage(license_detections):
-                    highest_coverage = 0.0
-                    highest_license = None
-
-                    for detection in license_detections:
-                        matches = (
-                            detection["matches"]
-                            if "matches" in detection
-                            else []
-                        )
-                        for match in matches:
-                            match_coverage = (
-                                match["match_coverage"]
-                                if "match_coverage" in match
-                                else 0
-                            )
-                            if match_coverage > highest_coverage:
-                                highest_coverage = match_coverage
-                                highest_license = (
-                                    match["license_expression"]
-                                    if "license_expression" in match
-                                    else None
-                                )
-
-                    return highest_license
 
                 license_id = get_license_with_highest_coverage(
                     license_detections

@@ -41,7 +41,10 @@ from gimie.models import (
 from gimie.graph.namespaces import SDO
 
 from gimie.io import RemoteResource
-from gimie.sources.common.license import is_license_path
+from gimie.sources.common.license import (
+    get_license_with_highest_coverage,
+    is_license_path,
+)
 from gimie.sources.common.queries import (
     send_rest_query,
     send_graphql_query,
@@ -130,6 +133,7 @@ class GithubExtractor(Extractor):
         file_dict = self._repo_data["object"]["entries"]
         repo_url = self._repo_data["url"]
         defaultBranchRef = self._repo_data["defaultBranchRef"]["name"]
+
         for item in file_dict:
             file = RemoteResource(
                 name=item["name"],
@@ -314,7 +318,6 @@ class GithubExtractor(Extractor):
     def _get_license(self):
         """Extract a SPDX License URL from a GitHub Repository"""
         license_files = filter(is_license_path, self.list_files())
-
         license_ids = []
         for file in license_files:
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -322,28 +325,6 @@ class GithubExtractor(Extractor):
                 license_detections = get_licenses(temp_file.name)[
                     "license_detections"
                 ]
-
-                def get_license_with_highest_coverage(license_detections):
-                    highest_coverage = 0.0
-                    highest_license = None
-
-                    for detection in license_detections:
-                        matches = (
-                            detection["matches"]
-                            if "matches" in detection
-                            else []
-                        )
-                        for match in matches:
-                            match_coverage = (
-                                match["match_coverage"]
-                                if "match_coverage" in match
-                                else 0
-                            )
-                            if match_coverage > highest_coverage:
-                                highest_coverage = match_coverage
-                                highest_license = match["license_expression"]
-
-                    return highest_license
 
                 license_id = get_license_with_highest_coverage(
                     license_detections
@@ -354,7 +335,7 @@ class GithubExtractor(Extractor):
 
         license_files = filter(is_license_path, self.list_files())
         license_ids = map(
-            lambda file: get_licenses(file.open.read())[
+            lambda file: get_licenses(file.open().read())[
                 "detected_license_expression_spdx"
             ],
             license_files,
