@@ -105,12 +105,6 @@ class GitlabExtractor(Extractor):
             self.version = data["releases"]["edges"][0]["node"]["name"]
             self.download_url = f"{self.url}/-/archive/{self.version}/{self.path.split('/')[-1]}-{self.version}.tar.gz"
 
-        # for the license, we need to query the rest API
-        # the code below does not work, returns - if you have permission - the GitLab specific licence
-        # resp = requests.get(url=f"{self.graphql_endpoint}/license/{self.identifier}")
-        # if resp.status_code == 200:
-        #     self.license = resp.json()
-
     def _safe_extract_group(
         self, repo: Dict[str, Any]
     ) -> Optional[Organization]:
@@ -286,7 +280,6 @@ class GitlabExtractor(Extractor):
 
         license_files = filter(is_license_path, self.list_files())
 
-        # Extract license IDs using list comprehension and context managers
         license_ids = []
         for file in license_files:
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -294,7 +287,6 @@ class GitlabExtractor(Extractor):
                 license_detections = get_licenses(temp_file.name)[
                     "license_detections"
                 ]
-                print(license_detections)
 
                 def get_license_with_highest_coverage(license_detections):
                     highest_coverage = 0.0
@@ -322,28 +314,11 @@ class GitlabExtractor(Extractor):
 
                     return highest_license
 
-                get_license_with_highest_coverage = (
-                    lambda license_detections: max(
-                        license_detections,
-                        key=lambda x: max(
-                            x.get("matches"),
-                            key=lambda y: y.get("match_coverage"),
-                        ).get("match_coverage"),
-                    )
-                    .get("matches")[0]
-                    .get("license_expression")
-                )
                 license_id = get_license_with_highest_coverage(
                     license_detections
                 )
                 license_ids.append(license_id)
-                print(license_id)
-                print(
-                    [
-                        f"https://spdx.org/licenses/{str(license_id)}.html"
-                        for license_id in license_ids
-                    ]
-                )
+
             for license_id in license_ids:
                 return f"https://spdx.org/licenses/{str(license_id)}.html"
 

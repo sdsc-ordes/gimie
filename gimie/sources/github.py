@@ -16,6 +16,7 @@
 # limitations under the License.
 from __future__ import annotations
 
+import tempfile
 from dataclasses import dataclass
 from datetime import datetime
 from dateutil.parser import isoparse
@@ -127,9 +128,13 @@ class GithubExtractor(Extractor):
     def list_files(self) -> List[RemoteResource]:
         file_list = []
         file_dict = self._repo_data["object"]["entries"]
+        repo_url = self._repo_data["url"]
+        defaultBranchRef = self._repo_data["defaultBranchRef"]["name"]
         for item in file_dict:
             file = RemoteResource(
-                name=item["name"], url=item["path"], headers=self._set_auth()
+                name=item["name"],
+                url=f'{repo_url}/blob/{defaultBranchRef}/{item["path"]}',
+                headers=self._set_auth(),
             )
             file_list.append(file)
         return file_list
@@ -152,7 +157,6 @@ class GithubExtractor(Extractor):
             self.download_url = (
                 f"{self.url}/archive/refs/tags/{self.version}.tar.gz"
             )
-        self.file_list = self.list_files()
 
     @cached_property
     def _repo_data(self) -> Dict[str, Any]:
@@ -162,6 +166,7 @@ class GithubExtractor(Extractor):
         repo_query = """
         query repo($owner: String!, $name: String!) {
             repository(name: $name, owner: $owner) {
+                url
                 createdAt
                 description
                 latestRelease {
@@ -172,6 +177,7 @@ class GithubExtractor(Extractor):
                 }
                 object(expression: "HEAD:") {
                     ... on Tree {
+
                         entries {
                             name
                             path
@@ -307,18 +313,54 @@ class GithubExtractor(Extractor):
 
     def _get_license(self):
         """Extract a SPDX License URL from a GitHub Repository"""
+        license_files = filter(is_license_path, self.list_files())
+
+        license_ids = []
+        for file in license_files:
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                temp_file.write(file.open().read())
+                license_detections = get_licenses(temp_file.name)[
+                    "license_detections"
+                ]
+
+                def get_license_with_highest_coverage(license_detections):
+                    highest_coverage = 0.0
+                    highest_license = None
+
+                    for detection in license_detections:
+                        matches = (
+                            detection["matches"]
+                            if "matches" in detection
+                            else []
+                        )
+                        for match in matches:
+                            match_coverage = (
+                                match["match_coverage"]
+                                if "match_coverage" in match
+                                else 0
+                            )
+                            if match_coverage > highest_coverage:
+                                highest_coverage = match_coverage
+                                highest_license = match["license_expression"]
+
+                    return highest_license
+
+                license_id = get_license_with_highest_coverage(
+                    license_detections
+                )
+                license_ids.append(license_id)
+            for license_id in license_ids:
+                return f"https://spdx.org/licenses/{str(license_id)}.html"
 
         license_files = filter(is_license_path, self.list_files())
         license_ids = map(
-            lambda file: get_licenses(file.open().read())[
+            lambda file: get_licenses(file.open.read())[
                 "detected_license_expression_spdx"
             ],
             license_files,
         )
-        return [
-            f"https://spdx.org/licenses/{license_id}.html"
-            for license_id in license_ids
-        ]
+        for license_id in license_ids:
+            return f"https://spdx.org/licenses/{license_id}.html"
 
 
 class GithubExtractorSchema(JsonLDSchema):
