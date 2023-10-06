@@ -19,7 +19,10 @@ def is_license_path(file: Resource) -> bool:
     return False
 
 
-def get_license_with_highest_coverage(license_detections):
+def get_license_with_highest_coverage(license_detections) -> str:
+    """takes a license_detection object (the output of get_licenses) and
+    returns the one with the highest match percentage, in case a file
+    contains two license texts"""
     highest_coverage = 0.0
     highest_license = None
 
@@ -36,5 +39,4 @@ def get_license_with_highest_coverage(license_detections):
                     if "license_expression" in match
                     else None
                 )
-
     return highest_license
