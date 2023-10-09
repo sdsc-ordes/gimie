@@ -27,11 +27,10 @@ def get_license_with_highest_coverage(license_detections) -> str:
     highest_license = None
 
     for detection in license_detections:
+
         matches = detection["matches"] if "matches" in detection else []
         for match in matches:
-            match_coverage = (
-                match["match_coverage"] if "match_coverage" in match else 0
-            )
+            match_coverage = match["score"] if "score" in match else 0
             if match_coverage > highest_coverage:
                 highest_coverage = match_coverage
                 highest_license = (

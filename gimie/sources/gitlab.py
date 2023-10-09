@@ -60,7 +60,7 @@ class GitlabExtractor(Extractor):
     keywords: Optional[List[str]] = None
     source_organization: Optional[Organization] = None
     download_url: Optional[str] = None
-    # license: Optional[str] = None
+    license: Optional[List[str]] = None
 
     def to_graph(self) -> Graph:
         """Convert repository to RDF graph."""
@@ -278,11 +278,11 @@ class GitlabExtractor(Extractor):
             email=node.get("publicEmail"),
         )
 
-    def _get_license(self):
+    def _get_license(self) -> list[str]:
         """Extract a SPDX License URL from a GitLab Repository"""
 
-        license_files = filter(is_license_path, self.list_files())
-
+        license_files_iterator = filter(is_license_path, self.list_files())
+        license_files = list(license_files_iterator)
         license_ids = []
         for file in license_files:
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -294,10 +294,10 @@ class GitlabExtractor(Extractor):
                 license_id = get_license_with_highest_coverage(
                     license_detections
                 )
-                license_ids.append(license_id)
-
-            for license_id in license_ids:
-                return f"https://spdx.org/licenses/{str(license_id)}.html"
+                license_ids.append(
+                    f"https://spdx.org/licenses/{str(license_id)}.html"
+                )
+        return license_ids
 
     def _user_from_rest(self, username: str) -> Person:
         """Given a username, use the REST API to retrieve the Person object."""
@@ -341,7 +341,7 @@ class GitlabExtractorSchema(JsonLDSchema):
     description = fields.String(SDO.description)
     date_created = fields.Date(SDO.dateCreated)
     date_modified = fields.Date(SDO.dateModified)
-    license = fields.IRI(SDO.license, many=True)
+    license = fields.List(SDO.license, fields.IRI)
     url = fields.IRI(SDO.codeRepository)
     keywords = fields.List(SDO.keywords, fields.String)
     version = fields.String(SDO.version)

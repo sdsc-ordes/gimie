@@ -118,7 +118,7 @@ class GithubExtractor(Extractor):
     date_created: Optional[datetime] = None
     date_modified: Optional[datetime] = None
     keywords: Optional[List[str]] = None
-    license: Optional[str] = None
+    license: Optional[List[str]] = None
     software_version: Optional[str] = None
 
     def to_graph(self) -> Graph:
@@ -315,9 +315,10 @@ class GithubExtractor(Extractor):
             affiliations=orgs,
         )
 
-    def _get_license(self):
+    def _get_license(self) -> list[str]:
         """Extract a SPDX License URL from a GitHub Repository"""
-        license_files = filter(is_license_path, self.list_files())
+        license_files_iterator = filter(is_license_path, self.list_files())
+        license_files = list(license_files_iterator)
         license_ids = []
         for file in license_files:
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -329,19 +330,10 @@ class GithubExtractor(Extractor):
                 license_id = get_license_with_highest_coverage(
                     license_detections
                 )
-                license_ids.append(license_id)
-            for license_id in license_ids:
-                return f"https://spdx.org/licenses/{str(license_id)}.html"
-
-        license_files = filter(is_license_path, self.list_files())
-        license_ids = map(
-            lambda file: get_licenses(file.open().read())[
-                "detected_license_expression_spdx"
-            ],
-            license_files,
-        )
-        for license_id in license_ids:
-            return f"https://spdx.org/licenses/{license_id}.html"
+                license_ids.append(
+                    f"https://spdx.org/licenses/{str(license_id)}.html"
+                )
+        return license_ids
 
 
 class GithubExtractorSchema(JsonLDSchema):
@@ -356,7 +348,7 @@ class GithubExtractorSchema(JsonLDSchema):
     description = fields.String(SDO.description)
     date_created = fields.Date(SDO.dateCreated)
     date_modified = fields.Date(SDO.dateModified)
-    license = fields.IRI(SDO.license)
+    license = fields.List(SDO.license, fields.IRI)
     url = fields.IRI(SDO.codeRepository)
     keywords = fields.List(SDO.keywords, fields.String)
     version = fields.String(SDO.version)
