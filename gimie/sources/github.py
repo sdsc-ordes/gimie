@@ -152,7 +152,10 @@ class GithubExtractor(Extractor):
         self.description = data["description"]
         self.date_created = isoparse(data["createdAt"][:-1])
         self.date_modified = isoparse(data["updatedAt"][:-1])
-        self.date_published = isoparse(data["latestRelease"]["publishedAt"])
+        if data["latestRelease"]:
+            self.date_published = isoparse(
+                data["latestRelease"]["publishedAt"]
+            )
         self.license = self._get_license()
         if data["primaryLanguage"] is not None:
             self.prog_langs = [data["primaryLanguage"]["name"]]
@@ -250,7 +253,6 @@ class GithubExtractor(Extractor):
         response = send_graphql_query(
             GH_API, repo_query, data, self._set_auth()
         )
-        print(response)
 
         if "errors" in response:
             raise ValueError(response["errors"])
