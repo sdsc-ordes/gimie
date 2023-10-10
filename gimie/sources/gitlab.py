@@ -12,7 +12,6 @@ from dotenv import load_dotenv
 from calamus import fields
 from calamus.schema import JsonLDSchema
 from rdflib import Graph
-from io import BytesIO
 import tempfile
 from gimie.graph.namespaces import SDO
 from gimie.io import RemoteResource

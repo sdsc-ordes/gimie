@@ -58,7 +58,7 @@ def query_contributors(
     url: str, headers: Dict[str, str]
 ) -> List[Dict[str, Any]]:
     """Queries the list of contributors of target repository
-    using Github's REST and GraphQL APIs. Returns a list of GraphQL User nodes.
+    using GitHub's REST and GraphQL APIs. Returns a list of GraphQL User nodes.
     NOTE: This is a workaround for the lack of a contributors field in the GraphQL API."""
     owner, name = urlparse(url).path.strip("/").split("/")
     # Get contributors (available in the REST API but not GraphQL)
@@ -132,12 +132,12 @@ class GithubExtractor(Extractor):
         file_list = []
         file_dict = self._repo_data["object"]["entries"]
         repo_url = self._repo_data["url"]
-        defaultBranchRef = self._repo_data["defaultBranchRef"]["name"]
+        defaultbranchref = self._repo_data["defaultBranchRef"]["name"]
 
         for item in file_dict:
             file = RemoteResource(
                 name=item["name"],
-                url=f'{repo_url}/blob/{defaultBranchRef}/{item["path"]}',
+                url=f'{repo_url}/blob/{defaultbranchref}/{item["path"]}',
                 headers=self._set_auth(),
             )
             file_list.append(file)
