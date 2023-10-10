@@ -94,7 +94,7 @@ class GitlabExtractor(Extractor):
         self.prog_langs = [lang["name"] for lang in data["languages"]]
         self.date_created = isoparse(data["createdAt"][:-1])
         self.date_modified = isoparse(data["lastActivityAt"][:-1])
-        if data["releases"]["edges"][0]["node"]["releasedAt"]:
+        if data["releases"]["edges"]:
             self.date_published = isoparse(
                 data["releases"]["edges"][0]["node"]["releasedAt"]
             )
