@@ -55,6 +55,7 @@ class GitlabExtractor(Extractor):
     description: Optional[str] = None
     date_created: Optional[datetime] = None
     date_modified: Optional[datetime] = None
+    date_published: Optional[datetime] = None
     version: Optional[str] = None
     keywords: Optional[List[str]] = None
     source_organization: Optional[Organization] = None
@@ -93,6 +94,10 @@ class GitlabExtractor(Extractor):
         self.prog_langs = [lang["name"] for lang in data["languages"]]
         self.date_created = isoparse(data["createdAt"][:-1])
         self.date_modified = isoparse(data["lastActivityAt"][:-1])
+        if data["releases"]["edges"][0]["node"]["releasedAt"]:
+            self.date_published = isoparse(
+                data["releases"]["edges"][0]["node"]["releasedAt"]
+            )
         self.license = self._get_license()
         self.keywords = data["topics"]
 
@@ -222,6 +227,7 @@ class GitlabExtractor(Extractor):
                     edges {
                     node {
                         name
+                        releasedAt
                     }
                     }
                 }
@@ -340,6 +346,7 @@ class GitlabExtractorSchema(JsonLDSchema):
     description = fields.String(SDO.description)
     date_created = fields.Date(SDO.dateCreated)
     date_modified = fields.Date(SDO.dateModified)
+    date_published = fields.Date(SDO.datePublished)
     license = fields.List(SDO.license, fields.IRI)
     url = fields.IRI(SDO.codeRepository)
     keywords = fields.List(SDO.keywords, fields.String)
