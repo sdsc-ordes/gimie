@@ -117,6 +117,7 @@ class GithubExtractor(Extractor):
     description: Optional[str] = None
     date_created: Optional[datetime] = None
     date_modified: Optional[datetime] = None
+    date_published: Optional[datetime] = None
     keywords: Optional[List[str]] = None
     license: Optional[List[str]] = None
     software_version: Optional[str] = None
@@ -151,6 +152,7 @@ class GithubExtractor(Extractor):
         self.description = data["description"]
         self.date_created = isoparse(data["createdAt"][:-1])
         self.date_modified = isoparse(data["updatedAt"][:-1])
+        self.date_published = isoparse(data["latestRelease"]["publishedAt"])
         self.license = self._get_license()
         if data["primaryLanguage"] is not None:
             self.prog_langs = [data["primaryLanguage"]["name"]]
@@ -174,6 +176,7 @@ class GithubExtractor(Extractor):
                 createdAt
                 description
                 latestRelease {
+                    publishedAt
                     name
                 }
                 defaultBranchRef {
@@ -247,6 +250,7 @@ class GithubExtractor(Extractor):
         response = send_graphql_query(
             GH_API, repo_query, data, self._set_auth()
         )
+        print(response)
 
         if "errors" in response:
             raise ValueError(response["errors"])
@@ -348,6 +352,7 @@ class GithubExtractorSchema(JsonLDSchema):
     description = fields.String(SDO.description)
     date_created = fields.Date(SDO.dateCreated)
     date_modified = fields.Date(SDO.dateModified)
+    date_published = fields.Date(SDO.datePublished)
     license = fields.List(SDO.license, fields.IRI)
     url = fields.IRI(SDO.codeRepository)
     keywords = fields.List(SDO.keywords, fields.String)
