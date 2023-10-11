@@ -35,7 +35,7 @@ def is_license_path(filename: str) -> bool:
     return False
 
 
-def get_license_with_highest_coverage(license_detections: list[dict]) -> str:
+def get_license_with_highest_coverage(license_detections: List[dict]) -> str:
     """Filters a list of "license detections" (the output of scancode.api.get_licenses)
     to return the one with the highest match percentage.
     This is used to select among multiple license matches from a single file."""
