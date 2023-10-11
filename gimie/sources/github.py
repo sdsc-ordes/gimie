@@ -331,9 +331,9 @@ class GithubExtractor(Extractor):
         for file in license_files:
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 temp_file.write(file.open().read())
-                license_id = _get_licenses(temp_file)
+                license_id = _get_licenses(temp_file.name)
                 license_ids.append(
-                    f"https://spdx.org/licenses/{str(license_id).capitalize()}.html"
+                    f"https://spdx.org/licenses/{str(license_id)}.html"
                 )
         return license_ids
 

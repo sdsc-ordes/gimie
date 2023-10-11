@@ -72,9 +72,12 @@ class GitlabExtractor(Extractor):
     def list_files(self) -> List[RemoteResource]:
         file_list = []
         file_dict = self._repo_data["repository"]["tree"]["blobs"]["nodes"]
+        defaultbranchref = self._repo_data["repository"]["rootRef"]
         for item in file_dict:
             file = RemoteResource(
-                name=item["name"], url=item["webUrl"], headers=self._set_auth()
+                name=item["name"],
+                url=f'{self.url}/-/raw/{defaultbranchref}/{item["name"]}',
+                headers=self._set_auth(),
             )
             file_list.append(file)
         return file_list
@@ -294,9 +297,9 @@ class GitlabExtractor(Extractor):
         for file in license_files:
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 temp_file.write(file.open().read())
-                license_id = _get_licenses(temp_file)
+                license_id = _get_licenses(temp_file.name)
                 license_ids.append(
-                    f"https://spdx.org/licenses/{str(license_id).capitalize()}.html"
+                    f"https://spdx.org/licenses/{str(license_id)}.html"
                 )
         return license_ids
 
