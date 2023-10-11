@@ -23,6 +23,8 @@ def get_spdx_license_id(license_dict: dict, license_id: str) -> str:
     for key, value in license_dict.items():
         if key.lower() == license_id.lower():
             return value.id
+        else:
+            return None
 
 
 def is_license_path(filename: str) -> bool:
