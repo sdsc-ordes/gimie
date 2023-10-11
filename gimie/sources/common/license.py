@@ -1,7 +1,7 @@
 import re
 from spdx_license_list import LICENSES
 from scancode.api import get_licenses
-from typing import NamedTuple
+from typing import List
 from gimie.io import Resource, iterable_to_stream, RemoteResource
 
 
