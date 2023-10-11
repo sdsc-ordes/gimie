@@ -7,7 +7,6 @@ from dateutil.parser import isoparse
 from functools import cached_property
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
-from scancode.api import get_licenses
 from dotenv import load_dotenv
 from calamus import fields
 from calamus.schema import JsonLDSchema
@@ -25,6 +24,7 @@ from gimie.sources.abstract import Extractor
 from gimie.sources.common.license import (
     get_license_with_highest_coverage,
     is_license_path,
+    _get_licenses,
 )
 from gimie.sources.common.queries import send_graphql_query, send_rest_query
 
@@ -286,21 +286,17 @@ class GitlabExtractor(Extractor):
     def _get_license(self) -> list[str]:
         """Extract a SPDX License URL from a GitLab Repository"""
 
-        license_files_iterator = filter(is_license_path, self.list_files())
+        license_files_iterator = filter(
+            lambda p: is_license_path(p.name), self.list_files()
+        )
         license_files = list(license_files_iterator)
         license_ids = []
         for file in license_files:
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 temp_file.write(file.open().read())
-                license_detections = get_licenses(temp_file.name)[
-                    "license_detections"
-                ]
-
-                license_id = get_license_with_highest_coverage(
-                    license_detections
-                )
+                license_id = _get_licenses(temp_file)
                 license_ids.append(
-                    f"https://spdx.org/licenses/{str(license_id)}.html"
+                    f"https://spdx.org/licenses/{str(license_id).capitalize()}.html"
                 )
         return license_ids
 
