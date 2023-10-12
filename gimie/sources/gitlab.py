@@ -70,6 +70,7 @@ class GitlabExtractor(Extractor):
         return g
 
     def list_files(self) -> List[RemoteResource]:
+        """takes the root repository folder and returns the list of files present"""
         file_list = []
         file_dict = self._repo_data["repository"]["tree"]["blobs"]["nodes"]
         defaultbranchref = self._repo_data["repository"]["rootRef"]
@@ -172,6 +173,7 @@ class GitlabExtractor(Extractor):
         query project_query($path: ID!) {
             project(fullPath: $path) {
                 name
+                forkDetails {hasConflicts}
                 id
                 description
                 createdAt
@@ -240,6 +242,7 @@ class GitlabExtractor(Extractor):
         response = send_graphql_query(
             self.graphql_endpoint, project_query, data, self._set_auth()
         )
+        print(response)
         if "errors" in response:
             raise ValueError(response["errors"])
 
