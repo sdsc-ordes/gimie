@@ -20,11 +20,17 @@ def _get_licenses(temp_file_path: str) -> str:
 def get_spdx_license_id(license_dict: dict, license_id: str) -> str:
     """Given a scamcode API license ID also known as a license detection, returns the correctly capitalized
     spdx id corresponding to it"""
+    if not license_id:
+        return "None"  # Return None if the dictionary is empty
+
     for key, value in license_dict.items():
-        if key is not None and value is not None:
+        if license_id:
             if key.lower() == license_id.lower():
                 return value.id
-    return None
+        else:
+            return "None"
+
+    return "None"
 
 
 def is_license_path(filename: str) -> bool:
