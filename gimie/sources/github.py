@@ -16,16 +16,16 @@
 # limitations under the License.
 from __future__ import annotations
 
+import tempfile
 from dataclasses import dataclass
 from datetime import datetime
 from dateutil.parser import isoparse
 from functools import cached_property
 import os
 import requests
-from typing import Any, Dict, List, Optional, Set, Union
+from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
 from dotenv import load_dotenv
-
 from calamus import fields
 from calamus.schema import JsonLDSchema
 from rdflib import Graph
@@ -38,8 +38,13 @@ from gimie.models import (
     PersonSchema,
 )
 from gimie.graph.namespaces import SDO
+
 from gimie.io import RemoteResource
-from gimie.sources.common.license import get_spdx_url
+from gimie.sources.common.license import (
+    get_license_with_highest_coverage,
+    is_license_path,
+    _get_licenses,
+)
 from gimie.sources.common.queries import (
     send_rest_query,
     send_graphql_query,
@@ -53,7 +58,7 @@ def query_contributors(
     url: str, headers: Dict[str, str]
 ) -> List[Dict[str, Any]]:
     """Queries the list of contributors of target repository
-    using Github's REST and GraphQL APIs. Returns a list of GraphQL User nodes.
+    using GitHub's REST and GraphQL APIs. Returns a list of GraphQL User nodes.
     NOTE: This is a workaround for the lack of a contributors field in the GraphQL API."""
     owner, name = urlparse(url).path.strip("/").split("/")
     # Get contributors (available in the REST API but not GraphQL)
@@ -112,8 +117,9 @@ class GithubExtractor(Extractor):
     description: Optional[str] = None
     date_created: Optional[datetime] = None
     date_modified: Optional[datetime] = None
+    date_published: Optional[datetime] = None
     keywords: Optional[List[str]] = None
-    license: Optional[str] = None
+    license: Optional[List[str]] = None
     software_version: Optional[str] = None
 
     def to_graph(self) -> Graph:
@@ -124,7 +130,19 @@ class GithubExtractor(Extractor):
         return g
 
     def list_files(self) -> List[RemoteResource]:
-        raise NotImplementedError
+        file_list = []
+        file_dict = self._repo_data["object"]["entries"]
+        repo_url = self._repo_data["url"]
+        defaultbranchref = self._repo_data["defaultBranchRef"]["name"]
+
+        for item in file_dict:
+            file = RemoteResource(
+                name=item["name"],
+                url=f'{repo_url}/blob/{defaultbranchref}/{item["path"]}',
+                headers=self._set_auth(),
+            )
+            file_list.append(file)
+        return file_list
 
     def extract(self):
         """Extract metadata from target GitHub repository."""
@@ -134,10 +152,12 @@ class GithubExtractor(Extractor):
         self.description = data["description"]
         self.date_created = isoparse(data["createdAt"][:-1])
         self.date_modified = isoparse(data["updatedAt"][:-1])
-        # If license is available, convert to standard SPDX URL
-        if data["licenseInfo"] is not None:
-            if "NOASSERTION" not in str(data["licenseInfo"]):
-                self.license = get_spdx_url(data["licenseInfo"]["spdxId"])
+        if data["latestRelease"]:
+            self.date_published = isoparse(
+                data["latestRelease"]["publishedAt"]
+            )
+        if self._get_license() != "https://spdx.org/licenses/None.html":
+            self.license = self._get_license()
         if data["primaryLanguage"] is not None:
             self.prog_langs = [data["primaryLanguage"]["name"]]
         self.keywords = self._get_keywords(*data["repositoryTopics"]["nodes"])
@@ -156,14 +176,25 @@ class GithubExtractor(Extractor):
         repo_query = """
         query repo($owner: String!, $name: String!) {
             repository(name: $name, owner: $owner) {
+                url
                 createdAt
                 description
                 latestRelease {
+                    publishedAt
                     name
                 }
-                licenseInfo {
-                    spdxId
+                defaultBranchRef {
+                    name
                 }
+                object(expression: "HEAD:") {
+                    ... on Tree {
+
+                        entries {
+                            name
+                            path
+                            }
+                        }
+                    }
                 mentionableUsers(first: 100) {
                     nodes {
                         login
@@ -223,6 +254,7 @@ class GithubExtractor(Extractor):
         response = send_graphql_query(
             GH_API, repo_query, data, self._set_auth()
         )
+
         if "errors" in response:
             raise ValueError(response["errors"])
 
@@ -290,6 +322,23 @@ class GithubExtractor(Extractor):
             affiliations=orgs,
         )
 
+    def _get_license(self) -> list[str]:
+        """Extract a SPDX License URL from a GitHub Repository"""
+        license_files_iterator = filter(
+            lambda p: is_license_path(p.name), self.list_files()
+        )
+        license_files = list(license_files_iterator)
+        license_ids = []
+        for file in license_files:
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                temp_file.write(file.open().read())
+                license_id = _get_licenses(temp_file.name)
+                if license_id:
+                    license_ids.append(
+                        f"https://spdx.org/licenses/{str(license_id)}.html"
+                    )
+        return license_ids
+
 
 class GithubExtractorSchema(JsonLDSchema):
     """This defines the schema used for json-ld serialization."""
@@ -303,7 +352,8 @@ class GithubExtractorSchema(JsonLDSchema):
     description = fields.String(SDO.description)
     date_created = fields.Date(SDO.dateCreated)
     date_modified = fields.Date(SDO.dateModified)
-    license = fields.IRI(SDO.license)
+    date_published = fields.Date(SDO.datePublished)
+    license = fields.List(SDO.license, fields.IRI)
     url = fields.IRI(SDO.codeRepository)
     keywords = fields.List(SDO.keywords, fields.String)
     version = fields.String(SDO.version)

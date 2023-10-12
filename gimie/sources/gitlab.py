@@ -7,12 +7,11 @@ from dateutil.parser import isoparse
 from functools import cached_property
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
-
 from dotenv import load_dotenv
 from calamus import fields
 from calamus.schema import JsonLDSchema
 from rdflib import Graph
-
+import tempfile
 from gimie.graph.namespaces import SDO
 from gimie.io import RemoteResource
 from gimie.models import (
@@ -22,6 +21,11 @@ from gimie.models import (
     PersonSchema,
 )
 from gimie.sources.abstract import Extractor
+from gimie.sources.common.license import (
+    get_license_with_highest_coverage,
+    is_license_path,
+    _get_licenses,
+)
 from gimie.sources.common.queries import send_graphql_query, send_rest_query
 
 load_dotenv()
@@ -51,11 +55,12 @@ class GitlabExtractor(Extractor):
     description: Optional[str] = None
     date_created: Optional[datetime] = None
     date_modified: Optional[datetime] = None
+    date_published: Optional[datetime] = None
     version: Optional[str] = None
     keywords: Optional[List[str]] = None
     source_organization: Optional[Organization] = None
     download_url: Optional[str] = None
-    # license: Optional[str] = None
+    license: Optional[List[str]] = None
 
     def to_graph(self) -> Graph:
         """Convert repository to RDF graph."""
@@ -65,7 +70,17 @@ class GitlabExtractor(Extractor):
         return g
 
     def list_files(self) -> List[RemoteResource]:
-        raise NotImplementedError
+        file_list = []
+        file_dict = self._repo_data["repository"]["tree"]["blobs"]["nodes"]
+        defaultbranchref = self._repo_data["repository"]["rootRef"]
+        for item in file_dict:
+            file = RemoteResource(
+                name=item["name"],
+                url=f'{self.url}/-/raw/{defaultbranchref}/{item["name"]}',
+                headers=self._set_auth(),
+            )
+            file_list.append(file)
+        return file_list
 
     def extract(self):
         """Extract metadata from target Gitlab repository."""
@@ -82,6 +97,11 @@ class GitlabExtractor(Extractor):
         self.prog_langs = [lang["name"] for lang in data["languages"]]
         self.date_created = isoparse(data["createdAt"][:-1])
         self.date_modified = isoparse(data["lastActivityAt"][:-1])
+        if data["releases"]["edges"]:
+            self.date_published = isoparse(
+                data["releases"]["edges"][0]["node"]["releasedAt"]
+            )
+        self.license = self._get_license()
         self.keywords = data["topics"]
 
         # Get contributors as the project members that are not owners and those that have written merge requests
@@ -94,12 +114,6 @@ class GitlabExtractor(Extractor):
             # go into releases and take the name from the first node (most recent)
             self.version = data["releases"]["edges"][0]["node"]["name"]
             self.download_url = f"{self.url}/-/archive/{self.version}/{self.path.split('/')[-1]}-{self.version}.tar.gz"
-
-        # for the license, we need to query the rest API
-        # the code below does not work, returns - if you have permission- the GitLab specific licence
-        # resp = requests.get(url=f"{self.graphql_endpoint}/license/{self.identifier}")
-        # if resp.status_code == 200:
-        #     self.license = resp.json()
 
     def _safe_extract_group(
         self, repo: Dict[str, Any]
@@ -204,10 +218,19 @@ class GitlabExtractor(Extractor):
                     }
                     }
                 }
+                repository {
+                    rootRef
+                    tree{
+                    blobs{
+                        nodes {
+                            name
+                            webUrl
+                          }}}}
                 releases {
                     edges {
                     node {
                         name
+                        releasedAt
                     }
                     }
                 }
@@ -263,6 +286,23 @@ class GitlabExtractor(Extractor):
             email=node.get("publicEmail"),
         )
 
+    def _get_license(self) -> list[str]:
+        """Extract a SPDX License URL from a GitLab Repository"""
+        license_files_iterator = filter(
+            lambda p: is_license_path(p.name), self.list_files()
+        )
+        license_files = list(license_files_iterator)
+        license_ids = []
+        for file in license_files:
+            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+                temp_file.write(file.open().read())
+                license_id = _get_licenses(temp_file.name)
+                if license_id:
+                    license_ids.append(
+                        f"https://spdx.org/licenses/{str(license_id)}.html"
+                    )
+        return license_ids
+
     def _user_from_rest(self, username: str) -> Person:
         """Given a username, use the REST API to retrieve the Person object."""
 
@@ -305,7 +345,8 @@ class GitlabExtractorSchema(JsonLDSchema):
     description = fields.String(SDO.description)
     date_created = fields.Date(SDO.dateCreated)
     date_modified = fields.Date(SDO.dateModified)
-    # license = IRI(SDO.license)
+    date_published = fields.Date(SDO.datePublished)
+    license = fields.List(SDO.license, fields.IRI)
     url = fields.IRI(SDO.codeRepository)
     keywords = fields.List(SDO.keywords, fields.String)
     version = fields.String(SDO.version)

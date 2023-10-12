@@ -1,56 +1,65 @@
-import os
 import re
+from spdx_license_list import LICENSES
+from scancode.api import get_licenses
 from typing import List
-
-from gimie.graph.namespaces import GIMIE
-
-
-def locate_licenses(path: str, recurse: bool = False) -> List[str]:
-    """Returns valid potential paths to license files in the project.
-    This uses pattern-matching on file names.
-
-    Parameters
-    ----------
-    path:
-        The root path to search for license files.
-    recurse:
-        Whether to look into subdirectories.
-
-    Returns
-    -------
-    license_files:
-        The list of relative paths (from input path) to files which
-        potentially contain license text.
-
-    Examples
-    --------
-    >>> locate_licenses('.')
-    ['./LICENSE']
-    """
-    license_files = []
-    pattern = r".*(license(s)?|reus(e|ing)|copy(ing)?)(\.(txt|md|rst))?$"
-
-    for root, _, files in os.walk(path):
-        # skip toplevel hidden dirs (e.g. .git/)
-        subdir = os.path.relpath(root, path)
-        if subdir.startswith(".") and subdir != ".":
-            continue
-        for file in files:
-            # skip hidden files
-            if file.startswith("."):
-                continue
-
-            if re.match(pattern, file, flags=re.IGNORECASE):
-                license_path = os.path.join(root, file)
-                license_files.append(license_path)
-
-        # The first root of os.walk is the current dir
-        if not recurse:
-            return license_files
-
-    return license_files
+from gimie.io import Resource, iterable_to_stream, RemoteResource
 
 
-def get_spdx_url(name: str) -> str:
-    """Given an SPDX license identifier, return the full URL."""
-    return f"https://spdx.org/licenses/{name}"
+def _get_licenses(temp_file_path: str) -> str:
+    """Takes a file with a license text in it, and matches this using the scancode API to a license to get some possible
+    license matches. The highest match is then returned as a spdx license ID"""
+    license_detections = get_licenses(temp_file_path, include_text=True)[
+        "license_detections"
+    ]
+    license_id = get_license_with_highest_coverage(license_detections)
+    spdx_license_id = get_spdx_license_id(LICENSES, license_id)
+
+    return spdx_license_id
+
+
+def get_spdx_license_id(license_dict: dict, license_id: str) -> str:
+    """Given a scamcode API license ID also known as a license detection, returns the correctly capitalized
+    spdx id corresponding to it"""
+    if not license_id:
+        return None  # Return None if the dictionary is empty
+
+    for key, value in license_dict.items():
+        if license_id:
+            if key.lower() == license_id.lower():
+                return value.id
+        else:
+            return None
+
+    return None
+
+
+def is_license_path(filename: str) -> bool:
+    """Given an input filename, returns a boolean indicating whether the filename path looks like a license."""
+    if filename.startswith("."):
+        return False
+    pattern = r".*(license(s)?.*|lizenz|reus(e|ing).*|copy(ing)?.*)(\.(txt|md|rst))?$"
+    if re.match(pattern, filename, flags=re.IGNORECASE):
+        return True
+    return False
+
+
+def get_license_with_highest_coverage(license_detections: List[dict]) -> str:
+    """Filters a list of "license detections" (the output of scancode.api.get_licenses)
+    to return the one with the highest match percentage.
+    This is used to select among multiple license matches from a single file."""
+    highest_coverage = 0.0
+    highest_license = None
+
+    for detection in license_detections:
+
+        matches = detection["matches"] if "matches" in detection else []
+        for match in matches:
+            match_coverage = match["score"] if "score" in match else 0
+            if match_coverage > highest_coverage:
+                highest_coverage = match_coverage
+                highest_license = (
+                    match["license_expression"]
+                    if "license_expression" in match
+                    else None
+                )
+    return highest_license
