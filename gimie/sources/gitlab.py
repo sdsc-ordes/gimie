@@ -288,7 +288,6 @@ class GitlabExtractor(Extractor):
 
     def _get_license(self) -> list[str]:
         """Extract a SPDX License URL from a GitLab Repository"""
-
         license_files_iterator = filter(
             lambda p: is_license_path(p.name), self.list_files()
         )
@@ -298,9 +297,10 @@ class GitlabExtractor(Extractor):
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 temp_file.write(file.open().read())
                 license_id = _get_licenses(temp_file.name)
-                license_ids.append(
-                    f"https://spdx.org/licenses/{str(license_id)}.html"
-                )
+                if license_id:
+                    license_ids.append(
+                        f"https://spdx.org/licenses/{str(license_id)}.html"
+                    )
         return license_ids
 
     def _user_from_rest(self, username: str) -> Person:

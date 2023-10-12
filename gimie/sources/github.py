@@ -156,7 +156,8 @@ class GithubExtractor(Extractor):
             self.date_published = isoparse(
                 data["latestRelease"]["publishedAt"]
             )
-        self.license = self._get_license()
+        if self._get_license() != "https://spdx.org/licenses/None.html":
+            self.license = self._get_license()
         if data["primaryLanguage"] is not None:
             self.prog_langs = [data["primaryLanguage"]["name"]]
         self.keywords = self._get_keywords(*data["repositoryTopics"]["nodes"])
@@ -332,9 +333,10 @@ class GithubExtractor(Extractor):
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 temp_file.write(file.open().read())
                 license_id = _get_licenses(temp_file.name)
-                license_ids.append(
-                    f"https://spdx.org/licenses/{str(license_id)}.html"
-                )
+                if license_id:
+                    license_ids.append(
+                        f"https://spdx.org/licenses/{str(license_id)}.html"
+                    )
         return license_ids
 
 
