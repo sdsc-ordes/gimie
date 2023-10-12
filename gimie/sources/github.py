@@ -360,6 +360,7 @@ class GithubExtractorSchema(JsonLDSchema):
     date_published = fields.Date(SDO.datePublished)
     license = fields.List(SDO.license, fields.IRI)
     url = fields.IRI(SDO.codeRepository)
+    # NOTE: parent_repository is not available for GitLab's GraphQL API in 2023. Add for GitLab when available
     parent_repository = fields.IRI(SDO.isBasedOnUrl)
     keywords = fields.List(SDO.keywords, fields.String)
     version = fields.String(SDO.version)
