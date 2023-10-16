@@ -173,7 +173,6 @@ class GitlabExtractor(Extractor):
         query project_query($path: ID!) {
             project(fullPath: $path) {
                 name
-                forkDetails {hasConflicts}
                 id
                 description
                 createdAt
@@ -242,7 +241,6 @@ class GitlabExtractor(Extractor):
         response = send_graphql_query(
             self.graphql_endpoint, project_query, data, self._set_auth()
         )
-        print(response)
         if "errors" in response:
             raise ValueError(response["errors"])
 
