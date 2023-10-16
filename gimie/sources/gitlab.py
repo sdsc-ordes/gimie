@@ -24,7 +24,7 @@ from gimie.sources.abstract import Extractor
 from gimie.sources.common.license import (
     get_license_with_highest_coverage,
     is_license_path,
-    _get_licenses,
+    _get_license_url,
 )
 from gimie.sources.common.queries import send_graphql_query, send_rest_query
 
@@ -286,22 +286,20 @@ class GitlabExtractor(Extractor):
             email=node.get("publicEmail"),
         )
 
-    def _get_license(self) -> list[str]:
+    def _get_licenses(self) -> list[str]:
         """Extract a SPDX License URL from a GitLab Repository"""
         license_files_iterator = filter(
             lambda p: is_license_path(p.name), self.list_files()
         )
         license_files = list(license_files_iterator)
-        license_ids = []
+        license_urls = []
         for file in license_files:
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 temp_file.write(file.open().read())
-                license_id = _get_licenses(temp_file.name)
-                if license_id:
-                    license_ids.append(
-                        f"https://spdx.org/licenses/{str(license_id)}.html"
-                    )
-        return license_ids
+                license_url = _get_license_url(temp_file.name)
+                if license_urls:
+                    license_urls.append(license_url)
+        return license_urls
 
     def _user_from_rest(self, username: str) -> Person:
         """Given a username, use the REST API to retrieve the Person object."""

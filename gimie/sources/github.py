@@ -43,7 +43,7 @@ from gimie.io import RemoteResource
 from gimie.sources.common.license import (
     get_license_with_highest_coverage,
     is_license_path,
-    _get_licenses,
+    _get_license_url,
 )
 from gimie.sources.common.queries import (
     send_rest_query,
@@ -328,16 +328,14 @@ class GithubExtractor(Extractor):
             lambda p: is_license_path(p.name), self.list_files()
         )
         license_files = list(license_files_iterator)
-        license_ids = []
+        license_urls = []
         for file in license_files:
             with tempfile.NamedTemporaryFile(delete=False) as temp_file:
                 temp_file.write(file.open().read())
-                license_id = _get_licenses(temp_file.name)
-                if license_id:
-                    license_ids.append(
-                        f"https://spdx.org/licenses/{str(license_id)}.html"
-                    )
-        return license_ids
+                license_url = _get_license_url(temp_file.name)
+                if license_url:
+                    license_urls.append(license_url)
+        return license_urls
 
 
 class GithubExtractorSchema(JsonLDSchema):
