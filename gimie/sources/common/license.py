@@ -3,15 +3,18 @@ from spdx_license_list import LICENSES, License
 from scancode.api import get_licenses
 from typing import Iterable, List, Optional
 from gimie.io import Resource, iterable_to_stream, RemoteResource
+import tempfile
 
 
-def _get_license_url(temp_file_path: str) -> str:
+def _get_license_url(license_file: Resource) -> str:
     """Takes the path of a text file containing a license text, and matches this
     using the scancode API to get possible license matches. The best match is
     then returned as a spdx license URL"""
-    license_detections = get_licenses(temp_file_path, include_text=True)[
-        "license_detections"
-    ]
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        temp_file.write(license_file.open().read())
+        license_detections = get_licenses(temp_file.name, include_text=True)[
+            "license_detections"
+        ]
     license_id = get_license_with_highest_coverage(license_detections)  # type: ignore
     spdx_license_id = get_spdx_license_id(LICENSES.keys(), license_id)
     spdx_license_url = f"https://spdx.org/licenses/{str(spdx_license_id)}.html"
