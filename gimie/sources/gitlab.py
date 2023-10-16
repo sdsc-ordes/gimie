@@ -101,7 +101,7 @@ class GitlabExtractor(Extractor):
             self.date_published = isoparse(
                 data["releases"]["edges"][0]["node"]["releasedAt"]
             )
-        self.license = self._get_license()
+        self.license = self._get_licenses()
         self.keywords = data["topics"]
 
         # Get contributors as the project members that are not owners and those that have written merge requests

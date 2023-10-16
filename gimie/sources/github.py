@@ -156,8 +156,8 @@ class GithubExtractor(Extractor):
             self.date_published = isoparse(
                 data["latestRelease"]["publishedAt"]
             )
-        if self._get_license() != "https://spdx.org/licenses/None.html":
-            self.license = self._get_license()
+
+        self.license = self._get_licenses()
         if data["primaryLanguage"] is not None:
             self.prog_langs = [data["primaryLanguage"]["name"]]
         self.keywords = self._get_keywords(*data["repositoryTopics"]["nodes"])
@@ -322,7 +322,7 @@ class GithubExtractor(Extractor):
             affiliations=orgs,
         )
 
-    def _get_license(self) -> list[str]:
+    def _get_licenses(self) -> list[str]:
         """Extract a SPDX License URL from a GitHub Repository"""
         license_files_iterator = filter(
             lambda p: is_license_path(p.name), self.list_files()
