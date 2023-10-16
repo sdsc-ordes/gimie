@@ -322,21 +322,6 @@ class GithubExtractor(Extractor):
             affiliations=orgs,
         )
 
-    def _get_licenses(self) -> list[str]:
-        """Extract a SPDX License URL from a GitHub Repository"""
-        license_files_iterator = filter(
-            lambda p: is_license_path(p.name), self.list_files()
-        )
-        license_files = list(license_files_iterator)
-        license_urls = []
-        for file in license_files:
-            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-                temp_file.write(file.open().read())
-                license_url = _get_license_url(temp_file.name)
-                if license_url:
-                    license_urls.append(license_url)
-        return license_urls
-
 
 class GithubExtractorSchema(JsonLDSchema):
     """This defines the schema used for json-ld serialization."""
