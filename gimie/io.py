@@ -11,6 +11,9 @@ class Resource:
     """Abstract class for buffered read-only access to local or remote resources via
     a file-like interface."""
 
+    name: str
+    path: Union[str, os.PathLike]
+
     def open(self) -> io.BufferedReader:
         raise NotImplementedError
 
