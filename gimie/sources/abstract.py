@@ -87,10 +87,9 @@ class Extractor(ABC):
 
     def _get_licenses(self) -> list[str]:
         """Extract a SPDX License URL from a GitHub Repository"""
-        license_files_iterator = filter(
+        license_files = filter(
             lambda p: is_license_path(p.name), self.list_files()
         )
-        license_files = list(license_files_iterator)
         license_urls = []
         for file in license_files:
             license_url = _get_license_url(file)
