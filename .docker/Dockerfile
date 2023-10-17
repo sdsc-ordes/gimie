@@ -26,6 +26,8 @@ COPY pyproject.toml ./pyproject.toml
 COPY poetry.lock ./poetry.lock
 COPY .env.dist ./.env.dist
 COPY README.md ./README.md
+RUN apt-get update && \
+    apt-get install -y gcc
 
 # Poetry install
 RUN poetry install --no-interaction --no-ansi -vvv
