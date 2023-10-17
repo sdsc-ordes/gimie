@@ -65,6 +65,7 @@ class GitlabExtractor(Extractor):
         return g
 
     def list_files(self) -> List[RemoteResource]:
+        """takes the root repository folder and returns the list of files present"""
         file_list = []
         file_dict = self._repo_data["repository"]["tree"]["blobs"]["nodes"]
         defaultbranchref = self._repo_data["repository"]["rootRef"]

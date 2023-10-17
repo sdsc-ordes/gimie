@@ -113,6 +113,7 @@ class GithubExtractor(Extractor):
     date_created: Optional[datetime] = None
     date_modified: Optional[datetime] = None
     date_published: Optional[datetime] = None
+    parent_repository: Optional[str] = None
     keywords: Optional[List[str]] = None
     license: Optional[List[str]] = None
     software_version: Optional[str] = None
@@ -125,6 +126,7 @@ class GithubExtractor(Extractor):
         return g
 
     def list_files(self) -> List[RemoteResource]:
+        """takes the root repository folder and returns the list of files present"""
         file_list = []
         file_dict = self._repo_data["object"]["entries"]
         repo_url = self._repo_data["url"]
@@ -147,6 +149,8 @@ class GithubExtractor(Extractor):
         self.description = data["description"]
         self.date_created = isoparse(data["createdAt"][:-1])
         self.date_modified = isoparse(data["updatedAt"][:-1])
+        if data["parent"]:
+            self.parent_repository = data["parent"]["url"]
         if data["latestRelease"]:
             self.date_published = isoparse(
                 data["latestRelease"]["publishedAt"]
@@ -172,6 +176,7 @@ class GithubExtractor(Extractor):
         query repo($owner: String!, $name: String!) {
             repository(name: $name, owner: $owner) {
                 url
+                parent {url}
                 createdAt
                 description
                 latestRelease {
@@ -333,6 +338,8 @@ class GithubExtractorSchema(JsonLDSchema):
     date_published = fields.Date(SDO.datePublished)
     license = fields.List(SDO.license, fields.IRI)
     url = fields.IRI(SDO.codeRepository)
+    # NOTE: parent_repository is not available for GitLab's GraphQL API in 2023. Add for GitLab when available
+    parent_repository = fields.IRI(SDO.isBasedOnUrl)
     keywords = fields.List(SDO.keywords, fields.String)
     version = fields.String(SDO.version)
 
