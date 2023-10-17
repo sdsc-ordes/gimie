@@ -82,10 +82,10 @@ class GitExtractor(Extractor):
         if self.local_path is None:
             return file_list
 
-        for p in Path(self.local_path).rglob("*"):
-            if (p.parts[0] == ".git") or not p.is_file():
+        for path in Path(self.local_path).rglob("*"):
+            if (path.parts[0] == ".git") or not path.is_file():
                 continue
-            file_list.append(LocalResource(p))
+            file_list.append(LocalResource(path))
 
         return file_list
 
