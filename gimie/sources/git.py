@@ -17,7 +17,7 @@
 """Extractor which uses a locally available (usually cloned) repository."""
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import List, Optional
 import uuid
 
 from calamus import fields
@@ -30,6 +30,7 @@ from gimie.io import LocalResource
 from gimie.graph.namespaces import SDO
 from gimie.models import Person, PersonSchema
 from gimie.sources.abstract import Extractor
+from pathlib import Path
 
 
 @dataclass
@@ -62,6 +63,7 @@ class GitExtractor(Extractor):
     contributors: Optional[List[Person]] = None
     date_created: Optional[datetime] = None
     date_modified: Optional[datetime] = None
+    license: Optional[List[str]] = None
 
     def extract(self):
         if self.local_path is None:
@@ -72,9 +74,20 @@ class GitExtractor(Extractor):
         self.contributors = self._get_contributors()
         self.date_created = self._get_creation_date()
         self.date_modified = self._get_modification_date()
+        self.license = self._get_licenses()
 
     def list_files(self) -> List[LocalResource]:
-        raise NotImplementedError
+        file_list = []
+
+        if self.local_path is None:
+            return file_list
+
+        for path in Path(self.local_path).rglob("*"):
+            if (path.parts[0] == ".git") or not path.is_file():
+                continue
+            file_list.append(LocalResource(path))
+
+        return file_list
 
     def to_graph(self) -> Graph:
         """Generate an RDF graph from the instance"""
@@ -138,6 +151,7 @@ class GitExtractorSchema(JsonLDSchema):
     contributors = fields.Nested(SDO.contributor, PersonSchema, many=True)
     date_created = fields.Date(SDO.dateCreated)
     date_modified = fields.Date(SDO.dateModified)
+    license = fields.List(SDO.license, fields.IRI)
 
     class Meta:
         rdf_type = SDO.SoftwareSourceCode
