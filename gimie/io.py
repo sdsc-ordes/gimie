@@ -12,7 +12,6 @@ class Resource:
     a file-like interface."""
 
     name: str
-    path: Union[str, os.PathLike]
 
     def open(self) -> io.BufferedReader:
         raise NotImplementedError
@@ -34,7 +33,7 @@ class LocalResource(Resource):
     """
 
     def __init__(self, path: Union[str, os.PathLike]):
-        self.path = Path(path)
+        self.path: Path = Path(path)
 
     def open(self, mode="r") -> io.BufferedReader:
         return io.BufferedReader(io.FileIO(self.path, mode))
