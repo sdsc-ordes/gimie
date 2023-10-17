@@ -24,7 +24,7 @@ def get_license_url(license_file: Resource) -> Optional[str]:
     if license_id is None:
         return None
     spdx_license_id = get_spdx_license_id(license_id)
-    os.unlink(temp_file.name)
+    os.remove(temp_file.name)
     if spdx_license_id:
         return f"https://spdx.org/licenses/{str(spdx_license_id)}.html"
 
