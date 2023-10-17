@@ -14,12 +14,6 @@ LABEL org.opencontainers.image.version ${VERSION_BUILD}
 ##################################################
 FROM python as poetry
 
-# Install system library
-
-RUN apt-get -y update && \
-    apt-get -y install libgomp1 && \
-    rm -rf /var/lib/apt/lists/*
-
 # Install poetry
 ENV POETRY_HOME=/opt/poetry
 ENV POETRY_VIRTUALENVS_IN_PROJECT=true
@@ -42,7 +36,7 @@ RUN poetry install --no-interaction --no-ansi -vvv
 ##################################################
 FROM python as runtime
 ENV PATH="/app/.venv/bin:$PATH"
-RUN apt-get update && apt-get install -y git
+RUN apt-get update && apt-get install -y git libgomp1
 COPY --from=poetry /app /app
 COPY ".docker/entrypoint.sh" "/entrypoint.sh"
 
