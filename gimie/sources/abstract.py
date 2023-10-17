@@ -86,7 +86,7 @@ class Extractor(ABC):
         return self.base_url
 
     def _get_licenses(self) -> List[str]:
-        """Extract a SPDX License URL from a GitHub Repository"""
+        """Extracts SPDX License URLs from the repository."""
         license_files = filter(
             lambda p: is_license_path(p.name), self.list_files()
         )
