@@ -339,7 +339,7 @@ class GithubExtractorSchema(JsonLDSchema):
     license = fields.List(SDO.license, fields.IRI)
     url = fields.IRI(SDO.codeRepository)
     # NOTE: parent_repository is not available for GitLab's GraphQL API in 2023. Add for GitLab when available
-    parent_repository = fields.IRI(SDO.isBasedOnUrl)
+    parent_repository = fields.IRI(SDO.isBasedOn)
     keywords = fields.List(SDO.keywords, fields.String)
     version = fields.String(SDO.version)
 
