@@ -14,6 +14,12 @@ LABEL org.opencontainers.image.version ${VERSION_BUILD}
 ##################################################
 FROM python as poetry
 
+# Install system library
+
+RUN apt-get -y update && \
+    apt-get -y install libgomp1 && \
+    rm -rf /var/lib/apt/lists/*
+
 # Install poetry
 ENV POETRY_HOME=/opt/poetry
 ENV POETRY_VIRTUALENVS_IN_PROJECT=true
