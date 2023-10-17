@@ -36,7 +36,8 @@ RUN poetry install --no-interaction --no-ansi -vvv
 ##################################################
 FROM python as runtime
 ENV PATH="/app/.venv/bin:$PATH"
-RUN apt-get update && apt-get install -y git libgomp1
+RUN apt-get update && \
+    apt-get install -y git libgomp1 libmagic-dev
 COPY --from=poetry /app /app
 COPY ".docker/entrypoint.sh" "/entrypoint.sh"
 
