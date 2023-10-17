@@ -6,6 +6,8 @@ from typing import Iterable, List, Optional
 from gimie.io import Resource
 import tempfile
 
+SPDX_IDS = list(LICENSES.keys())
+
 
 def get_license_url(license_file: Resource) -> Optional[str]:
     """Takes the path of a text file containing a license text, and matches this
@@ -19,7 +21,9 @@ def get_license_url(license_file: Resource) -> Optional[str]:
         "license_detections"
     ]
     license_id = get_license_with_highest_coverage(license_detections)  # type: ignore
-    spdx_license_id = get_spdx_license_id(LICENSES.keys(), license_id)
+    if license_id is None:
+        return None
+    spdx_license_id = get_spdx_license_id(license_id)
     os.unlink(temp_file.name)
     if spdx_license_id:
         return f"https://spdx.org/licenses/{str(spdx_license_id)}.html"
@@ -28,25 +32,23 @@ def get_license_url(license_file: Resource) -> Optional[str]:
 
 
 def get_spdx_license_id(
-    ref_licenses: Iterable[str], license_id: Optional[str]
+    license_id: str,
+    spdx_ids: Iterable[str] = SPDX_IDS,
 ) -> Optional[str]:
     """Given a scancode API license ID also known as a license detection, returns the correctly capitalized
     spdx id corresponding to it.
 
     Parameters
     ----------
-    ref_licenses: Iterable[str]
-        An iterable of (reference) SPDX license ids.
-    license_id: Optional[str]
+    license_id:
         A license id to match with SPDX licenses.
+    spdx_ids:
+        An iterable of (reference) SPDX license ids.
     """
 
-    lower_ref_licenses = {ref.lower(): ref for ref in ref_licenses}
+    lower_spdx_ids = {spdx.lower(): spdx for spdx in spdx_ids}
 
-    if license_id in lower_ref_licenses:
-        return lower_ref_licenses[license_id]
-
-    return None
+    return lower_spdx_ids.get(license_id.lower(), None)
 
 
 def is_license_path(filename: str) -> bool:
