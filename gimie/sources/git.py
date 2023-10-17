@@ -17,7 +17,7 @@
 """Extractor which uses a locally available (usually cloned) repository."""
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Optional, Union
+from typing import List, Optional
 import uuid
 
 from calamus import fields
@@ -28,10 +28,6 @@ from rdflib import Graph
 
 from gimie.io import LocalResource
 from gimie.graph.namespaces import SDO
-from gimie.sources.common.license import (
-    _get_license_url,
-    is_license_path,
-)
 from gimie.models import Person, PersonSchema
 from gimie.sources.abstract import Extractor
 from pathlib import Path

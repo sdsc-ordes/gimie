@@ -40,11 +40,6 @@ from gimie.models import (
 from gimie.graph.namespaces import SDO
 
 from gimie.io import RemoteResource
-from gimie.sources.common.license import (
-    get_license_with_highest_coverage,
-    is_license_path,
-    _get_license_url,
-)
 from gimie.sources.common.queries import (
     send_rest_query,
     send_graphql_query,

@@ -1,13 +1,13 @@
 import os
 import re
-from spdx_license_list import LICENSES, License
+from spdx_license_list import LICENSES
 from scancode.api import get_licenses
 from typing import Iterable, List, Optional
-from gimie.io import Resource, iterable_to_stream, RemoteResource
+from gimie.io import Resource
 import tempfile
 
 
-def _get_license_url(license_file: Resource) -> Optional[str]:
+def get_license_url(license_file: Resource) -> Optional[str]:
     """Takes the path of a text file containing a license text, and matches this
     using the scancode API to get possible license matches. The best match is
     then returned as a spdx license URL"""

@@ -21,11 +21,6 @@ from gimie.models import (
     PersonSchema,
 )
 from gimie.sources.abstract import Extractor
-from gimie.sources.common.license import (
-    get_license_with_highest_coverage,
-    is_license_path,
-    _get_license_url,
-)
 from gimie.sources.common.queries import send_graphql_query, send_rest_query
 
 load_dotenv()
@@ -149,7 +144,7 @@ class GitlabExtractor(Extractor):
 
     def _safe_extract_contributors(
         self, repo: dict[str, Any]
-    ) -> list[Person] | None:
+    ) -> List[Person] | None:
         members = [
             user["node"]["user"]
             for user in repo["projectMembers"]["edges"]
