@@ -21,11 +21,6 @@ from gimie.models import (
     PersonSchema,
 )
 from gimie.sources.abstract import Extractor
-from gimie.sources.common.license import (
-    get_license_with_highest_coverage,
-    is_license_path,
-    _get_licenses,
-)
 from gimie.sources.common.queries import send_graphql_query, send_rest_query
 
 load_dotenv()
@@ -101,7 +96,7 @@ class GitlabExtractor(Extractor):
             self.date_published = isoparse(
                 data["releases"]["edges"][0]["node"]["releasedAt"]
             )
-        self.license = self._get_license()
+        self.license = self._get_licenses()
         self.keywords = data["topics"]
 
         # Get contributors as the project members that are not owners and those that have written merge requests
@@ -149,7 +144,7 @@ class GitlabExtractor(Extractor):
 
     def _safe_extract_contributors(
         self, repo: dict[str, Any]
-    ) -> list[Person] | None:
+    ) -> List[Person] | None:
         members = [
             user["node"]["user"]
             for user in repo["projectMembers"]["edges"]
@@ -285,23 +280,6 @@ class GitlabExtractor(Extractor):
             name=node.get("name"),
             email=node.get("publicEmail"),
         )
-
-    def _get_license(self) -> list[str]:
-        """Extract a SPDX License URL from a GitLab Repository"""
-        license_files_iterator = filter(
-            lambda p: is_license_path(p.name), self.list_files()
-        )
-        license_files = list(license_files_iterator)
-        license_ids = []
-        for file in license_files:
-            with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-                temp_file.write(file.open().read())
-                license_id = _get_licenses(temp_file.name)
-                if license_id:
-                    license_ids.append(
-                        f"https://spdx.org/licenses/{str(license_id)}.html"
-                    )
-        return license_ids
 
     def _user_from_rest(self, username: str) -> Person:
         """Given a username, use the REST API to retrieve the Person object."""

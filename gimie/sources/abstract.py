@@ -21,6 +21,7 @@ from typing import List, Optional
 
 from rdflib import Graph
 from urllib.parse import urlparse
+from gimie.sources.common.license import get_license_url, is_license_path
 from gimie.io import Resource
 
 
@@ -83,3 +84,15 @@ class Extractor(ABC):
             url = urlparse(self.url)
             return f"{url.scheme}://{url.netloc}"
         return self.base_url
+
+    def _get_licenses(self) -> List[str]:
+        """Extracts SPDX License URLs from the repository."""
+        license_files = filter(
+            lambda p: is_license_path(p.name), self.list_files()
+        )
+        license_urls = []
+        for file in license_files:
+            license_url = get_license_url(file)
+            if license_url:
+                license_urls.append(license_url)
+        return license_urls
