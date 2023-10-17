@@ -5,6 +5,9 @@ on:
     type: [published]
   push:
     branches: [main]
+  pull_request:
+    paths:
+      - 'pyproject.toml'
 
 env:
   REGISTRY: ghcr.io
