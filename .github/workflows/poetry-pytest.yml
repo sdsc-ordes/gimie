@@ -10,15 +10,18 @@ jobs:
       matrix:
         python-version: ["3.8", "3.9", "3.10"]
     steps:
-      - uses: actions/checkout@v1
+      # https://github.com/actions/checkout
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # https://github.com/actions/setup-python
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
+      # https://github.com/snok/install-poetry
       - name: Install Poetry
         uses: snok/install-poetry@v1
 
@@ -51,7 +54,8 @@ jobs:
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
+    # https://github.com/coverallsapp/github-action
     - name: Coveralls Finished
-      uses: coverallsapp/github-action@master
+      uses: coverallsapp/github-action@v2
       with:
         parallel-finished: true

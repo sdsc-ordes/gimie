@@ -1,14 +1,25 @@
 name: docs
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - 'docs/**'
+  
 permissions:
     contents: write
 jobs:
-  docs:
+  docs-build:
     runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3
-
+      # https://github.com/actions/checkout
+      - uses: actions/checkout@v4
+      
+      # https://github.com/actions/setup-python
+      - uses: actions/setup-python@v4
+      
+      # https://github.com/snok/install-poetry
       - name: Install Poetry
         uses: snok/install-poetry@v1
 
@@ -20,6 +31,29 @@ jobs:
         run: |
           make doc
 
+  docs-push:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      # https://github.com/actions/checkout
+      - uses: actions/checkout@v4
+      
+      # https://github.com/actions/setup-python
+      - uses: actions/setup-python@v4
+      
+      # https://github.com/snok/install-poetry
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+
+      - name: Install dependencies
+        run: |
+          poetry install --with doc
+
+      - name: Sphinx build
+        run: |
+          make doc
+
+      # https://github.com/peaceiris/actions-gh-pages
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         # if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/docs-website' }}
