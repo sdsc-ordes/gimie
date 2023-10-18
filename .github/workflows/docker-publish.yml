@@ -11,7 +11,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build-image:
@@ -21,8 +20,12 @@ jobs:
       packages: write
 
     steps:
-      - name: Checkout repository
+      - name: checkout repository
         uses: actions/checkout@v3
+
+      - name: lowercase image name
+        run: |
+          echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
 
       # https://github.com/docker/setup-qemu-action
       - name: Set up QEMU
@@ -60,6 +63,13 @@ jobs:
       packages: write
 
     steps:
+      - name: checkout repository
+        uses: actions/checkout@v3
+
+      - name: lowercase image name
+        run: |
+          echo "IMAGE_NAME=${GITHUB_REPOSITORY,,}" >> ${GITHUB_ENV}
+
       - name: Log in to the Container registry
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a # v2.1.0
         with:
