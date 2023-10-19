@@ -26,12 +26,6 @@ class Resource:
 class LocalResource(Resource):
     """Providing buffered read-only access to local data.
 
-    Parameters
-    ----------
-    name: the name of the resource, typically the filename.
-    url: the URL where the resource. can be downladed from.
-    headers: optional headers to pass to the request.
-
     Examples
     --------
     >>> from gimie.io import LocalResource
@@ -54,9 +48,10 @@ class RemoteResource(Resource):
 
     Parameters
     ----------
-    name: the name of the resource, typically the filename.
-    url: the URL where the resource. can be downladed from.
-    headers: optional headers to pass to the request.
+    url:
+        The URL where the resource. can be downladed from.
+    headers:
+        Optional headers to pass to the request.
 
     Examples
     --------
