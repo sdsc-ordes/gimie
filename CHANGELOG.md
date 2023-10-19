@@ -1,5 +1,23 @@
 Notable changes introduced in gimie releases are documented in this file
 
+
+## [0.6.0] - 2023-10-19
+
+### Bug Fixes
+
+- *(deps)* switch to scancode mini (#88)
+- *(docker)* push action was missing buildx (#91)
+- *(github)* replace superseded schema:isBasedOnUrl property (#80)- incorrect mapping for schema:codeRepository (#64)
+- *(license)* NOASSERTION should not return triples. (#66)
+
+
+### Features
+
+- *(conventional-PRs)* all PRs will need to follow conventional format
+- *(conventional-PRs)* all PRs will need to follow conventional format
+- *(github.py)* Get "forked from" property of a repository (#79)
+- *(io)* file-like interface to remote resources (#70)- license matcher for git extractor (#78)
+
 ## [0.5.1] - 2023-07-10
 
 ### Bug Fixes
