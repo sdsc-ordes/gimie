@@ -73,6 +73,7 @@ class RemoteResource(Resource):
 
 class IterStream(io.RawIOBase):
     """Wraps an iterator under a like a file-like interface.
+    Empty elements in the iterator are ignored.
 
     Parameters
     ----------
@@ -81,7 +82,7 @@ class IterStream(io.RawIOBase):
 
     Examples
     --------
-    >>> stream = IterStream(iter([b"Hello ", b"World"]))
+    >>> stream = IterStream(iter([b"Hello ", b"", b"World"]))
     >>> stream.read()
     b'Hello World'
     """
@@ -96,7 +97,15 @@ class IterStream(io.RawIOBase):
     def readinto(self, b):
         try:
             l = len(b)  # We're supposed to return at most this much
-            chunk = self.leftover or next(self.iterator)
+
+            if self.leftover:
+                chunk = self.leftover
+            else:
+                chunk = next(self.iterator)
+            # skip empty elements
+            while not chunk:
+                chunk = next(self.iterator)
+
             output, self.leftover = chunk[:l], chunk[l:]
             b[: len(output)] = output
             return len(output)
