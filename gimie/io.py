@@ -34,8 +34,8 @@ class LocalResource(Resource):
     def __init__(self, path: Union[str, os.PathLike]):
         self.path: Path = Path(path)
 
-    def open(self, mode="r") -> io.RawIOBase:
-        return io.FileIO(self.path, mode)
+    def open(self) -> io.RawIOBase:
+        return io.FileIO(self.path, mode="r")
 
     @property
     def name(self) -> str:
