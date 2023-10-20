@@ -8,7 +8,7 @@ from typing import Iterator, Optional, Union
 
 
 class Resource:
-    """Abstract class for buffered read-only access to local or remote resources via
+    """Abstract class for read-only access to local or remote resources via
     a file-like interface.
 
     Parameters
@@ -24,11 +24,10 @@ class Resource:
 
 
 class LocalResource(Resource):
-    """Providing buffered read-only access to local data.
+    """Providing read-only access to local data via a file-like interface.
 
     Examples
     --------
-    >>> from gimie.io import LocalResource
     >>> resource = LocalResource("README.md")
     """
 
@@ -44,7 +43,7 @@ class LocalResource(Resource):
 
 
 class RemoteResource(Resource):
-    """Provides buffered read-only access to remote data.
+    """Provides read-only access to remote data via a file-like interface.
 
     Parameters
     ----------
@@ -55,9 +54,10 @@ class RemoteResource(Resource):
 
     Examples
     --------
-    >>> from gimie.io import RemoteResource
     >>> url = "https://raw.githubusercontent.com/SDSC-ORD/gimie/main/README.md"
-    >>> resource = RemoteResource("README.md", url)
+    >>> content = RemoteResource("README.md", url).open().read()
+    >>> assert isinstance(content, bytes)
+    >>> assert isinstance(content.decode(), str)
     """
 
     def __init__(self, name: str, url: str, headers: Optional[dict] = None):
@@ -73,16 +73,15 @@ class RemoteResource(Resource):
 
 
 class IterStream(io.RawIOBase):
-    """Wraps an iterator to make it look like a file-like object.
+    """Wraps an iterator under a like a file-like interface.
 
     Parameters
     ----------
     iterator:
-        An iterator that yields bytes.
+        An iterator yielding bytes.
 
     Examples
     --------
-    >>> from gimie.io import IterStream
     >>> stream = IterStream(iter([b"Hello ", b"World"]))
     >>> stream.read()
     b'Hello World'
