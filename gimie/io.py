@@ -4,7 +4,7 @@ import io
 import os
 from pathlib import Path
 import requests
-from typing import BinaryIO, Iterator, Optional, Union
+from typing import Iterator, Optional, Union
 
 
 class Resource:
@@ -19,7 +19,7 @@ class Resource:
 
     name: str
 
-    def open(self) -> BinaryIO:
+    def open(self) -> io.RawIOBase:
         raise NotImplementedError
 
 
@@ -35,7 +35,7 @@ class LocalResource(Resource):
     def __init__(self, path: Union[str, os.PathLike]):
         self.path: Path = Path(path)
 
-    def open(self, mode="r") -> Union[BinaryIO, io.RawIOBase]:
+    def open(self, mode="r") -> io.RawIOBase:
         return io.FileIO(self.path, mode)
 
     @property
