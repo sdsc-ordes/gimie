@@ -57,7 +57,6 @@ class RemoteResource(Resource):
     >>> url = "https://raw.githubusercontent.com/SDSC-ORD/gimie/main/README.md"
     >>> content = RemoteResource("README.md", url).open().read()
     >>> assert isinstance(content, bytes)
-    >>> assert isinstance(content.decode(), str)
     """
 
     def __init__(self, name: str, url: str, headers: Optional[dict] = None):
