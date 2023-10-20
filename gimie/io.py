@@ -97,17 +97,13 @@ class IterStream(io.RawIOBase):
     def readinto(self, b):
         try:
             l = len(b)  # We're supposed to return at most this much
-
-            if self.leftover:
-                chunk = self.leftover
-            else:
-                chunk = next(self.iterator)
-            # skip empty elements
-            while not chunk:
-                chunk = next(self.iterator)
-
-            output, self.leftover = chunk[:l], chunk[l:]
-            b[: len(output)] = output
-            return len(output)
+            while True:
+                chunk = self.leftover or next(self.iterator)
+                # skip empty elements
+                if not chunk:
+                    continue
+                output, self.leftover = chunk[:l], chunk[l:]
+                b[: len(output)] = output
+                return len(output)
         except StopIteration:
             return 0  # indicate EOF
