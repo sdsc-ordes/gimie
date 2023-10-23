@@ -1,11 +1,14 @@
 """Tests for the Gimie command line interface."""
 
 import os
+import datetime
+
+import pytest
+
+from gimie.graph.namespaces import GIMIE
+from gimie.io import LocalResource
 from gimie.sources.git import GitExtractor
 from gimie.project import Project
-import datetime
-import pytest
-from gimie.graph.namespaces import GIMIE
 
 LOCAL_REPOSITORY = os.getcwd()
 RENKU_GITHUB = "https://github.com/SwissDataScienceCenter/renku"
@@ -65,3 +68,8 @@ def test_clone_unsupported():
     proj = Project(UNSUPPORTED_PROV)
     assert type(proj.extractors[0]) == GitExtractor
     proj.extract()
+
+
+def test_git_list_files():
+    files = GitExtractor(UNSUPPORTED_PROV).list_files()
+    assert all(isinstance(f, LocalResource) for f in files)
