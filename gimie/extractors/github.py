@@ -127,7 +127,6 @@ class GithubExtractor(Extractor):
             description=data["description"],
             name=self.path,
             keywords=self._get_keywords(*data["repositoryTopics"]["nodes"]),
-            licenses=self._get_licenses(),
             url=self.url,
         )
         if data["parent"]:

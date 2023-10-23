@@ -70,7 +70,6 @@ class GitExtractor(Extractor):
             date_created=self._get_creation_date(),
             date_modified=self._get_modification_date(),
             name=self.path,
-            licenses=self._get_licenses(),
             url=self.url,
         )
 

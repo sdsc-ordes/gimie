@@ -74,7 +74,6 @@ class GitlabExtractor(Extractor):
             description=data["description"],
             identifier=urlparse(data["id"]).path.split("/")[2],
             keywords=data["topics"],
-            licenses=self._get_licenses(),
             name=self.path,
             prog_langs=[lang["name"] for lang in data["languages"]],
             url=self.url,
