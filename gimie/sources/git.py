@@ -20,15 +20,10 @@ from datetime import datetime
 from typing import List, Optional
 import uuid
 
-from calamus import fields
-from calamus.schema import JsonLDSchema
-import git
 import pydriller
-from rdflib import Graph
 
 from gimie.io import LocalResource
-from gimie.graph.namespaces import SDO
-from gimie.models import Person, PersonSchema
+from gimie.models import Person, Repository
 from gimie.sources.abstract import Extractor
 from pathlib import Path
 
@@ -59,22 +54,23 @@ class GitExtractor(Extractor):
     base_url: Optional[str] = None
     local_path: Optional[str] = None
 
-    author: Optional[Person] = None
-    contributors: Optional[List[Person]] = None
-    date_created: Optional[datetime] = None
-    date_modified: Optional[datetime] = None
-    license: Optional[List[str]] = None
-
-    def extract(self):
+    def extract(self) -> Repository:
         if self.local_path is None:
             raise ValueError("Local path must be provided for extraction.")
-        self.repository = pydriller.Repository(self.local_path)
         # Assuming author is the first person to commit
-        self.author = self._get_creator()
-        self.contributors = self._get_contributors()
-        self.date_created = self._get_creation_date()
-        self.date_modified = self._get_modification_date()
-        self.license = self._get_licenses()
+        self.repository = pydriller.Repository(self.local_path)
+
+        repo_meta = dict(
+            author=self._get_creator(),
+            contributors=self._get_contributors(),
+            date_created=self._get_creation_date(),
+            date_modified=self._get_modification_date(),
+            name=self.path,
+            licenses=self._get_licenses(),
+            url=self.url,
+        )
+
+        return Repository(**repo_meta)  # type: ignore
 
     def list_files(self) -> List[LocalResource]:
         file_list = []
@@ -88,13 +84,6 @@ class GitExtractor(Extractor):
             file_list.append(LocalResource(path))
 
         return file_list
-
-    def to_graph(self) -> Graph:
-        """Generate an RDF graph from the instance"""
-        jd = GitExtractorSchema().dumps(self)
-        g: Graph = Graph().parse(data=str(jd), format="json-ld")
-        g.bind("schema", SDO)
-        return g
 
     def _get_contributors(self) -> List[Person]:
         """Get the authors of the repository."""
@@ -136,24 +125,10 @@ class GitExtractor(Extractor):
             uid = str(uuid.uuid4())
         else:
             uid = name.replace(" ", "_").lower()
-        dev_id = f"{self._id}/{uid}"
+        dev_id = f"{self.url}/{uid}"
         return Person(
             _id=dev_id,
             identifier=uid,
             name=name,
             email=email,
         )
-
-
-class GitExtractorSchema(JsonLDSchema):
-    _id = fields.Id()
-    author = fields.Nested(SDO.author, PersonSchema)
-    contributors = fields.Nested(SDO.contributor, PersonSchema, many=True)
-    date_created = fields.Date(SDO.dateCreated)
-    date_modified = fields.Date(SDO.dateModified)
-    license = fields.List(SDO.license, fields.IRI)
-
-    class Meta:
-        rdf_type = SDO.SoftwareSourceCode
-        model = GitExtractor
-        add_value_types = False
