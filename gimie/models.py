@@ -119,15 +119,16 @@ class Repository:
 
     author: Optional[Union[Organization, Person]] = None
     contributors: Optional[List[Person]] = None
-    prog_langs: Optional[List[str]] = None
-    download_url: Optional[str] = None
-    description: Optional[str] = None
     date_created: Optional[datetime] = None
     date_modified: Optional[datetime] = None
     date_published: Optional[datetime] = None
-    parent_repository: Optional[str] = None
+    description: Optional[str] = None
+    download_url: Optional[str] = None
+    identifier: Optional[str] = None
     keywords: Optional[List[str]] = None
     licenses: Optional[List[str]] = None
+    parent_repository: Optional[str] = None
+    prog_langs: Optional[List[str]] = None
     version: Optional[str] = None
 
     @property
@@ -155,19 +156,20 @@ class RepositorySchema(JsonLDSchema):
     """This defines the schema used for json-ld serialization."""
 
     _id = fields.Id()
-    name = fields.String(SDO.name)
     author = fields.Nested(SDO.author, [PersonSchema, OrganizationSchema])
     contributors = fields.Nested(SDO.contributor, PersonSchema, many=True)
-    prog_langs = fields.List(SDO.programmingLanguage, fields.String)
-    download_url = fields.Raw(SDO.downloadUrl)
-    description = fields.String(SDO.description)
     date_created = fields.Date(SDO.dateCreated)
     date_modified = fields.Date(SDO.dateModified)
     date_published = fields.Date(SDO.datePublished)
-    licenses = fields.List(SDO.license, fields.IRI)
-    url = fields.IRI(SDO.codeRepository)
-    parent_repository = fields.IRI(SDO.isBasedOn)
+    description = fields.String(SDO.description)
+    download_url = fields.Raw(SDO.downloadUrl)
+    identifier = fields.String(SDO.identifier)
     keywords = fields.List(SDO.keywords, fields.String)
+    licenses = fields.List(SDO.license, fields.IRI)
+    name = fields.String(SDO.name)
+    parent_repository = fields.IRI(SDO.isBasedOn)
+    prog_langs = fields.List(SDO.programmingLanguage, fields.String)
+    url = fields.IRI(SDO.codeRepository)
     version = fields.String(SDO.version)
 
     class Meta:
