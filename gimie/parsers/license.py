@@ -1,12 +1,40 @@
 import os
 import re
-from spdx_license_list import LICENSES
-from scancode.api import get_licenses
-from typing import Iterable, List, Optional
-from gimie.io import Resource
 import tempfile
+from typing import Iterable, List, Optional
+
+from rdflib import Graph
+from rdflib.term import URIRef
+from scancode.api import get_licenses
+from spdx_license_list import LICENSES
+
+from gimie.graph.namespaces import SDO
+from gimie.io import Resource
+from gimie.parsers.abstract import Parser
 
 SPDX_IDS = list(LICENSES.keys())
+
+
+class LicenseParser(Parser):
+    def __init__(self, uri: URIRef, max_size_kb: Optional[int] = 2048):
+        super().__init__(uri, max_size_kb)
+
+    def _parse(self, resource: Resource) -> Graph:
+        """Extracts an spdx URL from a license file and returns a
+        triple of the form <input uri> <schema:license> <spdx_url>.
+        If no matching URL is found, an empty graph is returned.
+        """
+        g = Graph()
+        license_url = get_license_url(resource)
+        if license_url:
+            g.add((self.uri, SDO.license, URIRef(license_url)))
+        return g
+
+    def can_parse(self, resource: Resource) -> bool:
+        """Match based on filename  (and size?)"""
+        return is_license_path(
+            resource.name
+        )  # & (resource.size < self.max_size_kb)
 
 
 def get_license_url(license_file: Resource) -> Optional[str]:
