@@ -14,7 +14,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Abstract classes for gimie objects."""
+"""Abstract for Git repository extractors."""
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
@@ -26,10 +26,10 @@ from gimie.models import Repository
 
 class Extractor(ABC):
     """Extractor is an Abstract Base Class. It is only meant
-    to define a standard interface for all extractors.
+    to define a standard interface for all git repository extractors.
 
-    All subclasses must implement extract() and to_graph() methods
-    they are free to override the default serialize() and jsonld()
+    Subclasses for different git providers must implement
+    extract() and list_files() methods.
     """
 
     def __init__(
@@ -47,6 +47,7 @@ class Extractor(ABC):
         """Extract metadata"""
         ...
 
+    @abstractmethod
     def list_files(self) -> List[Resource]:
         """List all files in the repository HEAD."""
         ...
