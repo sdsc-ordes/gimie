@@ -13,6 +13,6 @@ TEST_REPOS = [
 
 @pytest.mark.parametrize("repo", TEST_REPOS)
 def test_gitlab_extractor(repo):
-    meta = GitlabExtractor(repo)
-    meta.extract()
+    extractor = GitlabExtractor(repo)
+    meta = extractor.extract()
     meta.serialize(format="ttl")

@@ -13,6 +13,5 @@ TEST_REPOS = [
 
 @pytest.mark.parametrize("repo", TEST_REPOS)
 def test_github_extractor(repo):
-    meta = GithubExtractor(repo)
-    meta.extract()
+    meta = GithubExtractor(repo).extract()
     meta.serialize(format="ttl")

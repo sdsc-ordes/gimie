@@ -22,9 +22,11 @@ from rdflib import Graph
 from gimie.project import Project
 
 
-OUT_TTL = Project(
-    "https://github.com/SDSC-ORD/gimie", sources=["github"]
-).serialize(format="ttl")
+OUT_TTL = (
+    Project("https://github.com/SDSC-ORD/gimie", sources=["github"])
+    .extract()
+    .serialize(format="ttl")
+)
 
 
 def test_validate_output_is_linked_data():
