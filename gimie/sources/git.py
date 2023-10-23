@@ -17,9 +17,12 @@
 """Extractor which uses a locally available (usually cloned) repository."""
 from dataclasses import dataclass
 from datetime import datetime
+from functools import cached_property
+import tempfile
 from typing import List, Optional
 import uuid
 
+import git
 import pydriller
 
 from gimie.io import LocalResource
@@ -58,7 +61,7 @@ class GitExtractor(Extractor):
         if self.local_path is None:
             raise ValueError("Local path must be provided for extraction.")
         # Assuming author is the first person to commit
-        self.repository = pydriller.Repository(self.local_path)
+        self.repository = self._repo_data
 
         repo_meta = dict(
             authors=[self._get_creator()],
@@ -73,17 +76,24 @@ class GitExtractor(Extractor):
         return Repository(**repo_meta)  # type: ignore
 
     def list_files(self) -> List[LocalResource]:
+
+        self.repository = self._repo_data
         file_list = []
 
-        if self.local_path is None:
-            return file_list
-
-        for path in Path(self.local_path).rglob("*"):
+        for path in Path(self.local_path).rglob("*"):  # type: ignore
             if (path.parts[0] == ".git") or not path.is_file():
                 continue
             file_list.append(LocalResource(path))
 
         return file_list
+
+    @cached_property
+    def _repo_data(self) -> pydriller.Repository:
+        """Get the repository data by accessing local data or cloning."""
+        if self.local_path is None:
+            self.local_path = tempfile.TemporaryDirectory().name
+            git.Repo.clone_from(self.url, self.local_path)  # type: ignore
+        return pydriller.Repository(self.local_path)
 
     def _get_contributors(self) -> List[Person]:
         """Get the authors of the repository."""
@@ -102,12 +112,14 @@ class GitExtractor(Extractor):
 
     def _get_modification_date(self) -> Optional[datetime]:
         """Get the last modification date of the repository."""
+        commit = None
         try:
             for commit in self.repository.traverse_commits():
                 pass
-            return commit.author_date
         except (StopIteration, NameError):
-            return None
+            pass
+        finally:
+            return commit.author_date if commit else None
 
     def _get_creator(self) -> Optional[Person]:
         """Get the creator of the repository."""
