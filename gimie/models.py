@@ -117,7 +117,7 @@ class Repository:
     url: str
     name: str
 
-    author: Optional[Union[Organization, Person]] = None
+    authors: Optional[List[Union[Organization, Person]]] = None
     contributors: Optional[List[Person]] = None
     date_created: Optional[datetime] = None
     date_modified: Optional[datetime] = None
@@ -156,7 +156,9 @@ class RepositorySchema(JsonLDSchema):
     """This defines the schema used for json-ld serialization."""
 
     _id = fields.Id()
-    author = fields.Nested(SDO.author, [PersonSchema, OrganizationSchema])
+    authors = fields.Nested(
+        SDO.author, [PersonSchema, OrganizationSchema], many=True
+    )
     contributors = fields.Nested(SDO.contributor, PersonSchema, many=True)
     date_created = fields.Date(SDO.dateCreated)
     date_modified = fields.Date(SDO.dateModified)

@@ -120,7 +120,7 @@ class GithubExtractor(Extractor):
         data = self._repo_data
 
         repo_meta = dict(
-            author=self._get_author(data["owner"]),
+            authors=[self._get_author(data["owner"])],
             contributors=self._fetch_contributors(),
             date_created=isoparse(data["createdAt"][:-1]),
             date_modified=isoparse(data["updatedAt"][:-1]),

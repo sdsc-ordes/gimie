@@ -61,7 +61,7 @@ class GitExtractor(Extractor):
         self.repository = pydriller.Repository(self.local_path)
 
         repo_meta = dict(
-            author=self._get_creator(),
+            authors=[self._get_creator()],
             contributors=self._get_contributors(),
             date_created=self._get_creation_date(),
             date_modified=self._get_modification_date(),

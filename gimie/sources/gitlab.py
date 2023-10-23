@@ -67,7 +67,7 @@ class GitlabExtractor(Extractor):
         # is marked as owner, contributors are project members or merge
         # request authors
         repo_meta = dict(
-            author=self._safe_extract_author(data),
+            authors=self._safe_extract_author(data),
             contributors=self._safe_extract_contributors(data),
             date_created=isoparse(data["createdAt"][:-1]),
             date_modified=isoparse(data["lastActivityAt"][:-1]),
