@@ -18,11 +18,11 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-
-from rdflib import Graph
 from urllib.parse import urlparse
-from gimie.sources.common.license import get_license_url, is_license_path
+
 from gimie.io import Resource
+from gimie.models import Repository
+from gimie.sources.common.license import get_license_url, is_license_path
 
 
 class Extractor(ABC):
@@ -44,31 +44,13 @@ class Extractor(ABC):
         self.local_path = local_path
 
     @abstractmethod
-    def extract(self):
+    def extract(self) -> Repository:
         """Extract metadata"""
         ...
-
-    @abstractmethod
-    def to_graph(self) -> Graph:
-        """Generate an RDF graph from the instance"""
-        return Graph()
 
     def list_files(self) -> List[Resource]:
         """List all files in the repository HEAD."""
         ...
-
-    def serialize(self, format: str = "ttl", **kwargs) -> str:
-        """Serialize the RDF graph representing the instance."""
-        return self.to_graph().serialize(format=format, **kwargs)  # type: ignore
-
-    def jsonld(self) -> str:
-        """Alias for jsonld serialization."""
-        return self.serialize(format="json-ld")
-
-    @property
-    def _id(self) -> str:
-        """Unique identifier for the repository."""
-        return self.url
 
     @property
     def path(self) -> str:
@@ -87,6 +69,7 @@ class Extractor(ABC):
 
     def _get_licenses(self) -> List[str]:
         """Extracts SPDX License URLs from the repository."""
+        # TODO: Move functionality into a dedicate Parser
         license_files = filter(
             lambda p: is_license_path(p.name), self.list_files()
         )
