@@ -27,8 +27,8 @@ from urllib.parse import urlparse
 from gimie.graph.operations import combine_graphs
 from gimie.models import Repository
 from gimie.utils import validate_url
-from gimie.sources import SOURCES
-from gimie.sources.abstract import Extractor
+from gimie.extractors import SOURCES
+from gimie.extractors.abstract import Extractor
 from gimie.utils import validate_url
 
 

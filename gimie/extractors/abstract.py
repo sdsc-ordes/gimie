@@ -22,7 +22,7 @@ from urllib.parse import urlparse
 
 from gimie.io import Resource
 from gimie.models import Repository
-from gimie.sources.common.license import get_license_url, is_license_path
+from gimie.extractors.common.license import get_license_url, is_license_path
 
 
 class Extractor(ABC):

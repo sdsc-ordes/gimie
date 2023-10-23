@@ -17,10 +17,10 @@
 
 """Sources from which metadata can be extracted by gimie."""
 from typing import Type
-from gimie.sources.abstract import Extractor
-from gimie.sources.github import GithubExtractor
-from gimie.sources.gitlab import GitlabExtractor
-from gimie.sources.git import GitExtractor
+from gimie.extractors.abstract import Extractor
+from gimie.extractors.github import GithubExtractor
+from gimie.extractors.gitlab import GitlabExtractor
+from gimie.extractors.git import GitExtractor
 
 from dataclasses import dataclass
 

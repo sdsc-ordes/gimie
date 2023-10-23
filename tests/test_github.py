@@ -1,6 +1,5 @@
 # Tests fetching metadata from GitHub repositories with different setups.
-from gimie.io import RemoteResource
-from gimie.sources.github import GithubExtractor
+from gimie.extractors.github import GithubExtractor
 import pytest
 
 

@@ -5,9 +5,8 @@ import datetime
 
 import pytest
 
-from gimie.graph.namespaces import GIMIE
 from gimie.io import LocalResource
-from gimie.sources.git import GitExtractor
+from gimie.extractors.git import GitExtractor
 from gimie.project import Project
 
 LOCAL_REPOSITORY = os.getcwd()

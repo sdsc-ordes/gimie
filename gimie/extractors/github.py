@@ -25,7 +25,7 @@ from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
 from dotenv import load_dotenv
 
-from gimie.sources.abstract import Extractor
+from gimie.extractors.abstract import Extractor
 from gimie.models import (
     Organization,
     Person,
@@ -33,7 +33,7 @@ from gimie.models import (
 )
 
 from gimie.io import RemoteResource
-from gimie.sources.common.queries import (
+from gimie.extractors.common.queries import (
     send_rest_query,
     send_graphql_query,
 )

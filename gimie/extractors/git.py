@@ -29,7 +29,7 @@ import pydriller
 
 from gimie.io import LocalResource
 from gimie.models import Person, Repository
-from gimie.sources.abstract import Extractor
+from gimie.extractors.abstract import Extractor
 from pathlib import Path
 
 

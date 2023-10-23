@@ -1,5 +1,5 @@
 from gimie.io import RemoteResource
-from gimie.sources.gitlab import GitlabExtractor
+from gimie.extractors.gitlab import GitlabExtractor
 import pytest
 
 TEST_REPOS = [

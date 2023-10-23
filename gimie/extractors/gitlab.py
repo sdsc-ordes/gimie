@@ -14,8 +14,8 @@ from gimie.models import (
     Person,
     Repository,
 )
-from gimie.sources.abstract import Extractor
-from gimie.sources.common.queries import send_graphql_query, send_rest_query
+from gimie.extractors.abstract import Extractor
+from gimie.extractors.common.queries import send_graphql_query, send_rest_query
 
 load_dotenv()
 
