@@ -16,9 +16,7 @@
 # limitations under the License.
 from __future__ import annotations
 
-import tempfile
 from dataclasses import dataclass
-from datetime import datetime
 from dateutil.parser import isoparse
 from functools import cached_property
 import os
@@ -26,9 +24,6 @@ import requests
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
 from dotenv import load_dotenv
-from calamus import fields
-from calamus.schema import JsonLDSchema
-from rdflib import Graph
 
 from gimie.sources.abstract import Extractor
 from gimie.models import (
@@ -36,7 +31,6 @@ from gimie.models import (
     Person,
     Repository,
 )
-from gimie.graph.namespaces import SDO
 
 from gimie.io import RemoteResource
 from gimie.sources.common.queries import (
@@ -126,15 +120,15 @@ class GithubExtractor(Extractor):
         data = self._repo_data
 
         repo_meta = dict(
-            url=self.url,
-            name=self.path,
             author=self._get_author(data["owner"]),
             contributors=self._fetch_contributors(),
-            description=data["description"],
             date_created=isoparse(data["createdAt"][:-1]),
             date_modified=isoparse(data["updatedAt"][:-1]),
+            description=data["description"],
+            name=self.path,
             keywords=self._get_keywords(*data["repositoryTopics"]["nodes"]),
             licenses=self._get_licenses(),
+            url=self.url,
         )
         if data["parent"]:
             repo_meta["parent_repository"] = data["parent"]["url"]
