@@ -109,7 +109,7 @@ class GithubExtractor(Extractor):
         for item in file_dict:
             file = RemoteResource(
                 name=item["name"],
-                url=f'{repo_url}/blob/{defaultbranchref}/{item["path"]}',
+                url=f'{repo_url}/raw/{defaultbranchref}/{item["path"]}',
                 headers=self._set_auth(),
             )
             file_list.append(file)
