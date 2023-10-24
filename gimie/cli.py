@@ -16,11 +16,14 @@
 # limitations under the License.
 """Command line interface to the gimie package."""
 from enum import Enum
-from typing import Optional
-from gimie import __version__
+from typing import List, Optional
+
 import click
 import typer
 
+from gimie import __version__
+from gimie.extractors import GIT_PROVIDERS
+from gimie.parsers import PARSERS
 from gimie.project import Project
 
 app = typer.Typer(add_completion=False)
@@ -32,12 +35,14 @@ def cli():
     pass
 
 
-class SerializationFormat(str, Enum):
-    """Enumeration of valid RDF serialization formats for project graphs"""
-
+class FormatChoice(str, Enum):
     ttl = "ttl"
     jsonld = "json-ld"
     nt = "nt"
+
+
+class ParserChoice(str, Enum):
+    license = "license"
 
 
 def version_callback(value: bool):
@@ -50,8 +55,8 @@ def version_callback(value: bool):
 @app.command()
 def data(
     url: str,
-    format: SerializationFormat = typer.Option(
-        "ttl",
+    format: FormatChoice = typer.Option(
+        FormatChoice.ttl,
         "--format",
         show_choices=True,
         help="Output serialization format for the RDF graph.",
@@ -60,6 +65,18 @@ def data(
         None,
         "--base-url",
         help="Specify the base URL of the git provider. Inferred by default.",
+    ),
+    include_parser: Optional[List[ParserChoice]] = typer.Option(
+        None,
+        "--include-parser",
+        "-I",
+        help="Parsers to include. By default, all parsers are used.",
+    ),
+    exclude_parser: Optional[List[ParserChoice]] = typer.Option(
+        None,
+        "--exclude-parser",
+        "-X",
+        help="Parsers to exclude. By default, all parsers are used.",
     ),
     version: Optional[bool] = typer.Option(
         None,
@@ -71,9 +88,14 @@ def data(
     """Extract linked metadata from a Git repository at the target URL.
 
     The output is sent to stdout, and turtle is used as the default serialization format."""
-    proj = Project(url, base_url=base_url)
+    parser_names = set(PARSERS.keys())
+    if exclude_parser:
+        parser_names -= set([parser.value for parser in exclude_parser])
+    if include_parser:
+        parser_names = set([parser.value for parser in include_parser])
+    proj = Project(url, base_url=base_url, parser_names=parser_names)
     repo_meta = proj.extract()
-    print(repo_meta.serialize(format=format))
+    print(repo_meta.serialize(format=format.value))
 
 
 @app.command()
