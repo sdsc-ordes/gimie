@@ -72,7 +72,8 @@ def data(
 
     The output is sent to stdout, and turtle is used as the default serialization format."""
     proj = Project(url, base_url=base_url)
-    print(proj.serialize(format=format))
+    repo_meta = proj.extract()
+    print(repo_meta.serialize(format=format))
 
 
 @app.command()

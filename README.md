@@ -10,7 +10,7 @@ Scientific code repositories contain valuable metadata which can be used to enri
 
 ----------------------------------------------------------------------
 
-Using Gimie: easy peasy, it's a 3 step process. 
+Using Gimie: easy peasy, it's a 3 step process.
 
 ## STEP 1: Installation
 
@@ -37,11 +37,11 @@ docker run -e ACCESS_TOKEN=$ACCESS_TOKEN ghcr.io/sdsc-ord/gimie:latest gimie dat
 
 ## STEP 2 : Set your credentials
 
-In order to access the github api, you need to provide a github token with the `read:org` scope. 
+In order to access the github api, you need to provide a github token with the `read:org` scope.
 
 ### A. Create access tokens
 
-New to access tokens? Or don't know how to get your Github / Gitlab token ? 
+New to access tokens? Or don't know how to get your Github / Gitlab token ?
 
 Have no fear, see
 [here for Github tokens](https://docs.github.com/en/enterprise-server@3.4/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) and [here for Gitlab tokens](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html).
@@ -68,7 +68,7 @@ export GITLAB_TOKEN=
 ```shell
 gimie data https://github.com/numpy/numpy
 ```
-(want a Gitlab project instead? Just replace the URL in the command line) 
+(want a Gitlab project instead? Just replace the URL in the command line)
 
 ### As a python library
 
@@ -132,7 +132,7 @@ run checks:
 ```shell
 make check
 ```
-for an easier use Github/Gitlab APIs, place your access tokens in the `.env` file: (and don't worry, the `.gitignore` will ignore them when you push to GitHub) 
+for an easier use Github/Gitlab APIs, place your access tokens in the `.env` file: (and don't worry, the `.gitignore` will ignore them when you push to GitHub)
 
 ```
 cp .env.dist .env

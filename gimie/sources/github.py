@@ -16,9 +16,7 @@
 # limitations under the License.
 from __future__ import annotations
 
-import tempfile
 from dataclasses import dataclass
-from datetime import datetime
 from dateutil.parser import isoparse
 from functools import cached_property
 import os
@@ -26,18 +24,13 @@ import requests
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
 from dotenv import load_dotenv
-from calamus import fields
-from calamus.schema import JsonLDSchema
-from rdflib import Graph
 
 from gimie.sources.abstract import Extractor
 from gimie.models import (
     Organization,
-    OrganizationSchema,
     Person,
-    PersonSchema,
+    Repository,
 )
-from gimie.graph.namespaces import SDO
 
 from gimie.io import RemoteResource
 from gimie.sources.common.queries import (
@@ -105,25 +98,6 @@ class GithubExtractor(Extractor):
     local_path: Optional[str] = None
 
     token: Optional[str] = None
-    author: Optional[Union[Organization, Person]] = None
-    contributors: Optional[List[Person]] = None
-    prog_langs: Optional[List[str]] = None
-    download_url: Optional[str] = None
-    description: Optional[str] = None
-    date_created: Optional[datetime] = None
-    date_modified: Optional[datetime] = None
-    date_published: Optional[datetime] = None
-    parent_repository: Optional[str] = None
-    keywords: Optional[List[str]] = None
-    license: Optional[List[str]] = None
-    software_version: Optional[str] = None
-
-    def to_graph(self) -> Graph:
-        """Convert repository to RDF graph."""
-        jd = GithubExtractorSchema().dumps(self)
-        g: Graph = Graph().parse(format="json-ld", data=str(jd))
-        g.bind("schema", SDO)
-        return g
 
     def list_files(self) -> List[RemoteResource]:
         """takes the root repository folder and returns the list of files present"""
@@ -135,37 +109,45 @@ class GithubExtractor(Extractor):
         for item in file_dict:
             file = RemoteResource(
                 name=item["name"],
-                url=f'{repo_url}/blob/{defaultbranchref}/{item["path"]}',
+                url=f'{repo_url}/raw/{defaultbranchref}/{item["path"]}',
                 headers=self._set_auth(),
             )
             file_list.append(file)
         return file_list
 
-    def extract(self):
+    def extract(self) -> Repository:
         """Extract metadata from target GitHub repository."""
         data = self._repo_data
-        self.author = self._get_author(data["owner"])
-        self.contributors = self._fetch_contributors()
-        self.description = data["description"]
-        self.date_created = isoparse(data["createdAt"][:-1])
-        self.date_modified = isoparse(data["updatedAt"][:-1])
+
+        repo_meta = dict(
+            authors=[self._get_author(data["owner"])],
+            contributors=self._fetch_contributors(),
+            date_created=isoparse(data["createdAt"][:-1]),
+            date_modified=isoparse(data["updatedAt"][:-1]),
+            description=data["description"],
+            name=self.path,
+            keywords=self._get_keywords(*data["repositoryTopics"]["nodes"]),
+            licenses=self._get_licenses(),
+            url=self.url,
+        )
         if data["parent"]:
-            self.parent_repository = data["parent"]["url"]
+            repo_meta["parent_repository"] = data["parent"]["url"]
+
         if data["latestRelease"]:
-            self.date_published = isoparse(
+            repo_meta["date_published"] = isoparse(
                 data["latestRelease"]["publishedAt"]
             )
 
-        self.license = self._get_licenses()
         if data["primaryLanguage"] is not None:
-            self.prog_langs = [data["primaryLanguage"]["name"]]
-        self.keywords = self._get_keywords(*data["repositoryTopics"]["nodes"])
-        last_release = data["latestRelease"]
-        if last_release is not None:
-            self.version = last_release["name"]
-            self.download_url = (
-                f"{self.url}/archive/refs/tags/{self.version}.tar.gz"
-            )
+            repo_meta["prog_langs"] = [data["primaryLanguage"]["name"]]
+
+        if data["latestRelease"]:
+            version = data["latestRelease"]["name"]
+            download_url = f"{self.url}/archive/refs/tags/{version}.tar.gz"
+            repo_meta["download_url"] = download_url
+            repo_meta["version"] = version
+
+        return Repository(**repo_meta)  # type: ignore
 
     @cached_property
     def _repo_data(self) -> Dict[str, Any]:
@@ -321,29 +303,3 @@ class GithubExtractor(Extractor):
             name=node["name"],
             affiliations=orgs,
         )
-
-
-class GithubExtractorSchema(JsonLDSchema):
-    """This defines the schema used for json-ld serialization."""
-
-    _id = fields.Id()
-    path = fields.String(SDO.name)
-    author = fields.Nested(SDO.author, [PersonSchema, OrganizationSchema])
-    contributors = fields.Nested(SDO.contributor, PersonSchema, many=True)
-    prog_langs = fields.List(SDO.programmingLanguage, fields.String)
-    download_url = fields.Raw(SDO.downloadUrl)
-    description = fields.String(SDO.description)
-    date_created = fields.Date(SDO.dateCreated)
-    date_modified = fields.Date(SDO.dateModified)
-    date_published = fields.Date(SDO.datePublished)
-    license = fields.List(SDO.license, fields.IRI)
-    url = fields.IRI(SDO.codeRepository)
-    # NOTE: parent_repository is not available for GitLab's GraphQL API in 2023. Add for GitLab when available
-    parent_repository = fields.IRI(SDO.isBasedOn)
-    keywords = fields.List(SDO.keywords, fields.String)
-    version = fields.String(SDO.version)
-
-    class Meta:
-        rdf_type = SDO.SoftwareSourceCode
-        model = GithubExtractor
-        add_value_types = False

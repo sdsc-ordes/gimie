@@ -17,18 +17,18 @@
 """Extractor which uses a locally available (usually cloned) repository."""
 from dataclasses import dataclass
 from datetime import datetime
+from functools import cached_property
+import os
+import shutil
+import tempfile
 from typing import List, Optional
 import uuid
 
-from calamus import fields
-from calamus.schema import JsonLDSchema
 import git
 import pydriller
-from rdflib import Graph
 
 from gimie.io import LocalResource
-from gimie.graph.namespaces import SDO
-from gimie.models import Person, PersonSchema
+from gimie.models import Person, Repository
 from gimie.sources.abstract import Extractor
 from pathlib import Path
 
@@ -58,43 +58,59 @@ class GitExtractor(Extractor):
     url: str
     base_url: Optional[str] = None
     local_path: Optional[str] = None
+    _cloned: bool = False
 
-    author: Optional[Person] = None
-    contributors: Optional[List[Person]] = None
-    date_created: Optional[datetime] = None
-    date_modified: Optional[datetime] = None
-    license: Optional[List[str]] = None
-
-    def extract(self):
-        if self.local_path is None:
-            raise ValueError("Local path must be provided for extraction.")
-        self.repository = pydriller.Repository(self.local_path)
+    def extract(self) -> Repository:
         # Assuming author is the first person to commit
-        self.author = self._get_creator()
-        self.contributors = self._get_contributors()
-        self.date_created = self._get_creation_date()
-        self.date_modified = self._get_modification_date()
-        self.license = self._get_licenses()
+        self.repository = self._repo_data
+
+        repo_meta = dict(
+            authors=[self._get_creator()],
+            contributors=self._get_contributors(),
+            date_created=self._get_creation_date(),
+            date_modified=self._get_modification_date(),
+            name=self.path,
+            licenses=self._get_licenses(),
+            url=self.url,
+        )
+
+        return Repository(**repo_meta)  # type: ignore
 
     def list_files(self) -> List[LocalResource]:
+
+        self.repository = self._repo_data
         file_list = []
 
-        if self.local_path is None:
-            return file_list
-
-        for path in Path(self.local_path).rglob("*"):
+        for path in Path(self.local_path).rglob("*"):  # type: ignore
             if (path.parts[0] == ".git") or not path.is_file():
                 continue
             file_list.append(LocalResource(path))
 
         return file_list
 
-    def to_graph(self) -> Graph:
-        """Generate an RDF graph from the instance"""
-        jd = GitExtractorSchema().dumps(self)
-        g: Graph = Graph().parse(data=str(jd), format="json-ld")
-        g.bind("schema", SDO)
-        return g
+    def __del__(self):
+        """Cleanup the cloned repo if it was cloned and is located in tempdir."""
+        try:
+            # Can't be too careful with temp files
+            tempdir = tempfile.gettempdir()
+            if (
+                self.local_path
+                and self._cloned
+                and self.local_path.startswith(tempdir)
+                and tempdir != os.getcwd()
+            ):
+                shutil.rmtree(self.local_path)
+        except AttributeError:
+            pass
+
+    @cached_property
+    def _repo_data(self) -> pydriller.Repository:
+        """Get the repository data by accessing local data or cloning."""
+        if self.local_path is None:
+            self._cloned = True
+            self.local_path = tempfile.TemporaryDirectory().name
+            git.Repo.clone_from(self.url, self.local_path)  # type: ignore
+        return pydriller.Repository(self.local_path)
 
     def _get_contributors(self) -> List[Person]:
         """Get the authors of the repository."""
@@ -113,12 +129,14 @@ class GitExtractor(Extractor):
 
     def _get_modification_date(self) -> Optional[datetime]:
         """Get the last modification date of the repository."""
+        commit = None
         try:
             for commit in self.repository.traverse_commits():
                 pass
-            return commit.author_date
         except (StopIteration, NameError):
-            return None
+            pass
+        finally:
+            return commit.author_date if commit else None
 
     def _get_creator(self) -> Optional[Person]:
         """Get the creator of the repository."""
@@ -136,24 +154,10 @@ class GitExtractor(Extractor):
             uid = str(uuid.uuid4())
         else:
             uid = name.replace(" ", "_").lower()
-        dev_id = f"{self._id}/{uid}"
+        dev_id = f"{self.url}/{uid}"
         return Person(
             _id=dev_id,
             identifier=uid,
             name=name,
             email=email,
         )
-
-
-class GitExtractorSchema(JsonLDSchema):
-    _id = fields.Id()
-    author = fields.Nested(SDO.author, PersonSchema)
-    contributors = fields.Nested(SDO.contributor, PersonSchema, many=True)
-    date_created = fields.Date(SDO.dateCreated)
-    date_modified = fields.Date(SDO.dateModified)
-    license = fields.List(SDO.license, fields.IRI)
-
-    class Meta:
-        rdf_type = SDO.SoftwareSourceCode
-        model = GitExtractor
-        add_value_types = False

@@ -25,6 +25,7 @@ from rdflib import Graph
 from urllib.parse import urlparse
 
 from gimie.graph.operations import combine_graphs
+from gimie.models import Repository
 from gimie.utils import validate_url
 from gimie.sources import SOURCES
 from gimie.sources.abstract import Extractor
@@ -48,6 +49,7 @@ class Project:
     Examples
     --------
     >>> proj = Project("https://github.com/SDSC-ORD/gimie")
+    >>> assert isinstance(proj.extract(), Graph)
     """
 
     def __init__(
@@ -63,24 +65,16 @@ class Project:
         self._cloned = False
         if validate_url(path):
             self.url = path
-            # We only need to clone a remote project
-            # if a local extractor is enabled
-            if any(map(is_local_source, sources)):
-                self.project_dir = self.clone(path)
         else:
             self.project_dir = path
 
         self.extractors = self.get_extractors(sources)
-        for ex in self.extractors:
-            ex.extract()
 
-    def clone(self, url: str) -> str:
-        """Clone target url in a new temporary directory"""
-        target_dir = TemporaryDirectory().name
-        cloned = git.Repo.clone_from(url, target_dir)  # type: ignore
-        self._cloned = True
-
-        return str(cloned.working_tree_dir)
+    def extract(self) -> Graph:
+        repos = [ex.extract() for ex in self.extractors]
+        graphs = [repo.to_graph() for repo in repos]
+        graph = combine_graphs(*graphs)
+        return graph
 
     def get_extractors(self, sources: Iterable[str]) -> List[Extractor]:
 
@@ -95,29 +89,6 @@ class Project:
             extractors.append(extractor)
 
         return extractors
-
-    def to_graph(self) -> Graph:
-        graphs = map(lambda ex: ex.to_graph(), self.extractors)
-        combined_graph = combine_graphs(*graphs)
-        return combined_graph
-
-    def serialize(self, format: str = "ttl", **kwargs):
-        return self.to_graph().serialize(format=format, **kwargs)
-
-    def cleanup(self):
-        """Recursively delete the project. Only works
-        for remote (i.e. cloned) projects."""
-        try:
-            tempdir = gettempdir()
-            if self.project_dir is not None:
-                in_temp = self.project_dir.startswith(tempdir)
-                if self._cloned and in_temp:
-                    shutil.rmtree(self.project_dir)
-        except AttributeError:
-            pass
-
-    def __del__(self):
-        self.cleanup()
 
 
 def split_git_url(url) -> Tuple[str, str]:

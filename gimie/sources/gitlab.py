@@ -8,17 +8,11 @@ from functools import cached_property
 from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
 from dotenv import load_dotenv
-from calamus import fields
-from calamus.schema import JsonLDSchema
-from rdflib import Graph
-import tempfile
-from gimie.graph.namespaces import SDO
 from gimie.io import RemoteResource
 from gimie.models import (
     Organization,
-    OrganizationSchema,
     Person,
-    PersonSchema,
+    Repository,
 )
 from gimie.sources.abstract import Extractor
 from gimie.sources.common.queries import send_graphql_query, send_rest_query
@@ -42,27 +36,6 @@ class GitlabExtractor(Extractor):
     local_path: Optional[str] = None
 
     token: Optional[str] = None
-    name: Optional[str] = None
-    identifier: Optional[str] = None
-    author: Optional[List[Union[Organization, Person]]] = None
-    contributors: Optional[List[Person]] = None
-    prog_langs: Optional[List[str]] = None
-    description: Optional[str] = None
-    date_created: Optional[datetime] = None
-    date_modified: Optional[datetime] = None
-    date_published: Optional[datetime] = None
-    version: Optional[str] = None
-    keywords: Optional[List[str]] = None
-    source_organization: Optional[Organization] = None
-    download_url: Optional[str] = None
-    license: Optional[List[str]] = None
-
-    def to_graph(self) -> Graph:
-        """Convert repository to RDF graph."""
-        jd = GitlabExtractorSchema().dumps(self)
-        g: Graph = Graph().parse(format="json-ld", data=str(jd))
-        g.bind("schema", SDO)
-        return g
 
     def list_files(self) -> List[RemoteResource]:
         """takes the root repository folder and returns the list of files present"""
@@ -78,47 +51,48 @@ class GitlabExtractor(Extractor):
             file_list.append(file)
         return file_list
 
-    def extract(self):
+    def extract(self) -> Repository:
         """Extract metadata from target Gitlab repository."""
 
         # fetch metadata
         data = self._repo_data
 
-        # Each Gitlab project has a unique identifier (integer)
-        self.identifier = urlparse(data["id"]).path.split("/")[2]
-        # at the moment, Gimie fetches only the group directly related to the project
+        # NOTE(identifier): Each Gitlab project has a unique identifier (integer)
+        # NOTE(author): Fetches only the group directly related to the project
         # the group takes the form: parent/subgroup
-        self.source_organization = self._safe_extract_group(data)
-        self.description = data["description"]
-        self.prog_langs = [lang["name"] for lang in data["languages"]]
-        self.date_created = isoparse(data["createdAt"][:-1])
-        self.date_modified = isoparse(data["lastActivityAt"][:-1])
+
+        # NOTE(contributors): contributors = project members
+        # who are not owners + those that have written merge requests
+        # owners are either multiple individuals or a group. If no user
+        # is marked as owner, contributors are project members or merge
+        # request authors
+        repo_meta = dict(
+            authors=self._safe_extract_author(data),
+            contributors=self._safe_extract_contributors(data),
+            date_created=isoparse(data["createdAt"][:-1]),
+            date_modified=isoparse(data["lastActivityAt"][:-1]),
+            description=data["description"],
+            identifier=urlparse(data["id"]).path.split("/")[2],
+            keywords=data["topics"],
+            licenses=self._get_licenses(),
+            name=self.path,
+            prog_langs=[lang["name"] for lang in data["languages"]],
+            url=self.url,
+        )
+
         if data["releases"]["edges"]:
-            self.date_published = isoparse(
+            repo_meta["date_published"] = isoparse(
                 data["releases"]["edges"][0]["node"]["releasedAt"]
             )
-        self.license = self._get_licenses()
-        self.keywords = data["topics"]
-
-        # Get contributors as the project members that are not owners and those that have written merge requests
-        # owners are either multiple individuals or a group, if not user is marked as owner
-        self.author = self._safe_extract_author(data)
-        # contributors are project members or merge request authors
-        self.contributors = self._safe_extract_contributors(data)
 
         if data["releases"] and (len(data["releases"]["edges"]) > 0):
             # go into releases and take the name from the first node (most recent)
-            self.version = data["releases"]["edges"][0]["node"]["name"]
-            self.download_url = f"{self.url}/-/archive/{self.version}/{self.path.split('/')[-1]}-{self.version}.tar.gz"
-
-    def _safe_extract_group(
-        self, repo: Dict[str, Any]
-    ) -> Optional[Organization]:
-        """Extract the group from a GraphQL repository node if it has one."""
-        if (self.path is not None) and (repo["group"] is not None):
-            repo["group"]["name"] = "/".join(self.path.split("/")[0:-1])
-            return self._get_organization(repo["group"])
-        return None
+            version = data["releases"]["edges"][0]["node"]["name"]
+            repo_meta["version"] = version
+            repo_meta[
+                "download_url"
+            ] = f"{self.url}/-/archive/{version}/{self.path.split('/')[-1]}-{version}.tar.gz"
+        return Repository(**repo_meta)  # type: ignore
 
     def _safe_extract_author(
         self, repo: Dict[str, Any]
@@ -217,11 +191,14 @@ class GitlabExtractor(Extractor):
                 repository {
                     rootRef
                     tree{
-                    blobs{
-                        nodes {
-                            name
-                            webUrl
-                          }}}}
+                        blobs{
+                            nodes {
+                                name
+                                webUrl
+                            }
+                        }
+                    }
+                }
                 releases {
                     edges {
                     node {
@@ -306,31 +283,3 @@ class GitlabExtractor(Extractor):
     @property
     def graphql_endpoint(self) -> str:
         return f"{self.base}/api"
-
-
-class GitlabExtractorSchema(JsonLDSchema):
-    """This defines the schema used for json-ld serialization."""
-
-    _id = fields.Id()
-    path = fields.String(SDO.name)
-    identifier = fields.String(SDO.identifier)
-    source_organization = fields.Nested(SDO.isPartOf, OrganizationSchema)
-    author = fields.Nested(
-        SDO.author, [PersonSchema, OrganizationSchema], many=True
-    )
-    contributors = fields.Nested(SDO.contributor, PersonSchema, many=True)
-    prog_langs = fields.List(SDO.programmingLanguage, fields.String)
-    download_url = fields.Raw(SDO.downloadUrl)
-    description = fields.String(SDO.description)
-    date_created = fields.Date(SDO.dateCreated)
-    date_modified = fields.Date(SDO.dateModified)
-    date_published = fields.Date(SDO.datePublished)
-    license = fields.List(SDO.license, fields.IRI)
-    url = fields.IRI(SDO.codeRepository)
-    keywords = fields.List(SDO.keywords, fields.String)
-    version = fields.String(SDO.version)
-
-    class Meta:
-        rdf_type = SDO.SoftwareSourceCode
-        model = GitlabExtractor
-        add_value_types = False

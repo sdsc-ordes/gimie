@@ -1,4 +1,5 @@
 # Tests fetching metadata from GitHub repositories with different setups.
+from gimie.io import RemoteResource
 from gimie.sources.github import GithubExtractor
 import pytest
 
@@ -12,7 +13,12 @@ TEST_REPOS = [
 
 
 @pytest.mark.parametrize("repo", TEST_REPOS)
-def test_github_extractor(repo):
-    meta = GithubExtractor(repo)
-    meta.extract()
+def test_github_extract(repo):
+    meta = GithubExtractor(repo).extract()
     meta.serialize(format="ttl")
+
+
+@pytest.mark.parametrize("repo", TEST_REPOS)
+def test_github_list_files(repo):
+    files = GithubExtractor(repo).list_files()
+    assert all(isinstance(f, RemoteResource) for f in files)
