@@ -16,21 +16,16 @@
 # limitations under the License.
 """Orchestration of multiple extractors for a given project.
 This is the main entry point for end-to-end analysis."""
-from tempfile import gettempdir, TemporaryDirectory
-from typing import Iterable, List, Optional, Tuple, Union
+from typing import Iterable, List, Optional, Tuple
 
-import shutil
-import git
 from rdflib import Graph
 from rdflib.term import URIRef
 from urllib.parse import urlparse
 
 from gimie.graph.operations import combine_graphs
 from gimie.utils import validate_url
-from gimie.extractors import GIT_PROVIDERS
-from gimie.extractors.abstract import Extractor
-from gimie.parsers import PARSERS
-from gimie.utils import validate_url
+from gimie.extractors import GIT_PROVIDERS, Extractor
+from gimie.parsers import PARSERS, Parser
 
 
 class Project:
@@ -66,7 +61,7 @@ class Project:
     ):
 
         if not git_provider:
-            git_provider = get_git_provider(path)
+            git_provider = infer_git_provider(path)
 
         self.base_url = base_url
         self.project_dir = None
@@ -82,12 +77,7 @@ class Project:
             base_url=self.base_url,
             local_path=self.project_dir,
         )
-        self.parsers = []
-        if parser_names is None:
-            parser_names = PARSERS.keys()
-        self.parsers = [
-            PARSERS[parser_name](URIRef(path)) for parser_name in parser_names
-        ]
+        self.parsers = get_parsers(path, parser_names)
 
     def extract(self) -> Graph:
         """Extract repository metadata from git provider to RDF graph and enrich with
@@ -103,20 +93,6 @@ class Project:
 
         repo_graph += combine_graphs(repo_graph, *parsed_graphs)
         return repo_graph
-
-    def get_extractors(self, sources: Iterable[str]) -> List[Extractor]:
-
-        extractors: List[Extractor] = []
-        for src in sources:
-            extractor = get_extractor(
-                self.url,
-                src,
-                base_url=self.base_url,
-                local_path=self.project_dir,
-            )
-            extractors.append(extractor)
-
-        return extractors
 
 
 def split_git_url(url) -> Tuple[str, str]:
@@ -145,43 +121,47 @@ def get_extractor(
         If applicable, the path to the directory where the
         repository is cloned.
     """
-    return GIT_PROVIDERS[source].extractor(
-        url, base_url=base_url, local_path=local_path
-    )
+    try:
+        return GIT_PROVIDERS[source](
+            url, base_url=base_url, local_path=local_path
+        )
+    except KeyError as err:
+        raise ValueError(
+            f"Unknown git provider: {source}.\n"
+            f"Supported sources: {', '.join(GIT_PROVIDERS)}"
+        ) from err
 
 
-def is_valid_source(source: str) -> bool:
-    """Check if input is a valid source for gimie."""
-    return source in GIT_PROVIDERS
+def get_parsers(
+    uri: str, parser_names: Optional[Iterable[str]] = None
+) -> List[Parser]:
+    """Instantiate the correct parsers for a given URI.
+    If parser_names is None, all parsers are used."""
+
+    parsers = []
+
+    if parser_names is None:
+        parser_names = PARSERS.keys()
+
+    for parser_name in parser_names:
+        try:
+            parsers.append(PARSERS[parser_name](URIRef(uri)))
+        except KeyError as err:
+            raise ValueError(
+                f"Unknown parser: {parser_name}.\n"
+                f"Supported parsers: {', '.join(PARSERS)}"
+            ) from err
+    return parsers
 
 
-def is_remote_source(source: str) -> bool:
-    """Check if input is a valid remote source for gimie."""
-    if is_valid_source(source):
-        return GIT_PROVIDERS[source].remote
-    return False
-
-
-def is_local_source(source: str) -> bool:
-    """Check if input is a valid local source for gimie."""
-    return not is_remote_source(source)
-
-
-def is_git_provider(source: str) -> bool:
-    """Check if input is a valid git provider for gimie."""
-    if is_valid_source(source):
-        return GIT_PROVIDERS[source].git
-    return False
-
-
-def get_git_provider(url: str) -> str:
+def infer_git_provider(url: str) -> str:
     """Given a git repository URL, return the corresponding git provider.
     Local path or unsupported git providers will return "git"."""
     # NOTE: We just check if the provider name is in the URL.
     # We may want to use a more robust check.
     if validate_url(url):
-        for name, prov in GIT_PROVIDERS.items():
-            if prov.git and prov.remote and name in url:
+        for name, _ in GIT_PROVIDERS.items():
+            if name in url and name != "git":
                 return name
-    # Fall back to local git if local path of unsupported provider
+    # Fall back to git if local path or unsupported provider
     return "git"
