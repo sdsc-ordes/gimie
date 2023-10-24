@@ -5,7 +5,7 @@ on:
   pull_request:
     paths:
       - 'docs/**'
-  
+
 permissions:
     contents: write
 jobs:
@@ -15,10 +15,10 @@ jobs:
     steps:
       # https://github.com/actions/checkout
       - uses: actions/checkout@v4
-      
+
       # https://github.com/actions/setup-python
       - uses: actions/setup-python@v4
-      
+
       # https://github.com/snok/install-poetry
       - name: Install Poetry
         uses: snok/install-poetry@v1
@@ -37,10 +37,10 @@ jobs:
     steps:
       # https://github.com/actions/checkout
       - uses: actions/checkout@v4
-      
+
       # https://github.com/actions/setup-python
       - uses: actions/setup-python@v4
-      
+
       # https://github.com/snok/install-poetry
       - name: Install Poetry
         uses: snok/install-poetry@v1

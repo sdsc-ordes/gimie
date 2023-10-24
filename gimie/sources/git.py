@@ -92,9 +92,9 @@ class GitExtractor(Extractor):
         try:
             # Can't be too careful with temp files
             if (
-                self.local_path and
-                self._cloned and
-                self.local_path.startswith(tempfile.gettempdir())
+                self.local_path
+                and self._cloned
+                and self.local_path.startswith(tempfile.gettempdir())
             ):
                 shutil.rmtree(self.local_path)
         except AttributeError:
