@@ -22,7 +22,6 @@ import click
 import typer
 
 from gimie import __version__
-from gimie.extractors import GIT_PROVIDERS
 from gimie.parsers import PARSERS
 from gimie.project import Project
 
@@ -39,10 +38,6 @@ class FormatChoice(str, Enum):
     ttl = "ttl"
     jsonld = "json-ld"
     nt = "nt"
-
-
-class ParserChoice(str, Enum):
-    license = "license"
 
 
 def version_callback(value: bool):
@@ -66,17 +61,17 @@ def data(
         "--base-url",
         help="Specify the base URL of the git provider. Inferred by default.",
     ),
-    include_parser: Optional[List[ParserChoice]] = typer.Option(
+    include_parser: Optional[List[str]] = typer.Option(
         None,
         "--include-parser",
         "-I",
-        help="Parsers to include. By default, all parsers are used.",
+        help="Only include selected parser. Use gimie parsers to list available parsers.",
     ),
-    exclude_parser: Optional[List[ParserChoice]] = typer.Option(
+    exclude_parser: Optional[List[str]] = typer.Option(
         None,
         "--exclude-parser",
         "-X",
-        help="Parsers to exclude. By default, all parsers are used.",
+        help="Exclude selected parser.",
     ),
     version: Optional[bool] = typer.Option(
         None,
@@ -90,9 +85,9 @@ def data(
     The output is sent to stdout, and turtle is used as the default serialization format."""
     parser_names = set(PARSERS.keys())
     if exclude_parser:
-        parser_names -= set([parser.value for parser in exclude_parser])
+        parser_names -= set([parser for parser in exclude_parser])
     if include_parser:
-        parser_names = set([parser.value for parser in include_parser])
+        parser_names = set([parser for parser in include_parser])
     proj = Project(url, base_url=base_url, parser_names=parser_names)
     repo_meta = proj.extract()
     print(repo_meta.serialize(format=format.value))
@@ -106,6 +101,20 @@ def advice(url: str):
     NOTE: Not implemented yet"""
     ...
     raise typer.Exit()
+
+
+@app.command()
+def parsers(
+    verbose: bool = typer.Option(
+        False, "--verbose", help="Show parser description."
+    )
+):
+    """List available parsers."""
+    if verbose:
+        message = "\n".join([f"{k}: {v.__doc__}" for k, v in PARSERS.items()])
+    else:
+        message = "\n".join(PARSERS.keys())
+    typer.echo(message)
 
 
 typer_cli = typer.main.get_command(app)

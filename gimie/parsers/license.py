@@ -32,6 +32,8 @@ SPDX_IDS = list(LICENSES.keys())
 
 
 class LicenseParser(Parser):
+    """Parse LICENSE file(s) into schema:license."""
+
     def __init__(self, uri: URIRef, max_size_kb: Optional[int] = 2048):
         super().__init__(uri, max_size_kb)
 
