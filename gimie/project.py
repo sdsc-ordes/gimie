@@ -65,10 +65,6 @@ class Project:
         self._cloned = False
         if validate_url(path):
             self.url = path
-            # We only need to clone a remote project
-            # if a local extractor is enabled
-            if any(map(is_local_source, sources)):
-                self.project_dir = self.clone(path)
         else:
             self.project_dir = path
 
@@ -79,14 +75,6 @@ class Project:
         graphs = [repo.to_graph() for repo in repos]
         graph = combine_graphs(*graphs)
         return graph
-
-    def clone(self, url: str) -> str:
-        """Clone target url in a new temporary directory"""
-        target_dir = TemporaryDirectory().name
-        cloned = git.Repo.clone_from(url, target_dir)  # type: ignore
-        self._cloned = True
-
-        return str(cloned.working_tree_dir)
 
     def get_extractors(self, sources: Iterable[str]) -> List[Extractor]:
 
@@ -101,21 +89,6 @@ class Project:
             extractors.append(extractor)
 
         return extractors
-
-    def cleanup(self):
-        """Recursively delete the project. Only works
-        for remote (i.e. cloned) projects."""
-        try:
-            tempdir = gettempdir()
-            if self.project_dir is not None:
-                in_temp = self.project_dir.startswith(tempdir)
-                if self._cloned and in_temp:
-                    shutil.rmtree(self.project_dir)
-        except AttributeError:
-            pass
-
-    def __del__(self):
-        self.cleanup()
 
 
 def split_git_url(url) -> Tuple[str, str]:

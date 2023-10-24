@@ -57,6 +57,7 @@ class GitExtractor(Extractor):
     url: str
     base_url: Optional[str] = None
     local_path: Optional[str] = None
+    _cloned: bool = False
 
     def extract(self) -> Repository:
         # Assuming author is the first person to commit
@@ -87,9 +88,14 @@ class GitExtractor(Extractor):
         return file_list
 
     def __del__(self):
-        """Cleanup the cloned repo."""
+        """Cleanup the cloned repo if it was cloned and is located in tempdir."""
         try:
-            if self.local_path is not None:
+            # Can't be too careful with temp files
+            if (
+                self.local_path and
+                self._cloned and
+                self.local_path.startswith(tempfile.gettempdir())
+            ):
                 shutil.rmtree(self.local_path)
         except AttributeError:
             pass
@@ -98,6 +104,7 @@ class GitExtractor(Extractor):
     def _repo_data(self) -> pydriller.Repository:
         """Get the repository data by accessing local data or cloning."""
         if self.local_path is None:
+            self._cloned = True
             self.local_path = tempfile.TemporaryDirectory().name
             git.Repo.clone_from(self.url, self.local_path)  # type: ignore
         return pydriller.Repository(self.local_path)
