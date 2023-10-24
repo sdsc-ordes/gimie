@@ -15,8 +15,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Files which can be parsed by gimie."""
+from gimie.parsers.abstract import Parser
 from gimie.parsers.license import LicenseParser
+from typing import Dict, Type
 
-PARSERS = {
+PARSERS: Dict[str, Type[Parser]] = {
     "license": LicenseParser,
 }

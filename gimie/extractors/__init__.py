@@ -16,26 +16,14 @@
 # limitations under the License.
 
 """Git providers from which metadata can be extracted by gimie."""
-from typing import Type
+from typing import Dict, Type
 from gimie.extractors.abstract import Extractor
 from gimie.extractors.github import GithubExtractor
 from gimie.extractors.gitlab import GitlabExtractor
 from gimie.extractors.git import GitExtractor
 
-from dataclasses import dataclass
-
-
-@dataclass
-class GitProvider:
-    """Source of metadata."""
-
-    remote: bool
-    git: bool
-    extractor: Type[Extractor]
-
-
-GIT_PROVIDERS = {
-    "git": GitProvider(remote=False, git=True, extractor=GitExtractor),
-    "github": GitProvider(remote=True, git=True, extractor=GithubExtractor),
-    "gitlab": GitProvider(remote=True, git=True, extractor=GitlabExtractor),
+GIT_PROVIDERS: Dict[str, Type[Extractor]] = {
+    "git": GitExtractor,
+    "github": GithubExtractor,
+    "gitlab": GitlabExtractor,
 }
