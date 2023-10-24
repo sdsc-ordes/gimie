@@ -50,7 +50,7 @@ class Parser(ABC):
     def parse(self, resource: Resource) -> Graph:
         """Parse if parsable, otherwise return an empty graph."""
         if self.can_parse(resource):
-            return self.parse(resource)
+            return self._parse(resource)
         return Graph()
 
     def parse_multiple(self, resources: Iterable[Resource]) -> Graph:
