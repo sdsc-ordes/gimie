@@ -44,10 +44,11 @@ class Project:
     base_url:
         The base URL of the git remote. Can be used to
         specify delimitation between base URL and project name.
-    sources:
-        The git provider to extract metadata from.
+    git_provider:
+        The name of the git provider to extract metadata from.
+        ('git', 'github', 'gitlab')
     parser_names:
-        Names of file parsers to use. Currently supported: 'license'.
+        Names of file parsers to use. ('license').
         If None, all parsers are used.
 
     Examples
@@ -64,7 +65,9 @@ class Project:
         parser_names: Optional[Iterable[str]] = None,
     ):
 
-        git_provider = get_git_provider(path)
+        if not git_provider:
+            git_provider = get_git_provider(path)
+
         self.base_url = base_url
         self.project_dir = None
         self._cloned = False
