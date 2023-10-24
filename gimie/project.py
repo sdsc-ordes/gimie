@@ -157,11 +157,15 @@ def get_parsers(
 def infer_git_provider(url: str) -> str:
     """Given a git repository URL, return the corresponding git provider.
     Local path or unsupported git providers will return "git"."""
+    # Fall back to git if local path
+    if not validate_url(url):
+        return "git"
+
     # NOTE: We just check if the provider name is in the URL.
     # We may want to use a more robust check.
-    if validate_url(url):
-        for name, _ in GIT_PROVIDERS.items():
-            if name in url and name != "git":
-                return name
-    # Fall back to git if local path or unsupported provider
+    for name in GIT_PROVIDERS.keys():
+        if name in url and name != "git":
+            return name
+
+    # Fall back to git for unsupported providers
     return "git"
