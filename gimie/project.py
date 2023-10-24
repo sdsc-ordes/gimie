@@ -96,6 +96,13 @@ class Project:
 
 
 def split_git_url(url) -> Tuple[str, str]:
+    """Split a git URL into base URL and project path.
+
+    Examples
+    --------
+    >>> split_git_url("https://gitlab.com/foo/bar")
+    ('https://gitlab.com', 'foo/bar')
+    """
     base_url = urlparse(url).scheme + "://" + urlparse(url).netloc
     project = urlparse(url).path.strip("/")
     return base_url, project
@@ -119,7 +126,14 @@ def get_extractor(
         The base URL of the git remote.
     local_path
         If applicable, the path to the directory where the
-        repository is cloned.
+        repository is located.
+
+    Examples
+    --------
+    >>> extractor = get_extractor(
+    ...     "https://github.com/SDSC-ORD/gimie",
+    ...     "github"
+    ... )
     """
     try:
         return GIT_PROVIDERS[source](
@@ -136,7 +150,25 @@ def get_parsers(
     uri: str, parser_names: Optional[Iterable[str]] = None
 ) -> List[Parser]:
     """Instantiate the correct parsers for a given URI.
-    If parser_names is None, all parsers are used."""
+    If parser_names is None, all parsers are used.
+
+    Parameters
+    -----------
+    uri
+        The URI of the associated repository.
+        See :class:`gimie.parsers.Parser`.
+    parser_names
+        Names of file parsers to use.
+
+    Examples
+    --------
+    >>> parsers = get_parsers(
+    ...     "https://github.com/foo/bar",
+    ...     ["license"]
+    ... )
+    >>> [type(parser) for parser in parsers]
+    [<class 'gimie.parsers.license.LicenseParser'>]
+    """
 
     parsers = []
 
@@ -156,7 +188,17 @@ def get_parsers(
 
 def infer_git_provider(url: str) -> str:
     """Given a git repository URL, return the corresponding git provider.
-    Local path or unsupported git providers will return "git"."""
+    Local path or unsupported git providers will return "git".
+
+    Examples
+    --------
+    >>> infer_git_provider("https://gitlab.com/foo/bar")
+    'gitlab'
+    >>> infer_git_provider("/foo/bar")
+    'git'
+    >>> infer_git_provider("https://codeberg.org/dnkl/foot")
+    'git'
+    """
     # Fall back to git if local path
     if not validate_url(url):
         return "git"

@@ -16,3 +16,9 @@ def test_advice_help():
     """Checks if the 'gimie advice --help' command exits successfully."""
     result = runner.invoke(cli.app, ["advice", "--help"])
     assert result.exit_code == 0
+
+
+def test_parsers_help():
+    """Checks if the 'gimie parsers --help' command exits successfully."""
+    result = runner.invoke(cli.app, ["parsers", "--help"])
+    assert result.exit_code == 0
