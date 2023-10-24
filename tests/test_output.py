@@ -23,7 +23,7 @@ from gimie.project import Project
 
 
 OUT_TTL = (
-    Project("https://github.com/SDSC-ORD/gimie", sources=["github"])
+    Project("https://github.com/SDSC-ORD/gimie", git_provider="github")
     .extract()
     .serialize(format="ttl")
 )
