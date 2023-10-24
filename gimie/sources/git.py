@@ -18,6 +18,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from functools import cached_property
+import shutil
 import tempfile
 from typing import List, Optional
 import uuid
@@ -58,8 +59,6 @@ class GitExtractor(Extractor):
     local_path: Optional[str] = None
 
     def extract(self) -> Repository:
-        if self.local_path is None:
-            raise ValueError("Local path must be provided for extraction.")
         # Assuming author is the first person to commit
         self.repository = self._repo_data
 
@@ -86,6 +85,14 @@ class GitExtractor(Extractor):
             file_list.append(LocalResource(path))
 
         return file_list
+
+    def __del__(self):
+        """Cleanup the cloned repo."""
+        try:
+            if self.local_path is not None:
+                shutil.rmtree(self.local_path)
+        except AttributeError:
+            pass
 
     @cached_property
     def _repo_data(self) -> pydriller.Repository:
