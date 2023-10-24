@@ -18,6 +18,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from functools import cached_property
+import os
 import shutil
 import tempfile
 from typing import List, Optional
@@ -91,10 +92,12 @@ class GitExtractor(Extractor):
         """Cleanup the cloned repo if it was cloned and is located in tempdir."""
         try:
             # Can't be too careful with temp files
+            tempdir = tempfile.gettempdir()
             if (
                 self.local_path
                 and self._cloned
-                and self.local_path.startswith(tempfile.gettempdir())
+                and self.local_path.startswith(tempdir)
+                and tempdir != os.getcwd()
             ):
                 shutil.rmtree(self.local_path)
         except AttributeError:
