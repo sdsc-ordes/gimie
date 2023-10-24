@@ -164,7 +164,7 @@ class RepositorySchema(JsonLDSchema):
     date_modified = fields.Date(SDO.dateModified)
     date_published = fields.Date(SDO.datePublished)
     description = fields.String(SDO.description)
-    download_url = fields.Raw(SDO.downloadUrl)
+    download_url = fields.IRI(SDO.downloadUrl)
     identifier = fields.String(SDO.identifier)
     keywords = fields.List(SDO.keywords, fields.String)
     licenses = fields.List(SDO.license, fields.IRI)
