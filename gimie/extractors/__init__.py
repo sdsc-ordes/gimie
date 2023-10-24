@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Sources from which metadata can be extracted by gimie."""
+"""Git providers from which metadata can be extracted by gimie."""
 from typing import Type
 from gimie.extractors.abstract import Extractor
 from gimie.extractors.github import GithubExtractor
@@ -26,7 +26,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Source:
+class GitProvider:
     """Source of metadata."""
 
     remote: bool
@@ -34,8 +34,8 @@ class Source:
     extractor: Type[Extractor]
 
 
-SOURCES = {
-    "git": Source(remote=False, git=True, extractor=GitExtractor),
-    "github": Source(remote=True, git=True, extractor=GithubExtractor),
-    "gitlab": Source(remote=True, git=True, extractor=GitlabExtractor),
+GIT_PROVIDERS = {
+    "git": GitProvider(remote=False, git=True, extractor=GitExtractor),
+    "github": GitProvider(remote=True, git=True, extractor=GithubExtractor),
+    "gitlab": GitProvider(remote=True, git=True, extractor=GitlabExtractor),
 }

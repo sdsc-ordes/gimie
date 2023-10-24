@@ -22,13 +22,14 @@ from typing import Iterable, List, Optional, Tuple, Union
 import shutil
 import git
 from rdflib import Graph
+from rdflib.term import URIRef
 from urllib.parse import urlparse
 
 from gimie.graph.operations import combine_graphs
-from gimie.models import Repository
 from gimie.utils import validate_url
-from gimie.extractors import SOURCES
+from gimie.extractors import GIT_PROVIDERS
 from gimie.extractors.abstract import Extractor
+from gimie.parsers import PARSERS
 from gimie.utils import validate_url
 
 
@@ -44,7 +45,10 @@ class Project:
         The base URL of the git remote. Can be used to
         specify delimitation between base URL and project name.
     sources:
-        The metadata sources to use.
+        The git provider to extract metadata from.
+    parser_names:
+        Names of file parsers to use. Currently supported: 'license'.
+        If None, all parsers are used.
 
     Examples
     --------
@@ -56,10 +60,11 @@ class Project:
         self,
         path: str,
         base_url: Optional[str] = None,
-        sources: Optional[Union[Iterable[str], str]] = None,
+        git_provider: Optional[str] = None,
+        parser_names: Optional[Iterable[str]] = None,
     ):
 
-        sources = normalize_sources(path, sources)
+        git_provider = get_git_provider(path)
         self.base_url = base_url
         self.project_dir = None
         self._cloned = False
@@ -68,13 +73,33 @@ class Project:
         else:
             self.project_dir = path
 
-        self.extractors = self.get_extractors(sources)
+        self.extractor = get_extractor(
+            self.url,
+            git_provider,
+            base_url=self.base_url,
+            local_path=self.project_dir,
+        )
+        self.parsers = []
+        if parser_names is None:
+            parser_names = PARSERS.keys()
+        self.parsers = [
+            PARSERS[parser_name](URIRef(path)) for parser_name in parser_names
+        ]
 
     def extract(self) -> Graph:
-        repos = [ex.extract() for ex in self.extractors]
-        graphs = [repo.to_graph() for repo in repos]
-        graph = combine_graphs(*graphs)
-        return graph
+        """Extract repository metadata from git provider to RDF graph and enrich with
+        metadata parsed from file contents."""
+
+        repo = self.extractor.extract()
+        repo_graph = repo.to_graph()
+
+        files = self.extractor.list_files()
+        parsed_graphs = [
+            parser.parse_multiple(files) for parser in self.parsers
+        ]
+
+        repo_graph += combine_graphs(repo_graph, *parsed_graphs)
+        return repo_graph
 
     def get_extractors(self, sources: Iterable[str]) -> List[Extractor]:
 
@@ -97,52 +122,6 @@ def split_git_url(url) -> Tuple[str, str]:
     return base_url, project
 
 
-def normalize_sources(
-    path: str, sources: Optional[Union[Iterable[str], str]] = None
-) -> List[str]:
-    """Input validation and normalization for metadata sources.
-    Returns a list of all input sources.
-
-    Parameters
-    ----------
-    path :
-        The path to the repository, either a local path or a URL.
-    sources:
-        The metadata sources to use. If None only the git provider is used.
-
-    Returns
-    -------
-    List[str]
-        A list of all input sources. If the git provider was missing
-        from input sources, it is inferred from path.
-
-    Examples
-    --------
-    >>> normalize_sources("https://github.com/SDSC-ORD/gimie")
-    ['github']
-    >>> normalize_sources("https://github.com/SDSC-ORD/gimie", "github")
-    ['github']
-    >>> normalize_sources("https://github.com/SDSC-ORD/gimie", ["github"])
-    ['github']
-    """
-    if isinstance(sources, str):
-        norm = [sources]
-    elif isinstance(sources, Iterable):
-        norm = list(sources)
-    elif sources is None:
-        norm = []
-    else:
-        raise ValueError(f"Invalid sources: {sources}")
-
-    git_provider = get_git_provider(path)
-    if git_provider not in norm:
-        norm.append(git_provider)
-
-    if (not validate_url(path)) and any(map(is_remote_source, norm)):
-        raise ValueError("Cannot use a remote source with a local project.")
-    return norm
-
-
 def get_extractor(
     url: str,
     source: str,
@@ -163,20 +142,20 @@ def get_extractor(
         If applicable, the path to the directory where the
         repository is cloned.
     """
-    return SOURCES[source].extractor(
+    return GIT_PROVIDERS[source].extractor(
         url, base_url=base_url, local_path=local_path
     )
 
 
 def is_valid_source(source: str) -> bool:
     """Check if input is a valid source for gimie."""
-    return source in SOURCES
+    return source in GIT_PROVIDERS
 
 
 def is_remote_source(source: str) -> bool:
     """Check if input is a valid remote source for gimie."""
     if is_valid_source(source):
-        return SOURCES[source].remote
+        return GIT_PROVIDERS[source].remote
     return False
 
 
@@ -188,7 +167,7 @@ def is_local_source(source: str) -> bool:
 def is_git_provider(source: str) -> bool:
     """Check if input is a valid git provider for gimie."""
     if is_valid_source(source):
-        return SOURCES[source].git
+        return GIT_PROVIDERS[source].git
     return False
 
 
@@ -198,7 +177,7 @@ def get_git_provider(url: str) -> str:
     # NOTE: We just check if the provider name is in the URL.
     # We may want to use a more robust check.
     if validate_url(url):
-        for name, prov in SOURCES.items():
+        for name, prov in GIT_PROVIDERS.items():
             if prov.git and prov.remote and name in url:
                 return name
     # Fall back to local git if local path of unsupported provider
