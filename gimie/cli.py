@@ -27,6 +27,7 @@ from gimie.project import Project
 
 app = typer.Typer(add_completion=False)
 
+
 # Used to autogenerate docs with sphinx-click
 @click.group()
 def cli():
@@ -34,7 +35,7 @@ def cli():
     pass
 
 
-class FormatChoice(str, Enum):
+class RDFFormatChoice(str, Enum):
     ttl = "ttl"
     jsonld = "json-ld"
     nt = "nt"
@@ -50,8 +51,8 @@ def version_callback(value: bool):
 @app.command()
 def data(
     url: str,
-    format: FormatChoice = typer.Option(
-        FormatChoice.ttl,
+    format: RDFFormatChoice = typer.Option(
+        RDFFormatChoice.ttl,
         "--format",
         show_choices=True,
         help="Output serialization format for the RDF graph.",
@@ -82,7 +83,8 @@ def data(
 ):
     """Extract linked metadata from a Git repository at the target URL.
 
-    The output is sent to stdout, and turtle is used as the default serialization format."""
+    The output is sent to stdout, and turtle is used as the default serialization format.
+    """
     parser_names = set(PARSERS.keys())
     if exclude_parser:
         parser_names -= set([parser for parser in exclude_parser])
@@ -119,6 +121,7 @@ def parsers(
 
 typer_cli = typer.main.get_command(app)
 cli.add_command(typer_cli, "cli")
+
 
 # This callback is triggered when gimie is called without subcommand
 @app.callback()
