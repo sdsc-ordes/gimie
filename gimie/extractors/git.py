@@ -76,7 +76,6 @@ class GitExtractor(Extractor):
         return Repository(**repo_meta)  # type: ignore
 
     def list_files(self) -> List[LocalResource]:
-
         self.repository = self._repo_data
         file_list = []
 

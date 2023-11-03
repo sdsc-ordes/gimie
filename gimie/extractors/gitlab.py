@@ -60,7 +60,7 @@ class GitlabExtractor(Extractor):
         defaultbranchref = self._repo_data["repository"]["rootRef"]
         for item in file_dict:
             file = RemoteResource(
-                name=item["name"],
+                path=item["name"],
                 url=f'{self.url}/-/raw/{defaultbranchref}/{item["name"]}',
                 headers=self._set_auth(),
             )
