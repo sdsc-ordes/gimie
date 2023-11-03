@@ -1,7 +1,7 @@
 import pytest
 
 from gimie.io import LocalResource
-from gimie.parsers import get_parser, list_parsers, select_parser, parse_files
+from gimie.parsers import get_parser, list_parsers, parse_files
 
 
 def test_get_parser():
