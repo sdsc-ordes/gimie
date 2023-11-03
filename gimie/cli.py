@@ -22,7 +22,7 @@ import click
 import typer
 
 from gimie import __version__
-from gimie.parsers import PARSERS
+from gimie.parsers import DEFAULT_PARSERS, PARSERS
 from gimie.project import Project
 
 app = typer.Typer(add_completion=False)
@@ -66,7 +66,7 @@ def data(
         None,
         "--include-parser",
         "-I",
-        help="Only include selected parser. Use gimie parsers to list available parsers.",
+        help="Only include selected parser. Use gimie parsers to list parsers.",
     ),
     exclude_parser: Optional[List[str]] = typer.Option(
         None,
@@ -85,7 +85,7 @@ def data(
 
     The output is sent to stdout, and turtle is used as the default serialization format.
     """
-    parser_names = set(PARSERS.keys())
+    parser_names = set(DEFAULT_PARSERS.keys())
     if exclude_parser:
         parser_names -= set([parser for parser in exclude_parser])
     if include_parser:
@@ -111,12 +111,28 @@ def parsers(
         False, "--verbose", help="Show parser description."
     )
 ):
-    """List available parsers."""
-    if verbose:
-        message = "\n".join([f"{k}: {v.__doc__}" for k, v in PARSERS.items()])
-    else:
-        message = "\n".join(PARSERS.keys())
+    """List available parsers, specifying which are default.
+    If --verbose is used, show parser description."""
+    message = ""
+    for name, parser in PARSERS.items():
+        default = name in DEFAULT_PARSERS
+        parser_line = typer.style(
+            f"{name} {'(default)' if default else ''}",
+            fg=typer.colors.GREEN,
+            bold=default,
+        )
+        if verbose:
+            parser_line += f" - {parser.__doc__}"
+        message += f"{parser_line}\n"
     typer.echo(message)
+
+
+def main(good: bool = True):
+    message_start = "everything is "
+    if good:
+        ending = typer.style("good", fg=typer.colors.GREEN, bold=True)
+    else:
+        ending = typer.style("bad", fg=typer.colors.WHITE, bg=typer.colors.RED)
 
 
 typer_cli = typer.main.get_command(app)
