@@ -16,16 +16,15 @@
 # limitations under the License.
 """Orchestration of multiple extractors for a given project.
 This is the main entry point for end-to-end analysis."""
-from typing import Iterable, List, Optional, Tuple
+from typing import Iterable, Optional, Tuple
 
 from rdflib import Graph
 from rdflib.term import URIRef
 from urllib.parse import urlparse
 
-from gimie.graph.operations import combine_graphs
 from gimie.extractors import get_extractor, infer_git_provider
 from gimie.graph.operations import properties_to_graph
-from gimie.parsers import PARSERS, parse_files
+from gimie.parsers import parse_files
 from gimie.utils import validate_url
 
 
@@ -45,7 +44,7 @@ class Project:
         ('git', 'github', 'gitlab')
     parser_names:
         Names of file parsers to use. ('license').
-        If None, default parsers are used (see gimie.parsers.DEFAULT_PARSERS).
+        If None, default parsers are used (see gimie.parsers.PARSERS).
 
     Examples
     --------
@@ -78,8 +77,7 @@ class Project:
             local_path=self.project_dir,
         )
         if parser_names:
-            check_parser_names(parser_names)
-            self.parsers = {name: PARSERS[name] for name in parser_names}
+            self.parsers = set(parser_names)
         else:
             self.parsers = None
 
@@ -98,7 +96,7 @@ class Project:
         return repo_graph
 
 
-def split_git_url(url) -> Tuple[str, str]:
+def split_git_url(url: str) -> Tuple[str, str]:
     """Split a git URL into base URL and project path.
 
     Examples
@@ -109,28 +107,3 @@ def split_git_url(url) -> Tuple[str, str]:
     base_url = urlparse(url).scheme + "://" + urlparse(url).netloc
     project = urlparse(url).path.strip("/")
     return base_url, project
-
-
-def check_parser_names(parser_names: Iterable[str]):
-    """Verify that input names correspond to existing
-    parsers. Raises an error if an incorrect name is
-    provided.
-
-    Parameters
-    -----------
-    parser_names
-        Names of file parsers to verify.
-
-    Examples
-    --------
-    >>> check_parser_names(["license"])
-    """
-
-    for parser_name in parser_names:
-        try:
-            PARSERS[parser_name]()
-        except KeyError as err:
-            raise ValueError(
-                f"Unknown parser: {parser_name}.\n"
-                f"Supported parsers: {', '.join(PARSERS)}"
-            ) from err

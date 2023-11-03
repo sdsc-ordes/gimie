@@ -2,16 +2,7 @@
 import pytest
 
 from gimie.extractors import GIT_PROVIDERS
-from gimie.project import check_parser_names, get_extractor
-from gimie.parsers import PARSERS
-
-
-def test_check_parser_names():
-    check_parser_names(PARSERS.keys())
-
-    # Should raise error if parser not found
-    with pytest.raises(ValueError):
-        check_parser_names(["bad_parser"])
+from gimie.project import get_extractor
 
 
 def test_get_extractor():
