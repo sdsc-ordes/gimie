@@ -23,9 +23,10 @@ from rdflib.term import URIRef
 from urllib.parse import urlparse
 
 from gimie.graph.operations import combine_graphs
+from gimie.extractors import get_extractor, infer_git_provider
+from gimie.graph.operations import properties_to_graph
+from gimie.parsers import DEFAULT_PARSERS, PARSERS, parse_files
 from gimie.utils import validate_url
-from gimie.extractors import GIT_PROVIDERS, Extractor
-from gimie.parsers import PARSERS, Parser
 
 
 class Project:
@@ -59,7 +60,6 @@ class Project:
         git_provider: Optional[str] = None,
         parser_names: Optional[Iterable[str]] = None,
     ):
-
         if not git_provider:
             git_provider = infer_git_provider(path)
 
@@ -77,7 +77,11 @@ class Project:
             base_url=self.base_url,
             local_path=self.project_dir,
         )
-        self.parsers = get_parsers(path, parser_names)
+        if parser_names:
+            check_parser_names(parser_names)
+            self.parsers = {name: PARSERS[name] for name in parser_names}
+        else:
+            self.parsers = None
 
     def extract(self) -> Graph:
         """Extract repository metadata from git provider to RDF graph and enrich with
@@ -87,11 +91,10 @@ class Project:
         repo_graph = repo.to_graph()
 
         files = self.extractor.list_files()
-        parsed_graphs = [
-            parser.parse_multiple(files) for parser in self.parsers
-        ]
+        properties = parse_files(files, self.parsers)
 
-        repo_graph += combine_graphs(repo_graph, *parsed_graphs)
+        parsed_graph = properties_to_graph(URIRef(self.url), properties)
+        repo_graph += parsed_graph
         return repo_graph
 
 
@@ -108,106 +111,25 @@ def split_git_url(url) -> Tuple[str, str]:
     return base_url, project
 
 
-def get_extractor(
-    url: str,
-    source: str,
-    base_url: Optional[str] = None,
-    local_path: Optional[str] = None,
-) -> Extractor:
-    """Instantiate the correct extractor for a given source.
-
-    Parameters
-    -----------
-    URL
-        Where the repository metadata is extracted from.
-    source
-        The source of the repository (git, gitlab, github, ...).
-    base_url
-        The base URL of the git remote.
-    local_path
-        If applicable, the path to the directory where the
-        repository is located.
-
-    Examples
-    --------
-    >>> extractor = get_extractor(
-    ...     "https://github.com/SDSC-ORD/gimie",
-    ...     "github"
-    ... )
-    """
-    try:
-        return GIT_PROVIDERS[source](
-            url, base_url=base_url, local_path=local_path
-        )
-    except KeyError as err:
-        raise ValueError(
-            f"Unknown git provider: {source}.\n"
-            f"Supported sources: {', '.join(GIT_PROVIDERS)}"
-        ) from err
-
-
-def get_parsers(
-    uri: str, parser_names: Optional[Iterable[str]] = None
-) -> List[Parser]:
+def check_parser_names(parser_names: Iterable[str]):
     """Instantiate the correct parsers for a given URI.
-    If parser_names is None, all parsers are used.
+    If parser_names is None, default parsers are used.
 
     Parameters
     -----------
-    uri
-        The URI of the associated repository.
-        See :class:`gimie.parsers.Parser`.
     parser_names
         Names of file parsers to use.
 
     Examples
     --------
-    >>> parsers = get_parsers(
-    ...     "https://github.com/foo/bar",
-    ...     ["license"]
-    ... )
-    >>> [type(parser) for parser in parsers]
-    [<class 'gimie.parsers.license.LicenseParser'>]
+    >>> check_parsers(["license"])
     """
-
-    parsers = []
-
-    if parser_names is None:
-        parser_names = PARSERS.keys()
 
     for parser_name in parser_names:
         try:
-            parsers.append(PARSERS[parser_name](URIRef(uri)))
+            PARSERS[parser_name]()
         except KeyError as err:
             raise ValueError(
                 f"Unknown parser: {parser_name}.\n"
                 f"Supported parsers: {', '.join(PARSERS)}"
             ) from err
-    return parsers
-
-
-def infer_git_provider(url: str) -> str:
-    """Given a git repository URL, return the corresponding git provider.
-    Local path or unsupported git providers will return "git".
-
-    Examples
-    --------
-    >>> infer_git_provider("https://gitlab.com/foo/bar")
-    'gitlab'
-    >>> infer_git_provider("/foo/bar")
-    'git'
-    >>> infer_git_provider("https://codeberg.org/dnkl/foot")
-    'git'
-    """
-    # Fall back to git if local path
-    if not validate_url(url):
-        return "git"
-
-    # NOTE: We just check if the provider name is in the URL.
-    # We may want to use a more robust check.
-    for name in GIT_PROVIDERS.keys():
-        if name in url and name != "git":
-            return name
-
-    # Fall back to git for unsupported providers
-    return "git"
