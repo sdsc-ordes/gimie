@@ -66,7 +66,7 @@ def data(
         None,
         "--include-parser",
         "-I",
-        help="Only include selected parser. Use gimie parsers to list parsers.",
+        help="Only include selected parser. Use 'gimie parsers' to list parsers.",
     ),
     exclude_parser: Optional[List[str]] = typer.Option(
         None,
@@ -125,14 +125,6 @@ def parsers(
             parser_line += f" - {parser.__doc__}"
         message += f"{parser_line}\n"
     typer.echo(message)
-
-
-def main(good: bool = True):
-    message_start = "everything is "
-    if good:
-        ending = typer.style("good", fg=typer.colors.GREEN, bold=True)
-    else:
-        ending = typer.style("bad", fg=typer.colors.WHITE, bg=typer.colors.RED)
 
 
 typer_cli = typer.main.get_command(app)

@@ -25,7 +25,7 @@ from urllib.parse import urlparse
 from gimie.graph.operations import combine_graphs
 from gimie.extractors import get_extractor, infer_git_provider
 from gimie.graph.operations import properties_to_graph
-from gimie.parsers import DEFAULT_PARSERS, PARSERS, parse_files
+from gimie.parsers import PARSERS, parse_files
 from gimie.utils import validate_url
 
 
@@ -45,7 +45,7 @@ class Project:
         ('git', 'github', 'gitlab')
     parser_names:
         Names of file parsers to use. ('license').
-        If None, all parsers are used.
+        If None, default parsers are used (see gimie.parsers.DEFAULT_PARSERS).
 
     Examples
     --------
@@ -112,13 +112,14 @@ def split_git_url(url) -> Tuple[str, str]:
 
 
 def check_parser_names(parser_names: Iterable[str]):
-    """Instantiate the correct parsers for a given URI.
-    If parser_names is None, default parsers are used.
+    """Verify that input names correspond to existing
+    parsers. Raises an error if an incorrect name is
+    provided.
 
     Parameters
     -----------
     parser_names
-        Names of file parsers to use.
+        Names of file parsers to verify.
 
     Examples
     --------
