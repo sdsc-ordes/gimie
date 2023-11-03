@@ -26,7 +26,7 @@ class Parser(ABC):
     to define a standard interface for all parsers.
 
     All subclasses must implement parse(). A parser parses
-    bytes data into a set of property-object tuples.
+    bytes data into a set of predicate-object tuples.
     """
 
     def __init__(self):
@@ -39,6 +39,6 @@ class Parser(ABC):
 
     def parse_all(self, docs: Iterable[bytes]) -> Set[Property]:
         """Parse multiple sources and return the union of
-        property-object tuples."""
+        predicate-object tuples."""
         properties = map(self.parse, docs)
         return reduce(lambda p1, p2: p1 | p2, properties)
