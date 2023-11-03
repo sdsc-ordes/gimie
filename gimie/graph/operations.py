@@ -18,14 +18,10 @@
 from functools import reduce
 from typing import Set
 
-from calamus import fields
 from rdflib import Graph
 from rdflib.term import URIRef
 
 from gimie.graph import Property
-
-
-schema = fields.Namespace("http://schema.org/")
 
 
 def combine_graphs(*graphs: Graph) -> Graph:
