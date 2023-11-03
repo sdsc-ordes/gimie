@@ -35,7 +35,8 @@ def combine_graphs(*graphs: Graph) -> Graph:
 
 
 def properties_to_graph(uri: URIRef, properties: Set[Property]) -> Graph:
-    """Convert a set of property-object tuples into a graph."""
+    """Attaches a set of predicate-object tuples to input
+    URI to produce an RDF graph."""
     g = Graph()
     for pred, obj in properties:
         g.add((uri, pred, obj))

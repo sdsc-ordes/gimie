@@ -34,7 +34,7 @@ class Parser(ABC):
 
     @abstractmethod
     def parse(self, data: bytes) -> Set[Property]:
-        """Extract property-object tuples from a source."""
+        """Extract predicate-object tuples from a source."""
         ...
 
     def parse_all(self, docs: Iterable[bytes]) -> Set[Property]:
