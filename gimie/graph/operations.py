@@ -16,9 +16,13 @@
 # limitations under the License.
 """Operations on graphs."""
 from functools import reduce
+from typing import Set
 
 from calamus import fields
 from rdflib import Graph
+from rdflib.term import URIRef
+
+from gimie.graph import Property
 
 
 schema = fields.Namespace("http://schema.org/")
@@ -28,3 +32,11 @@ def combine_graphs(*graphs: Graph) -> Graph:
     """Combines an arbitrary number of input graphs
     into a single graph."""
     return reduce(lambda g1, g2: g1 | g2, graphs)
+
+
+def properties_to_graph(uri: URIRef, properties: Set[Property]) -> Graph:
+    """Convert a set of property-object tuples into a graph."""
+    g = Graph()
+    for pred, obj in properties:
+        g.add((uri, pred, obj))
+    return g
