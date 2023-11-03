@@ -16,7 +16,7 @@
 # limitations under the License.
 from abc import ABC, abstractmethod
 from functools import reduce
-from typing import Iterable, Set, Tuple, TypeAlias, Union
+from typing import Iterable, Set
 
 from gimie.graph import Property
 
