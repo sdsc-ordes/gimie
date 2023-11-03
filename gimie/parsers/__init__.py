@@ -16,8 +16,10 @@
 # limitations under the License.
 """Files which can be parsed by gimie."""
 from pathlib import Path
-from typing import NamedTuple, Optional, Type
+from typing import Dict, Iterable, NamedTuple, Optional, Set, Type
 
+from gimie.graph import Property
+from gimie.io import Resource
 from gimie.parsers.abstract import Parser
 from gimie.parsers.license import LicenseParser, is_license_filename
 
@@ -32,14 +34,56 @@ _PARSERS = {
 }
 
 DEFAULT_PARSERS = {k: v.type for k, v in _PARSERS.items() if v.default}
-EXTRA_PARSERS = {k: v.type for k, v in _PARSERS.items() if not v.default}
+PARSERS = {k: v.type for k, v in _PARSERS.items()}
 
 
-def get_parser(path: Path, parsers=DEFAULT_PARSERS) -> Optional[Type[Parser]]:
-    """Get the appropriate parser based on a file path."""
+def select_parser(
+    path: Path,
+    parser_collection: Optional[Dict[str, Type[Parser]]] = None,
+) -> Optional[Type[Parser]]:
+    """Select the appropriate parser from a collection based on a file path.
+    If no parser is found, return None.
+
+    Parameters
+    ----------
+    path:
+        The path of the file to parse.
+    parser_collection:
+        A dictionary of parser names and their corresponding types.
+        If None, use the default collection.
+    """
     # Only parse licenses in the root directory
     if is_license_filename(path.name) and len(path.stem) == 1:
         name = "license"
     else:
-        name = None
-    return parsers.get(name, None)
+        return None
+
+    if name not in (parser_collection or DEFAULT_PARSERS):
+        return None
+    return PARSERS.get(name, None)
+
+
+def parse_files(
+    files: Iterable[Resource],
+    parser_collection: Optional[Dict[str, Type[Parser]]] = None,
+) -> Set[Property]:
+    """For each input file, select appropriate parser among a collection and
+    parse its contents. Return the union of all parsed properties. If no parser
+    is found for a given file, skip it.
+
+    Parameters
+    ----------
+    files:
+        A collection of file-like objects.
+    parser_collection:
+        A dictionary of parser names and their corresponding types.
+        If None, use the default collection.
+    """
+    properties = set()
+    for file in files:
+        parser = select_parser(file.path, parser_collection)
+        if not parser:
+            continue
+        data = file.open().read()
+        properties |= parser().parse(data or b"")
+    return properties
