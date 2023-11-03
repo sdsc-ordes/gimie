@@ -18,9 +18,7 @@ from abc import ABC, abstractmethod
 from functools import reduce
 from typing import Iterable, Set, Tuple, TypeAlias, Union
 
-from rdflib.term import Literal, URIRef
-
-Property: TypeAlias = Tuple[URIRef, Union[URIRef, Literal]]
+from gimie.graph import Property
 
 
 class Parser(ABC):
