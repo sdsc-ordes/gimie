@@ -123,7 +123,7 @@ def check_parser_names(parser_names: Iterable[str]):
 
     Examples
     --------
-    >>> check_parsers(["license"])
+    >>> check_parser_names(["license"])
     """
 
     for parser_name in parser_names:
