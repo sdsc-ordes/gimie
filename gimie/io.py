@@ -29,11 +29,11 @@ class Resource:
 
     Parameters
     ----------
-    name:
-        The name of the resource, typically the filename.
+    path:
+        The local relative path to the resource.
     """
 
-    name: str
+    path: Path
 
     def open(self) -> io.RawIOBase:
         raise NotImplementedError
@@ -53,10 +53,6 @@ class LocalResource(Resource):
     def open(self) -> io.RawIOBase:
         return io.FileIO(self.path, mode="r")
 
-    @property
-    def name(self) -> str:
-        return self.path.name
-
 
 class RemoteResource(Resource):
     """Provides read-only access to remote data via a file-like interface.
@@ -75,8 +71,8 @@ class RemoteResource(Resource):
     >>> assert isinstance(content, bytes)
     """
 
-    def __init__(self, name: str, url: str, headers: Optional[dict] = None):
-        self.name = name
+    def __init__(self, path: str, url: str, headers: Optional[dict] = None):
+        self.path = Path(path)
         self.url = url
         self.headers = headers or {}
 
