@@ -49,14 +49,13 @@ class LicenseParser(Parser):
 
 
 def get_license_url(data: bytes) -> Optional[str]:
-    """Takes a file-like resource containing a license text, and matches its content
+    """Takes a license body as raw data, and matches its content
     using the scancode API to get possible license matches. The best match is
     then returned as a spdx license URL.
 
     Examples
     --------
-    >>> from gimie.io import LocalResource
-    >>> get_license_url(LocalResource('LICENSE'))
+    >>> get_license_url(open('LICENSE', 'rb').read())
     'https://spdx.org/licenses/Apache-2.0.html'
     """
     temp_file = tempfile.NamedTemporaryFile(delete=False)
@@ -114,11 +113,11 @@ def is_license_filename(filename: str) -> bool:
 
     Examples
     --------
-    >>> is_license_path('LICENSE.txt')
+    >>> is_license_filename('LICENSE.txt')
     True
-    >>> is_license_path('LICENSE-APACHE')
+    >>> is_license_filename('LICENSE-APACHE')
     True
-    >>> is_license_path('README.md')
+    >>> is_license_filename('README.md')
     False
     """
     if filename.startswith("."):
