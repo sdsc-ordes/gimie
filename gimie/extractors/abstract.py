@@ -44,7 +44,7 @@ class Extractor(ABC):
 
     @abstractmethod
     def extract(self) -> Repository:
-        """Extract metadata"""
+        """Extract metadata from the git provider into a Repository object."""
         ...
 
     @abstractmethod
