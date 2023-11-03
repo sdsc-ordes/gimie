@@ -53,7 +53,7 @@ def select_parser(
         If None, use the default collection.
     """
     # Only parse licenses in the root directory
-    if is_license_filename(path.name) and len(path.stem) == 1:
+    if is_license_filename(path.name) and len(path.parts) == 1:
         name = "license"
     else:
         return None
