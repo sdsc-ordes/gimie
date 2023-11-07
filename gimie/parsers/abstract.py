@@ -14,26 +14,31 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Operations on graphs."""
+from abc import ABC, abstractmethod
 from functools import reduce
-from typing import Set
-
-from rdflib import Graph
-from rdflib.term import URIRef
+from typing import Iterable, Set
 
 from gimie.graph import Property
 
 
-def combine_graphs(*graphs: Graph) -> Graph:
-    """Combines an arbitrary number of input graphs
-    into a single graph."""
-    return reduce(lambda g1, g2: g1 | g2, graphs)
+class Parser(ABC):
+    """Parser is an Abstract Base Class. It is only meant
+    to define a standard interface for all parsers.
 
+    All subclasses must implement parse(). A parser parses
+    bytes data into a set of predicate-object tuples.
+    """
 
-def properties_to_graph(uri: URIRef, properties: Set[Property]) -> Graph:
-    """Attaches a set of predicate-object tuples to input
-    URI to produce an RDF graph."""
-    g = Graph()
-    for pred, obj in properties:
-        g.add((uri, pred, obj))
-    return g
+    def __init__(self):
+        pass
+
+    @abstractmethod
+    def parse(self, data: bytes) -> Set[Property]:
+        """Extract predicate-object tuples from a source."""
+        ...
+
+    def parse_all(self, docs: Iterable[bytes]) -> Set[Property]:
+        """Parse multiple sources and return the union of
+        predicate-object tuples."""
+        properties = map(self.parse, docs)
+        return reduce(lambda p1, p2: p1 | p2, properties)

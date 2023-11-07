@@ -29,7 +29,7 @@ import pydriller
 
 from gimie.io import LocalResource
 from gimie.models import Person, Repository
-from gimie.sources.abstract import Extractor
+from gimie.extractors.abstract import Extractor
 from pathlib import Path
 
 
@@ -70,14 +70,12 @@ class GitExtractor(Extractor):
             date_created=self._get_creation_date(),
             date_modified=self._get_modification_date(),
             name=self.path,
-            licenses=self._get_licenses(),
             url=self.url,
         )
 
         return Repository(**repo_meta)  # type: ignore
 
     def list_files(self) -> List[LocalResource]:
-
         self.repository = self._repo_data
         file_list = []
 

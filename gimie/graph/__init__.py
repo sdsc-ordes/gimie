@@ -14,28 +14,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from typing import Tuple, Union
 
-"""Sources from which metadata can be extracted by gimie."""
-from typing import Type
-from gimie.sources.abstract import Extractor
-from gimie.sources.github import GithubExtractor
-from gimie.sources.gitlab import GitlabExtractor
-from gimie.sources.git import GitExtractor
+from rdflib.term import Literal, URIRef
 
-from dataclasses import dataclass
-
-
-@dataclass
-class Source:
-    """Source of metadata."""
-
-    remote: bool
-    git: bool
-    extractor: Type[Extractor]
-
-
-SOURCES = {
-    "git": Source(remote=False, git=True, extractor=GitExtractor),
-    "github": Source(remote=True, git=True, extractor=GithubExtractor),
-    "gitlab": Source(remote=True, git=True, extractor=GitlabExtractor),
-}
+Property = Tuple[URIRef, Union[URIRef, Literal]]

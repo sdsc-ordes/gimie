@@ -1,27 +1,65 @@
+# Gimie
+# Copyright 2022 - Swiss Data Science Center (SDSC)
+# A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and
+# Eidgenössische Technische Hochschule Zürich (ETHZ).
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 import os
 import re
-from spdx_license_list import LICENSES
-from scancode.api import get_licenses
-from typing import Iterable, List, Optional
-from gimie.io import Resource
 import tempfile
+from typing import Iterable, List, Optional, Set, Tuple, Union
+
+from rdflib.term import URIRef
+from scancode.api import get_licenses
+from spdx_license_list import LICENSES
+
+from gimie.graph.namespaces import SDO
+from gimie.parsers.abstract import Parser, Property
 
 SPDX_IDS = list(LICENSES.keys())
 
 
-def get_license_url(license_file: Resource) -> Optional[str]:
-    """Takes a file-like resource containing a license text, and matches its content
+class LicenseParser(Parser):
+    """Parse LICENSE file(s) into schema:license."""
+
+    def __init__(self):
+        super().__init__()
+
+    def parse(self, data: bytes) -> Set[Property]:
+        """Extracts an spdx URL from a license file and returns a
+        set with a single tuple <schema:license> <spdx_url>.
+        If no matching URL is found, an empty set is returned.
+        """
+        props = set()
+        license_url = get_license_url(data)
+
+        if license_url:
+            props.add((SDO.license, URIRef(license_url)))
+        return props
+
+
+def get_license_url(data: bytes) -> Optional[str]:
+    """Takes a license body as raw data, and matches its content
     using the scancode API to get possible license matches. The best match is
     then returned as a spdx license URL.
 
     Examples
     --------
-    >>> from gimie.io import LocalResource
-    >>> get_license_url(LocalResource('LICENSE'))
+    >>> get_license_url(open('LICENSE', 'rb').read())
     'https://spdx.org/licenses/Apache-2.0.html'
     """
     temp_file = tempfile.NamedTemporaryFile(delete=False)
-    temp_file.write(license_file.open().read())
+    temp_file.write(data)
     temp_file.close()
 
     license_detections = get_licenses(temp_file.name, include_text=True)[
@@ -65,7 +103,7 @@ def get_spdx_license_id(
     return lower_spdx_ids.get(license_id.lower(), None)
 
 
-def is_license_path(filename: str) -> bool:
+def is_license_filename(filename: str) -> bool:
     """Given an input filename, returns a boolean indicating whether the filename path looks like a license.
 
     Parameters
@@ -75,11 +113,11 @@ def is_license_path(filename: str) -> bool:
 
     Examples
     --------
-    >>> is_license_path('LICENSE.txt')
+    >>> is_license_filename('LICENSE.txt')
     True
-    >>> is_license_path('LICENSE-APACHE')
+    >>> is_license_filename('LICENSE-APACHE')
     True
-    >>> is_license_path('README.md')
+    >>> is_license_filename('README.md')
     False
     """
     if filename.startswith("."):
@@ -113,7 +151,6 @@ def get_license_with_highest_coverage(
     highest_license = None
 
     for detection in license_detections:
-
         matches = detection["matches"] if "matches" in detection else []
         for match in matches:
             match_coverage = match.get("score", 0)

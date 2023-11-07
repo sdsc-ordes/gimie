@@ -5,9 +5,8 @@ import datetime
 
 import pytest
 
-from gimie.graph.namespaces import GIMIE
 from gimie.io import LocalResource
-from gimie.sources.git import GitExtractor
+from gimie.extractors.git import GitExtractor
 from gimie.project import Project
 
 LOCAL_REPOSITORY = os.getcwd()
@@ -57,8 +56,8 @@ def test_set_uri():
 def test_clone_extract_github():
     """Clone Git repository by setting git extractor
     explicitely and extract metadata locally."""
-    proj = Project(RENKU_GITHUB, sources="git")
-    assert type(proj.extractors[0]) == GitExtractor
+    proj = Project(RENKU_GITHUB, git_provider="git")
+    assert type(proj.extractor) == GitExtractor
     proj.extract()
 
 
@@ -66,7 +65,7 @@ def test_clone_unsupported():
     """Instantiate Project from unsupported provider
     with git as default provider"""
     proj = Project(UNSUPPORTED_PROV)
-    assert type(proj.extractors[0]) == GitExtractor
+    assert type(proj.extractor) == GitExtractor
     proj.extract()
 
 

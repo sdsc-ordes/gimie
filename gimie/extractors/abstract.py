@@ -14,7 +14,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Abstract classes for gimie objects."""
+"""Abstract for Git repository extractors."""
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
@@ -22,15 +22,14 @@ from urllib.parse import urlparse
 
 from gimie.io import Resource
 from gimie.models import Repository
-from gimie.sources.common.license import get_license_url, is_license_path
 
 
 class Extractor(ABC):
     """Extractor is an Abstract Base Class. It is only meant
-    to define a standard interface for all extractors.
+    to define a standard interface for all git repository extractors.
 
-    All subclasses must implement extract() and to_graph() methods
-    they are free to override the default serialize() and jsonld()
+    Subclasses for different git providers must implement
+    extract() and list_files() methods.
     """
 
     def __init__(
@@ -45,9 +44,10 @@ class Extractor(ABC):
 
     @abstractmethod
     def extract(self) -> Repository:
-        """Extract metadata"""
+        """Extract metadata from the git provider into a Repository object."""
         ...
 
+    @abstractmethod
     def list_files(self) -> List[Resource]:
         """List all files in the repository HEAD."""
         ...
@@ -66,16 +66,3 @@ class Extractor(ABC):
             url = urlparse(self.url)
             return f"{url.scheme}://{url.netloc}"
         return self.base_url
-
-    def _get_licenses(self) -> List[str]:
-        """Extracts SPDX License URLs from the repository."""
-        # TODO: Move functionality into a dedicate Parser
-        license_files = filter(
-            lambda p: is_license_path(p.name), self.list_files()
-        )
-        license_urls = []
-        for file in license_files:
-            license_url = get_license_url(file)
-            if license_url:
-                license_urls.append(license_url)
-        return license_urls

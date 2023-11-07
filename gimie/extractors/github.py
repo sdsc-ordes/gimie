@@ -25,7 +25,7 @@ from typing import Any, Dict, List, Optional, Union
 from urllib.parse import urlparse
 from dotenv import load_dotenv
 
-from gimie.sources.abstract import Extractor
+from gimie.extractors.abstract import Extractor
 from gimie.models import (
     Organization,
     Person,
@@ -33,7 +33,7 @@ from gimie.models import (
 )
 
 from gimie.io import RemoteResource
-from gimie.sources.common.queries import (
+from gimie.extractors.common.queries import (
     send_rest_query,
     send_graphql_query,
 )
@@ -47,7 +47,8 @@ def query_contributors(
 ) -> List[Dict[str, Any]]:
     """Queries the list of contributors of target repository
     using GitHub's REST and GraphQL APIs. Returns a list of GraphQL User nodes.
-    NOTE: This is a workaround for the lack of a contributors field in the GraphQL API."""
+    NOTE: This is a workaround for the lack of a contributors field in the GraphQL API.
+    """
     owner, name = urlparse(url).path.strip("/").split("/")
     # Get contributors (available in the REST API but not GraphQL)
     data = f"repos/{owner}/{name}/contributors"
@@ -108,7 +109,7 @@ class GithubExtractor(Extractor):
 
         for item in file_dict:
             file = RemoteResource(
-                name=item["name"],
+                path=item["name"],
                 url=f'{repo_url}/raw/{defaultbranchref}/{item["path"]}',
                 headers=self._set_auth(),
             )
@@ -127,7 +128,6 @@ class GithubExtractor(Extractor):
             description=data["description"],
             name=self.path,
             keywords=self._get_keywords(*data["repositoryTopics"]["nodes"]),
-            licenses=self._get_licenses(),
             url=self.url,
         )
         if data["parent"]:
@@ -244,7 +244,8 @@ class GithubExtractor(Extractor):
 
     def _fetch_contributors(self) -> List[Person]:
         """Queries the GitHub GraphQL API to extract contributors through the commit list.
-        NOTE: This is a workaround for the lack of a contributors field in the GraphQL API."""
+        NOTE: This is a workaround for the lack of a contributors field in the GraphQL API.
+        """
         headers = self._set_auth()
         contributors = []
         resp = query_contributors(self.url, headers)
