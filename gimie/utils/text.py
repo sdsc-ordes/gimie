@@ -2,7 +2,6 @@ from collections import Counter
 from functools import reduce
 import re
 from typing import (
-    Callable,
     Dict,
     Iterable,
     List,
@@ -31,6 +30,11 @@ def tokenize(text: str, sep: str = " ") -> List[str]:
         Text to tokenize.
     sep:
         Token separator.
+
+    Examples
+    --------
+    >>> tokenize("Is this a test? Yes it is.")
+    ['is', 'this', 'a', 'test', 'yes', 'it', 'is']
     """
     text = text.lower()
     text = re.sub(r"[\.|,|;|:|!|?|\n]", "", text)
@@ -46,9 +50,15 @@ def extract_ngrams(tokens: List[str], size: int = 1) -> List[str]:
         List of tokens.
     size:
         Size of ngrams to extract.
+
+    Examples
+    --------
+    >>> extract_ngrams(["this", "is", "a", "test"], size=2)
+    ['this is', 'is a', 'a test']
     """
     return [
-        " ".join(tokens[i : i + size]) for i in range(0, len(tokens), size)
+        " ".join(tokens[i : i + size])
+        for i in range(0, len(tokens) - size + 1)
     ]
 
 
@@ -63,6 +73,11 @@ def get_ngram_counts(
         Document to extract ngrams from.
     ngram_range:
         Inclusive range of ngram sizes to extract.
+
+    Examples
+    --------
+    >>> get_ngram_counts("Red roses red.", ngram_range=(1, 2))
+    Counter({'red': 2, 'roses': 1, 'red roses': 1, 'roses red': 1})
     """
     ngram_counts: Counter[str] = Counter()
     tokens = tokenize(doc)
@@ -80,17 +95,27 @@ def normalize_csr_rows(X: sp.csr_matrix, norm: str = "l1") -> sp.csr_matrix:
         CSR matrix to normalize.
     norm:
         Norm to use for normalization. Either "l1" or "l2".
+
+    Examples
+    --------
+    >>> X = sp.csr_matrix([[1, 2], [3, 4]], dtype=np.float64)
+    >>> normalize_csr_rows(X, norm="l1").toarray()
+    array([[0.33333333, 0.66666667],
+           [0.42857143, 0.57142857]])
+    >>> normalize_csr_rows(X, norm="l2").toarray()
+    array([[0.4472136 , 0.89442719],
+           [0.6       , 0.8       ]])
     """
-    norm_func: Callable[[float], float] = {
-        "l1": lambda x: np.abs(x).sum(),  # type: ignore
-        "l2": lambda x: np.sqrt((x**2).sum()),  # type: ignore
+    norm_func = {
+        "l1": lambda x: np.abs(x).sum(),
+        "l2": lambda x: np.sqrt((x**2).sum()),
     }[norm]
 
     for i in range(X.shape[0]):
-        if X[i].sum() == 0.0:  # type: ignore
+        if X[i].sum() == 0.0:
             continue
 
-        X[i, :] /= norm_func(X[i].data)  # type: ignore
+        X[i, :] /= norm_func(X[i].data)
     return X
 
 
@@ -273,7 +298,7 @@ class TfidfVectorizer(BaseModel):
         ]
         tfidf = self._get_tfidf(counts_records, vocab=self.vocabulary)
         if self.config.norm is not None:
-            return inplace_csr_row_normalize(tfidf, norm=self.config.norm)
+            return normalize_csr_rows(tfidf, norm=self.config.norm)
         return tfidf
 
     def fit_transform(self, data: Iterable[str]) -> sp.csr_matrix:
