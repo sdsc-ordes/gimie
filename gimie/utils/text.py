@@ -71,9 +71,7 @@ def get_ngram_counts(
     return ngram_counts
 
 
-def inplace_csr_row_normalize(
-    X: sp.csr_matrix, norm: str = "l1"
-) -> sp.csr_matrix:
+def normalize_csr_rows(X: sp.csr_matrix, norm: str = "l1") -> sp.csr_matrix:
     """Normalize rows of a CSR matrix in place.
 
     Parameters
