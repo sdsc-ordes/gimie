@@ -25,7 +25,7 @@ from urllib.parse import urlparse
 from gimie.extractors import get_extractor, infer_git_provider
 from gimie.graph.operations import properties_to_graph
 from gimie.parsers import parse_files
-from gimie.utils import validate_url
+from gimie.utils.uri import validate_url
 
 
 class Project:
