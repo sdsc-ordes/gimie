@@ -15,11 +15,6 @@ from pydantic import BaseModel, Field
 from pydantic.dataclasses import dataclass
 import scipy.sparse as sp
 
-CORPUS = [
-    "This is my test document.",
-    "This is another test document.",
-]
-
 
 def tokenize(text: str, sep: str = " ") -> List[str]:
     """Basic tokenizer. Removes punctuation, but not stop words.
@@ -164,9 +159,9 @@ class TfidfVectorizer(BaseModel):
     --------
     >>> docs = ["The quick brown fox", "jumps over", "the lazy dog."]
     >>> vectorizer = TfidfVectorizer(config=TfidfConfig())
-    >>> tfidf = vectorizer.fit_transform(CORPUS)
+    >>> tfidf = vectorizer.fit_transform(docs)
     >>> tfidf.shape
-    (2, 6)
+    (3, 8)
     """
 
     config: TfidfConfig
