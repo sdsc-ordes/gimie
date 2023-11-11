@@ -38,6 +38,7 @@ scancode-toolkit-mini = "^32.0.8"
 spdx-license-list = "^3.22"
 numpy = "^1.26.1"
 pydantic = "^2.4.2"
+scipy = "^1.11.3"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.10.0"
