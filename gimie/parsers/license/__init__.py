@@ -62,7 +62,7 @@ def match_license(
 
     Examples
     --------
-    >>> get_license_url(open('LICENSE', 'rb').read())
+    >>> match_license(open('LICENSE', 'rb').read())
     'https://spdx.org/licenses/Apache-2.0.html'
     """
     # Compute tfidf vector for input license
