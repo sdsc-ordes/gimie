@@ -13,9 +13,12 @@ from gimie.utils.text import TfidfConfig, TfidfVectorizer
 
 OUT_DIR = Path("gimie") / "parsers" / "license" / "data"
 
-# Download all licenses metadata from SPDX
+# Retrieve metadata for all OSI approved and valid licenses from SPDX
 SPDX_LIST_URL = "https://raw.githubusercontent.com/spdx/license-list-data/main/json/licenses.json"
-all_licenses = requests.get(SPDX_LIST_URL).json()
+all_licenses = requests.get(SPDX_LIST_URL).json()["licenses"]
+licenses = filter(lambda l: l["isOsiApproved"], all_licenses)
+licenses = filter(lambda l: not l["isDeprecatedLicenseId"], licenses)
+licenses = list(licenses)
 
 # Assemble corpus of license texts (this takes a while)
 class License(NamedTuple):
@@ -25,7 +28,7 @@ class License(NamedTuple):
 
 corpus: List[License] = []
 
-for idx, license in enumerate(all_licenses["licenses"]):
+for idx, license in enumerate(licenses):
     resp = requests.get(license["detailsUrl"])
     if not resp.ok:
         continue
