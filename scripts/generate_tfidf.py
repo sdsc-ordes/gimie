@@ -6,10 +6,12 @@ import json
 from pathlib import Path
 from typing import List, NamedTuple
 
-import scipy.sparse as sp
+import numpy as np
 import requests
-
-from gimie.utils.text import TfidfConfig, TfidfVectorizer
+import scipy.sparse as sp
+from sklearn.feature_extraction.text import TfidfVectorizer
+import skops.io as sio
+from zipfile import ZIP_DEFLATED
 
 OUT_DIR = Path("gimie") / "parsers" / "license" / "data"
 
@@ -38,15 +40,19 @@ for idx, license in enumerate(licenses):
 # Fit tfidf vectorizer to corpus
 texts = [l.text for l in corpus]
 vectorizer = TfidfVectorizer(
-    config=TfidfConfig(
-        max_features=700, ngram_range=(1, 2), sublinear_tf=True, norm="l2"
-    )
+    max_features=700, ngram_range=(1, 2), sublinear_tf=True, norm="l2"
 )
 tfidf = vectorizer.fit_transform(texts)
 
 # Save vectorizer and tfidf matrix
-with open(OUT_DIR / "tfidf_vectorizer.json", "w") as fp:
-    fp.write(vectorizer.model_dump_json())
+obj = sio.dump(
+    vectorizer,
+    OUT_DIR / "tfidf_vectorizer.skops",
+    compression=ZIP_DEFLATED,
+    compresslevel=9,
+)
+# Prune precision to reduce size
+tfidf.data = tfidf.data.astype(np.float16)
 sp.save_npz(OUT_DIR / "tfidf_matrix.npz", tfidf)
 with open(OUT_DIR / "spdx_licenses.csv", "w") as fp:
     for l in corpus:

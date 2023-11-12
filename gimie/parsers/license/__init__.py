@@ -21,12 +21,13 @@ import re
 from typing import List, Optional, Set
 
 import numpy as np
-import scipy.sparse as sp
 from rdflib.term import URIRef
+import scipy.sparse as sp
+from sklearn.feature_extraction.text import TfidfVectorizer
+import skops.io as sio
 
 from gimie.graph.namespaces import SDO
 from gimie.parsers.abstract import Parser, Property
-from gimie.utils.text import TfidfVectorizer
 
 
 class LicenseParser(Parser):
@@ -86,10 +87,10 @@ def match_license(
 def load_tfidf_vectorizer() -> TfidfVectorizer:
     """Load tfidf matrix and vectorizer from disk."""
 
-    data = pkgutil.get_data(__name__, "data/tfidf_vectorizer.json")
+    data = pkgutil.get_data(__name__, "data/tfidf_vectorizer.skops")
     if data is None:
-        raise FileNotFoundError("Could not find tfidf_vectorizer.json")
-    return TfidfVectorizer.model_validate_json(data)
+        raise FileNotFoundError("Could not find tfidf_vectorizer.skops")
+    return sio.loads(data, trusted=True)
 
 
 def load_spdx_ids() -> List[str]:
