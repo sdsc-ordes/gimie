@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 from typing import List, NamedTuple
 
+import numpy as np
 import scipy.sparse as sp
 import requests
 
@@ -47,6 +48,8 @@ tfidf = vectorizer.fit_transform(texts)
 # Save vectorizer and tfidf matrix
 with open(OUT_DIR / "tfidf_vectorizer.json", "w") as fp:
     fp.write(vectorizer.model_dump_json())
+# Prune precision to reduce size
+tfidf.data = tfidf.data.astype(np.float16)
 sp.save_npz(OUT_DIR / "tfidf_matrix.npz", tfidf)
 with open(OUT_DIR / "spdx_licenses.csv", "w") as fp:
     for l in corpus:
