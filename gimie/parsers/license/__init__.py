@@ -30,7 +30,8 @@ from gimie.utils.text import TfidfVectorizer
 
 
 class LicenseParser(Parser):
-    """Parse LICENSE file(s) into schema:license."""
+    """Parse LICENSE body into schema:license <spdx-url>.
+    Uses tf-idf-based matching."""
 
     def __init__(self):
         super().__init__()
