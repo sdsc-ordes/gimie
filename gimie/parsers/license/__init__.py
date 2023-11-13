@@ -48,9 +48,7 @@ class LicenseParser(Parser):
         return props
 
 
-def match_license(
-    data: bytes, min_similarity: float = 0.9
-) -> Optional[str]:
+def match_license(data: bytes, min_similarity: float = 0.9) -> Optional[str]:
     """Given a license file, returns the url of the most similar spdx license.
     This is done using TF-IDF on the license text and getting the
     closest match in the SPDX license corpus based on cosine similarity.
