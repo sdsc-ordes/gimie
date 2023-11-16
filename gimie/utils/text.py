@@ -118,6 +118,8 @@ def normalize_csr_rows(X: sp.csr_matrix, norm: str = "l1") -> sp.csr_matrix:
 class TfidfConfig:
     """Configuration for TfidfVectorizer.
 
+    For more information on tf-idf, see https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfTransformer.html
+
     Parameters
     ----------
     max_features:
@@ -125,7 +127,9 @@ class TfidfConfig:
     ngram_range:
         Inclusive range of ngram sizes to extract.
     smooth_idf:
-        Smooth idf weights by adding one to document frequencies.
+        Smooth idf weights by adding a constant 1 to the numerator and denominator
+        of the idf as if an extra document was seen containing every term once,
+        preventing zero divisions.
     vocabulary:
         Vocabulary to use. If None, the vocabulary is inferred from the data.
     norm:
@@ -143,8 +147,13 @@ class TfidfConfig:
 
 
 class TfidfVectorizer(BaseModel):
-    """A simple term frequency-inverse document frequency (tf-idf) vectorizer
+    r"""A simple term frequency-inverse document frequency (tf-idf) vectorizer
     that can be loaded from and serialized to JSON.
+
+    This implementation replicates the behavior of scikit-learn's (as of 1.3.2),
+    but only supports a subset of its parameters.
+
+    For more information on tf-idf, see https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfTransformer.html
 
     Parameters
     ----------
@@ -303,6 +312,7 @@ class TfidfVectorizer(BaseModel):
         Parameters
         ----------
         data:
-            List of documents contents to fit the vectorizer to and transform."""
+            List of documents contents to fit the vectorizer to and transform.
+        """
         self.fit(list(data))
         return self.transform(data)
