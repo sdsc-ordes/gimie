@@ -4,7 +4,7 @@ from typing import List
 import numpy as np
 import pytest
 
-from gimie.utils.text import TfidfConfig, TfidfVectorizer
+from gimie.utils.text_processing import TfidfConfig, TfidfVectorizer
 
 CORPUS = [
     "This is my test document.",

@@ -26,7 +26,7 @@ from rdflib.term import URIRef
 
 from gimie.graph.namespaces import SDO
 from gimie.parsers.abstract import Parser, Property
-from gimie.utils.text import TfidfVectorizer
+from gimie.utils.text_processing import TfidfVectorizer
 
 
 class LicenseParser(Parser):
