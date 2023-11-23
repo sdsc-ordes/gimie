@@ -177,6 +177,28 @@ class TfidfVectorizer(BaseModel):
     idf_vector: List[float] = list()
     vocabulary: Dict[str, int] = Field(default_factory=dict)
 
+    def _get_idf_vector(
+        self, ngram_counts: List[Counter[str]], vocab: Dict[str, int]
+    ) -> List[float]:
+        """Compute the idf vector for the whole corpus from a list of
+        ngram counts from each document.
+
+        Parameters
+        ----------
+        ngram_counts:
+            List of ngram counts for each document.
+        vocab:
+            Vocabulary to use. Each ngram key has an integer value used as the
+            column index of the output matrix.
+        """
+        idf_vector = np.zeros(len(vocab), dtype=np.float64)
+        for record in ngram_counts:
+            idf_vector[[vocab[t] for t in record.keys() if t in vocab]] += 1
+        n_docs = len(ngram_counts) + int(self.config.smooth_idf)
+        idf_vector += int(self.config.smooth_idf)
+        idf_vector = 1 + np.log(n_docs / (idf_vector))
+        return list(idf_vector)
+
     def _get_tf_matrix(
         self, ngram_counts: List[Counter[str]], vocab: Dict[str, int]
     ) -> sp.csr_matrix:
@@ -204,28 +226,6 @@ class TfidfVectorizer(BaseModel):
             np.log(tf_matrix.data, tf_matrix.data)  # type: ignore
             tf_matrix.data += 1  # type: ignore
         return tf_matrix
-
-    def _get_idf_vector(
-        self, ngram_counts: List[Counter[str]], vocab: Dict[str, int]
-    ) -> List[float]:
-        """Compute the idf vector for the whole corpus from a list of
-        ngram counts from each document.
-
-        Parameters
-        ----------
-        ngram_counts:
-            List of ngram counts for each document.
-        vocab:
-            Vocabulary to use. Each ngram key has an integer value used as the
-            column index of the output matrix.
-        """
-        idf_vector = np.zeros(len(vocab), dtype=np.float64)
-        for record in ngram_counts:
-            idf_vector[[vocab[t] for t in record.keys() if t in vocab]] += 1
-        n_docs = len(ngram_counts) + int(self.config.smooth_idf)
-        idf_vector += int(self.config.smooth_idf)
-        idf_vector = 1 + np.log(n_docs / (idf_vector))
-        return list(idf_vector)
 
     def _get_tfidf(
         self, ngram_counts: List[Counter[str]], vocab: Dict[str, int]
