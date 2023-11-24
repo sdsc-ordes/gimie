@@ -21,7 +21,7 @@ from gimie.extractors.abstract import Extractor
 from gimie.extractors.github import GithubExtractor
 from gimie.extractors.gitlab import GitlabExtractor
 from gimie.extractors.git import GitExtractor
-from gimie.utils import validate_url
+from gimie.utils.uri import validate_url
 
 GIT_PROVIDERS: Dict[str, Type[Extractor]] = {
     "git": GitExtractor,
