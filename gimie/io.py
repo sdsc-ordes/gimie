@@ -66,7 +66,7 @@ class RemoteResource(Resource):
 
     Examples
     --------
-    >>> url = "https://raw.githubusercontent.com/SDSC-ORD/gimie/main/README.md"
+    >>> url = "https://raw.githubusercontent.com/sdsc-ordes/gimie/main/README.md"
     >>> content = RemoteResource("README.md", url).open().read()
     >>> assert isinstance(content, bytes)
     """

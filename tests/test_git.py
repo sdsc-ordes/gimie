@@ -18,7 +18,7 @@ UNSUPPORTED_PROV = "https://codeberg.org/dnkl/foot"
 def local_meta():
     """Return metadata for a local repository."""
     extractor = GitExtractor(
-        "https://github.com/SDSC-ORD/gimie", local_path=LOCAL_REPOSITORY
+        "https://github.com/sdsc-ordes/gimie", local_path=LOCAL_REPOSITORY
     )
     return extractor.extract()
 

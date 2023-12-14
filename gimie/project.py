@@ -48,7 +48,7 @@ class Project:
 
     Examples
     --------
-    >>> proj = Project("https://github.com/SDSC-ORD/gimie")
+    >>> proj = Project("https://github.com/sdsc-ordes/gimie")
     >>> assert isinstance(proj.extract(), Graph)
     """
 

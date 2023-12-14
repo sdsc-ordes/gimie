@@ -53,7 +53,7 @@ def get_extractor(
     Examples
     --------
     >>> extractor = get_extractor(
-    ...     "https://github.com/SDSC-ORD/gimie",
+    ...     "https://github.com/sdsc-ordes/gimie",
     ...     "github"
     ... )
     """

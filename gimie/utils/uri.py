@@ -32,9 +32,9 @@ def validate_url(url: str):
     False
     >>> validate_url(532)
     False
-    >>> validate_url('https://www.github.com/SDSC-ORD/gimie')
+    >>> validate_url('https://www.github.com/sdsc-ordes/gimie')
     True
-    >>> validate_url('github.com/SDSC-ORD/gimie')
+    >>> validate_url('github.com/sdsc-ordes/gimie')
     False
     """
     try:
@@ -61,6 +61,6 @@ def generate_uri(ref: str):
     Examples
     --------
     >>> generate_uri("abc")
-    'https://sdsc-ord.github.io/gimie/abc'
+    'https://sdsc-ordes.github.io/gimie/abc'
     """
     return str(GIMIE[ref])

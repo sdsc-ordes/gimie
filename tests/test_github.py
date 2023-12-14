@@ -6,7 +6,7 @@ from gimie.io import RemoteResource
 
 
 TEST_REPOS = [
-    "https://github.com/SDSC-ORD/gimie",  # Owned by organization, has releases
+    "https://github.com/sdsc-ordes/gimie",  # Owned by organization, has releases
     "https://github.com/apache/openoffice",  # Owned by organization, no releases
     "https://github.com/ishepard/pydriller",  # Owned by user, has releases
     "https://github.com/rmfranken/license_test",  # Contains 2 license files
