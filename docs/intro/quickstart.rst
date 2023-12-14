@@ -20,7 +20,7 @@ Install using pip or docker:
 
         .. code-block:: console
 
-            docker pull ghcr.io/sdsc-ord/gimie:latest
+            docker pull ghcr.io/sdsc-ordes/gimie:latest
 
 
 .. warning::
@@ -47,7 +47,7 @@ Gimie can then be used as follows to extract repository metadata:
         .. code-block:: console
             :emphasize-text: <repository-url>
 
-            docker run -e GITHUB_TOKEN=${GITHUB_TOKEN} ghcr.io/sdsc-ord/gimie:latest data <repository-url> > output.ttl
+            docker run -e GITHUB_TOKEN=${GITHUB_TOKEN} ghcr.io/sdsc-ordes/gimie:latest data <repository-url> > output.ttl
 
 
 .. note::

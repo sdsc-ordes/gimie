@@ -1,6 +1,6 @@
-[![gimie](docs/logo.svg)](https://github.com/SDSC-ORD/gimie)
+[![gimie](docs/logo.svg)](https://github.com/sdsc-ordes/gimie)
 
-[![PyPI version](https://badge.fury.io/py/gimie.svg)](https://badge.fury.io/py/gimie) [![Python Poetry Test](https://github.com/SDSC-ORD/gimie/actions/workflows/poetry-pytest.yml/badge.svg)](https://github.com/SDSC-ORD/gimie/actions/workflows/poetry-pytest.yml) [![docs](https://github.com/SDSC-ORD/gimie/actions/workflows/sphinx-docs.yml/badge.svg)](https://sdsc-ord.github.io/gimie) [![Coverage Status](https://coveralls.io/repos/github/SDSC-ORD/gimie/badge.svg?branch=main)](https://coveralls.io/github/SDSC-ORD/gimie?branch=main)
+[![PyPI version](https://badge.fury.io/py/gimie.svg)](https://badge.fury.io/py/gimie) [![Python Poetry Test](https://github.com/sdsc-ordes/gimie/actions/workflows/poetry-pytest.yml/badge.svg)](https://github.com/sdsc-ordes/gimie/actions/workflows/poetry-pytest.yml) [![docs](https://github.com/sdsc-ordes/gimie/actions/workflows/sphinx-docs.yml/badge.svg)](https://sdsc-ordes.github.io/gimie) [![Coverage Status](https://coveralls.io/repos/github/sdsc-ordes/gimie/badge.svg?branch=main)](https://coveralls.io/github/sdsc-ordes/gimie?branch=main)
 
 Gimie (GIt Meta Information Extractor) is a python library and command line tool to extract structured metadata from git repositories.
 
@@ -23,16 +23,16 @@ pip install gimie
 To install the dev version from github:
 
 ```shell
-pip install git+https://github.com/SDSC-ORD/gimie.git@main#egg=gimie
+pip install git+https://github.com/sdsc-ordes/gimie.git@main#egg=gimie
 ```
 
-Gimie is also available as a docker container hosted on the [Github container registry](https://github.com/SDSC-ORD/gimie/pkgs/container/gimie):
+Gimie is also available as a docker container hosted on the [Github container registry](https://github.com/sdsc-ordes/gimie/pkgs/container/gimie):
 
 ```shell
-docker pull ghcr.io/sdsc-ord/gimie:latest
+docker pull ghcr.io/sdsc-ordes/gimie:latest
 
 # The access token can be provided as an environment variable
-docker run -e ACCESS_TOKEN=$ACCESS_TOKEN ghcr.io/sdsc-ord/gimie:latest gimie data <repo>
+docker run -e ACCESS_TOKEN=$ACCESS_TOKEN ghcr.io/sdsc-ordes/gimie:latest gimie data <repo>
 ```
 
 ## STEP 2 : Set your credentials
@@ -86,7 +86,7 @@ proj.serialize(format='ttl')
 Or to extract only from a specific source:
 ```python
 from gimie.sources.github import GithubExtractor
-gh = GithubExtractor('https://github.com/SDSC-ORD/gimie')
+gh = GithubExtractor('https://github.com/sdsc-ordes/gimie')
 gh.extract()
 
 # To retrieve the rdflib.Graph object
@@ -117,7 +117,7 @@ The code formatting standard we use is [black](https://github.com/psf/black), wi
 activate a conda or virtual environment with Python 3.8 or higher
 
 ```shell
-git clone https://github.com/SDSC-ORD/gimie && cd gimie
+git clone https://github.com/sdsc-ordes/gimie && cd gimie
 make install
 ```
 

@@ -7,8 +7,8 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "gimie"
-copyright = "2023, SDSC-ORD"
-author = "SDSC-ORD"
+copyright = "2023, sdsc-ordes"
+author = "sdsc-ordes"
 release = "0.6.1"
 
 # -- General configuration ---------------------------------------------------
