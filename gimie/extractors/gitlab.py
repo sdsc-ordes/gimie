@@ -62,7 +62,7 @@ class GitlabExtractor(Extractor):
             file = RemoteResource(
                 path=item["name"],
                 url=f'{self.url}/-/raw/{defaultbranchref}/{item["name"]}',
-                headers=self._set_auth(),
+                headers=self._headers,
             )
             file_list.append(file)
         return file_list
@@ -226,14 +226,15 @@ class GitlabExtractor(Extractor):
         }
         """
         response = send_graphql_query(
-            self.graphql_endpoint, project_query, data, self._set_auth()
+            self.graphql_endpoint, project_query, data, self._headers
         )
         if "errors" in response:
             raise ValueError(response["errors"])
 
         return response["data"]["project"]
 
-    def _set_auth(self) -> Any:
+    @cached_property
+    def _headers(self) -> Any:
         """Set authentication headers for Gitlab API requests."""
         try:
             if not self.token:
@@ -280,7 +281,7 @@ class GitlabExtractor(Extractor):
         author = send_rest_query(
             self.rest_endpoint,
             f"/users?username={username}",
-            self._set_auth(),
+            self._headers,
         )
         if isinstance(author, list):
             author = author[0]
