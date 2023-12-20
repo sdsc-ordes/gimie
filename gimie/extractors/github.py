@@ -111,7 +111,7 @@ class GithubExtractor(Extractor):
             file = RemoteResource(
                 path=item["name"],
                 url=f'{repo_url}/raw/{defaultbranchref}/{item["path"]}',
-                headers=self._set_auth(),
+                headers=self._headers,
             )
             file_list.append(file)
         return file_list
@@ -233,9 +233,7 @@ class GithubExtractor(Extractor):
             }
         }
         """
-        response = send_graphql_query(
-            GH_API, repo_query, data, self._set_auth()
-        )
+        response = send_graphql_query(GH_API, repo_query, data, self._headers)
 
         if "errors" in response:
             raise ValueError(response["errors"])
@@ -246,14 +244,14 @@ class GithubExtractor(Extractor):
         """Queries the GitHub GraphQL API to extract contributors through the commit list.
         NOTE: This is a workaround for the lack of a contributors field in the GraphQL API.
         """
-        headers = self._set_auth()
         contributors = []
-        resp = query_contributors(self.url, headers)
+        resp = query_contributors(self.url, self._headers)
         for user in resp:
             contributors.append(self._get_user(user))
         return list(contributors)
 
-    def _set_auth(self) -> Any:
+    @cached_property
+    def _headers(self) -> Any:
         """Set authentication headers for GitHub API requests."""
         try:
             if not self.token:
