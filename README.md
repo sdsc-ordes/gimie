@@ -77,25 +77,12 @@ from gimie.project import Project
 proj = Project("https://github.com/numpy/numpy)
 
 # To retrieve the rdflib.Graph object
-g = proj.to_graph()
+g = proj.extract()
 
 # To retrieve the serialized graph
-proj.serialize(format='ttl')
+g_in_ttl = g.serialize(format='ttl')
+print(g_in_ttl)
 ```
-
-Or to extract only from a specific source:
-```python
-from gimie.sources.github import GithubExtractor
-gh = GithubExtractor('https://github.com/sdsc-ordes/gimie')
-gh.extract()
-
-# To retrieve the rdflib.Graph object
-g = gh.to_graph()
-
-# To retrieve the serialized graph
-gh.serialize(format='ttl')
-```
-[For a GitLab project, replace `gimie.sources.github` by `gimie.sources.gitlab`, `GithubExtractor` by `GitlabExtractor`, as well as the URL to the GitLab project.]
 
 ## Outputs
 
