@@ -18,7 +18,7 @@ A specific extractor can also be used, for example to use with GitLab projects:
 .. code-block:: python
 
    from gimie.extractors import GitlabExtractor
-   url = "https://gitlab.com/inkscape/inkscape"
+   url = "https://gitlab.com/data-custodian/custodian"
    extractor = GitlabExtractor(url)
    repo = extractor.extract()
 
@@ -32,10 +32,10 @@ The `Repository` object can be serialized to RDF or converted to an rdflib graph
    type(repo)
    # gimie.models.Repository
    repo.name
-   # 'inkscape/inkscape'
+   # 'data-custodian/custodian'
    repo.prog_langs
-   # ['C++', 'C', 'CMake', 'HTML', 'Python']
-   repo.serialize(format='json-ld', destination='inkscape.json')
+   # ['Go', 'Dockerfile', 'Smarty', 'Shell', 'Makefile']
+   repo.serialize(format='json-ld', destination='custodian.json')
    g = repo.to_graph()
    type(g)
    # rdflib.graph.Graph
@@ -49,4 +49,27 @@ Extractors also have a `list_files()` method which provides handles to a streama
    readme_handle.path
    # PosixPath('README.md')
    readme_handle.open().readlines()[:2]
-   # [b'Inkscape. Draw Freely.\n', b'======================\n']
+   # [b'# The Swiss Data Custodian\n', b'\n']
+
+
+Parsers can also be run manually on the files contents:
+
+
+.. code-block:: python
+
+   from gimie.parsers import LicenseParser
+   parser = LicenseParser()
+   license_handle = handles[8]
+   license_contents = license_handle.open().read()
+   parser.parse(license_contents)
+   # {(rdflib.term.URIRef('http://schema.org/license'), rdflib.term.URIRef('https://spdx.org/licenses/AGPL-3.0-only.html'))}
+
+
+There is also a helper function to run parsers on a list of files,
+selecting the correct parser based on file names:
+
+.. code-block:: python
+
+   from gimie.parsers import parse_files
+   parse_files(handles)
+   # {(rdflib.term.URIRef('http://schema.org/license'), rdflib.term.URIRef('https://spdx.org/licenses/AGPL-3.0-only.html'))}
