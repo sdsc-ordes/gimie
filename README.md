@@ -83,7 +83,7 @@ g = proj.extract()
 g_in_ttl = g.serialize(format='ttl')
 print(g_in_ttl)
 ```
-
+For more advanced use see [the documentation](https://sdsc-ordes.github.io/gimie/intro/usage_python.html).
 ## Outputs
 
 The default output is [Turtle](https://www.w3.org/TR/turtle/), a textual syntax for [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework) data model. We follow the schema recommended by [codemeta](https://codemeta.github.io/).
