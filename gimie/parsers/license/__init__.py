@@ -66,7 +66,7 @@ def match_license(data: bytes, min_similarity: float = 0.9) -> Optional[str]:
     """
     # Compute tfidf vector for input license
     vectorizer = load_tfidf_vectorizer()
-    input_vec = vectorizer.transform([str(data)])
+    input_vec = vectorizer.transform([data.decode()])
 
     # Load ids and tfidf vectors for spdx licenses
     spdx_licenses = load_spdx_ids()
