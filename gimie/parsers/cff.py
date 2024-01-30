@@ -53,15 +53,20 @@ def get_cff_doi(data: bytes) -> Optional[str]:
 
     Examples
     --------
-    >>> get_cff_doi(bytes("doi: 10.5281/zenodo.1234"))
-    "10.5281/zenodo.1234"
-    >>> get_cff_doi(bytes("doi:   10.5281/zenodo.1234"))
-    "10.5281/zenodo.1234"
-    >>> get_cff_doi(bytes("abc: def"))
+    >>> get_cff_doi(bytes("doi:   10.5281/zenodo.1234", encoding="utf8"))
+    '10.5281/zenodo.1234'
+    >>> get_cff_doi(bytes("abc: def", encoding="utf8"))
 
     """
 
-    matches = re.search(r"^doi: *(.*)$", str(data), flags=re.MULTILINE)
-    doi = matches.groups()[0]
+    matches = re.search(
+        r"^doi: *(.*)$",
+        data.decode(),
+        flags=re.IGNORECASE | re.MULTILINE,
+    )
+    try:
+        doi = matches.groups()[0]
+    except AttributeError:
+        doi = None
 
     return doi
