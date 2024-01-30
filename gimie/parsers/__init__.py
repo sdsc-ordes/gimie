@@ -22,6 +22,7 @@ from gimie.graph import Property
 from gimie.io import Resource
 from gimie.parsers.abstract import Parser
 from gimie.parsers.license import LicenseParser, is_license_filename
+from gimie.parsers.cff import CffParser
 
 
 class ParserInfo(NamedTuple):
@@ -31,6 +32,7 @@ class ParserInfo(NamedTuple):
 
 PARSERS = {
     "license": ParserInfo(default=True, type=LicenseParser),
+    "cff": ParserInfo(default=True, type=CffParser),
 }
 
 
@@ -69,9 +71,11 @@ def select_parser(
     parsers:
         A set of parser names. If None, use the default collection.
     """
-    # Only parse licenses in the root directory
+    # Only parse licenses and citations in the root directory
     if is_license_filename(path.name) and len(path.parts) == 1:
         name = "license"
+    elif path.name == "CITATION.cff" and len(path.parts) == 1:
+        name = "cff"
     else:
         return None
 
