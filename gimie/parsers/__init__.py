@@ -71,10 +71,10 @@ def select_parser(
     parsers:
         A set of parser names. If None, use the default collection.
     """
-    # Only parse licenses in the root directory
+    # Only parse licenses and citations in the root directory
     if is_license_filename(path.name) and len(path.parts) == 1:
         name = "license"
-    elif path.name == "CITATION.cff":
+    elif path.name == "CITATION.cff" and len(path.parts) == 1:
         name = "cff"
     else:
         return None
