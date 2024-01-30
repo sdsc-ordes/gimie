@@ -51,6 +51,14 @@ def get_cff_doi(data: bytes) -> Optional[str]:
     data:
         The cff file body as bytes.
 
+    Examples
+    --------
+    >>> get_cff_doi(bytes("doi: 10.5281/zenodo.1234"))
+    "10.5281/zenodo.1234"
+    >>> get_cff_doi(bytes("doi:   10.5281/zenodo.1234"))
+    "10.5281/zenodo.1234"
+    >>> get_cff_doi(bytes("abc: def"))
+
     """
 
     matches = re.search(r"^doi: *(.*)$", str(data), flags=re.MULTILINE)
