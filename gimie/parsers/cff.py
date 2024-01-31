@@ -64,7 +64,7 @@ def get_cff_doi(data: bytes) -> Optional[str]:
     cff = yaml.safe_load(data.decode())
 
     try:
-        doi = cff['doi']
+        doi = cff["doi"]
     except KeyError:
         return None
 
