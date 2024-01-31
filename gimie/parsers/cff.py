@@ -17,6 +17,8 @@
 from io import BytesIO
 import re
 from typing import List, Optional, Set
+from urllib.parse import urlparse
+import yaml
 
 from rdflib.term import URIRef
 
@@ -59,14 +61,14 @@ def get_cff_doi(data: bytes) -> Optional[str]:
 
     """
 
-    matches = re.search(
-        r"^doi: *(.*)$",
-        data.decode(),
-        flags=re.IGNORECASE | re.MULTILINE,
-    )
+    cff = yaml.safe_load(data.decode())
+
     try:
-        doi = matches.groups()[0]
-    except AttributeError:
-        doi = None
+        doi = cff['doi']
+    except KeyError:
+        return None
+
+    if not urlparse(doi).scheme:
+        doi = "https://" + doi
 
     return doi
