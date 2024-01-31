@@ -32,7 +32,7 @@ Gimie is also available as a docker container hosted on the [Github container re
 docker pull ghcr.io/sdsc-ordes/gimie:latest
 
 # The access token can be provided as an environment variable
-docker run -e ACCESS_TOKEN=$ACCESS_TOKEN ghcr.io/sdsc-ordes/gimie:latest gimie data <repo>
+docker run -e GITHUB_TOKEN=$GITHUB_TOKEN ghcr.io/sdsc-ordes/gimie:latest gimie data <repo>
 ```
 
 ## STEP 2 : Set your credentials
