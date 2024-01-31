@@ -56,7 +56,7 @@ def get_cff_doi(data: bytes) -> Optional[str]:
     Examples
     --------
     >>> get_cff_doi(bytes("doi:   10.5281/zenodo.1234", encoding="utf8"))
-    '10.5281/zenodo.1234'
+    'https://10.5281/zenodo.1234'
     >>> get_cff_doi(bytes("abc: def", encoding="utf8"))
 
     """
