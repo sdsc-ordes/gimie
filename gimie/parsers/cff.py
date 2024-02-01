@@ -62,12 +62,12 @@ def doi_to_url(doi: str) -> str:
 
     Examples
     --------
-    >>> doi_to_url("10.xxxx/example.abcd")
-    'https://doi.org/10.xxxx/example.abcd'
-    >>> doi_to_url("doi.org/10.xxxx/example.abcd")
-    'https://doi.org/10.xxxx/example.abcd'
-    >>> doi_to_url("https://doi.org/10.xxxx/example.abcd")
-    'https://doi.org/10.xxxx/example.abcd'
+    >>> doi_to_url("10.0000/example.abcd")
+    'https://doi.org/10.0000/example.abcd'
+    >>> doi_to_url("doi.org/10.0000/example.abcd")
+    'https://doi.org/10.0000/example.abcd'
+    >>> doi_to_url("https://doi.org/10.0000/example.abcd")
+    'https://doi.org/10.0000/example.abcd'
     """
 
     # regex from:
