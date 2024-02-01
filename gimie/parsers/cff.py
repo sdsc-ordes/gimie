@@ -27,7 +27,7 @@ from gimie.parsers.abstract import Parser, Property
 
 
 class CffParser(Parser):
-    """Parse cff file to extract the doi into schema:citation <doi>."""
+    """Parse DOI from CITATION.cff into schema:citation <doi>."""
 
     def __init__(self):
         super().__init__()
@@ -45,18 +45,58 @@ class CffParser(Parser):
         return props
 
 
+def doi_to_url(doi: str) -> str:
+    """Formats a doi to an https URL to doi.org.
+
+    Parameters
+    ----------
+    doi
+        doi where the scheme (e.g. https://) and
+        hostname (e.g. doi.org) may be missing.
+
+    Returns
+    -------
+    str
+        doi formatted as a valid url. Base url
+        is set to https://doi.org when missing.
+
+    Examples
+    --------
+    >>> doi_to_url("10.xxxx/example.abcd")
+    'https://doi.org/10.xxxx/example.abcd'
+    >>> doi_to_url("doi.org/10.xxxx/example.abcd")
+    'https://doi.org/10.xxxx/example.abcd'
+    >>> doi_to_url("https://doi.org/10.xxxx/example.abcd")
+    'https://doi.org/10.xxxx/example.abcd'
+    """
+    prefix = ""
+
+    if not doi.startswith("http"):
+        prefix += "https://"
+
+    if not "doi.org/" in doi:
+        prefix += "doi.org/"
+
+    return prefix + doi
+
+
 def get_cff_doi(data: bytes) -> Optional[str]:
     """Given a CFF file, returns the DOI, if any.
 
     Parameters
     ----------
-    data:
+    data
         The cff file body as bytes.
+
+    Returns
+    -------
+    str, optional
+        doi formatted as a valid url
 
     Examples
     --------
     >>> get_cff_doi(bytes("doi:   10.5281/zenodo.1234", encoding="utf8"))
-    'https://10.5281/zenodo.1234'
+    'https://doi.org/10.5281/zenodo.1234'
     >>> get_cff_doi(bytes("abc: def", encoding="utf8"))
 
     """
@@ -68,7 +108,4 @@ def get_cff_doi(data: bytes) -> Optional[str]:
     except KeyError:
         return None
 
-    if not urlparse(doi).scheme:
-        doi = "https://" + doi
-
-    return doi
+    return doi_to_url(doi)
