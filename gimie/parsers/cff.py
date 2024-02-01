@@ -17,7 +17,6 @@
 from io import BytesIO
 import re
 from typing import List, Optional, Set
-from urllib.parse import urlparse
 import yaml
 
 from rdflib.term import URIRef
