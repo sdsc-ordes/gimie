@@ -69,7 +69,6 @@ def doi_to_url(doi: str) -> str:
     >>> doi_to_url("https://doi.org/10.xxxx/example.abcd")
     'https://doi.org/10.xxxx/example.abcd'
     """
-    prefix = ""
 
     # regex from:
     # https://www.crossref.org/blog/dois-and-matching-regular-expressions
