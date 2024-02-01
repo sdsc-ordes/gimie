@@ -71,13 +71,18 @@ def doi_to_url(doi: str) -> str:
     """
     prefix = ""
 
-    if not doi.startswith("http"):
-        prefix += "https://"
+    # regex from:
+    # https://www.crossref.org/blog/dois-and-matching-regular-expressions
+    doi_match = re.search(
+        r"10.\d{4,9}/[-._;()/:A-Z0-9]+$", doi, flags=re.IGNORECASE
+    )
 
-    if not "doi.org/" in doi:
-        prefix += "doi.org/"
+    if doi_match is None:
+        raise ValueError(f"Not a valid DOI: {doi}")
 
-    return prefix + doi
+    short_doi = doi_match.group()
+
+    return f"https://doi.org/{short_doi}"
 
 
 def get_cff_doi(data: bytes) -> Optional[str]:
@@ -108,8 +113,13 @@ def get_cff_doi(data: bytes) -> Optional[str]:
         return None
 
     try:
-        doi = cff["doi"]
+        doi_url = doi_to_url(cff["doi"])
+    # No doi in cff file
     except (KeyError, TypeError):
-        return None
+        doi_url = None
+    # doi is malformed
+    except ValueError as err:
+        logger.warn(err)
+        doi_url = None
 
-    return doi_to_url(doi)
+    return doi_url
