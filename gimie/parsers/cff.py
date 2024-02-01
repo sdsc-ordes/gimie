@@ -21,6 +21,7 @@ import yaml
 
 from rdflib.term import URIRef
 
+from gimie import logger
 from gimie.graph.namespaces import SDO
 from gimie.parsers.abstract import Parser, Property
 
@@ -100,11 +101,15 @@ def get_cff_doi(data: bytes) -> Optional[str]:
 
     """
 
-    cff = yaml.safe_load(data.decode())
+    try:
+        cff = yaml.safe_load(data.decode())
+    except yaml.scanner.ScannerError:
+        logger.warn("cannot read CITATION.cff, skipped.")
+        return None
 
     try:
         doi = cff["doi"]
-    except KeyError:
+    except (KeyError, TypeError):
         return None
 
     return doi_to_url(doi)
