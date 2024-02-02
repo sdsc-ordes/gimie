@@ -115,6 +115,7 @@ def get_cff_doi(data: bytes) -> Optional[str]:
         doi_url = doi_to_url(cff["doi"])
     # No doi in cff file
     except (KeyError, TypeError):
+        logger.warn("CITATION.cff does not contain a 'doi' key.")
         doi_url = None
     # doi is malformed
     except ValueError as err:
