@@ -22,4 +22,8 @@ import importlib.metadata as importlib_metadata
 __version__ = importlib_metadata.version(__name__)
 
 logger = logging.getLogger()
-logger.setLevel(logging.WARNING)
+stdout_formatter = logging.Formatter("%(levelname)s :: %(message)s")
+stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.WARNING)
+stream_handler.setFormatter(stdout_formatter)
+logger.addHandler(stream_handler)
