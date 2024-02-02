@@ -108,18 +108,18 @@ def get_cff_doi(data: bytes) -> Optional[str]:
     try:
         cff = yaml.safe_load(data.decode())
     except yaml.scanner.ScannerError:
-        logger.warn("cannot read CITATION.cff, skipped.")
+        logger.warning("cannot read CITATION.cff, skipped.")
         return None
 
     try:
         doi_url = doi_to_url(cff["doi"])
     # No doi in cff file
     except (KeyError, TypeError):
-        logger.warn("CITATION.cff does not contain a 'doi' key.")
+        logger.warning("CITATION.cff does not contain a 'doi' key.")
         doi_url = None
     # doi is malformed
     except ValueError as err:
-        logger.warn(err)
+        logger.warning(err)
         doi_url = None
 
     return doi_url
