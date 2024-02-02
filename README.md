@@ -12,7 +12,7 @@ Scientific code repositories contain valuable metadata which can be used to enri
 
 Using Gimie: easy peasy, it's a 3 step process.
 
-## STEP 1: Installation
+## 1: Installation
 
 To install the stable version on PyPI:
 
@@ -32,10 +32,10 @@ Gimie is also available as a docker container hosted on the [Github container re
 docker pull ghcr.io/sdsc-ordes/gimie:latest
 
 # The access token can be provided as an environment variable
-docker run -e ACCESS_TOKEN=$ACCESS_TOKEN ghcr.io/sdsc-ordes/gimie:latest gimie data <repo>
+docker run -e GITHUB_TOKEN=$GITHUB_TOKEN ghcr.io/sdsc-ordes/gimie:latest gimie data <repo>
 ```
 
-## STEP 2 : Set your credentials
+## 2 : Set your credentials
 
 In order to access the github api, you need to provide a github token with the `read:org` scope.
 
@@ -61,7 +61,7 @@ and/or your Gitlab token:
 export GITLAB_TOKEN=
 ```
 
-## STEP 3: GIMIE info ! Run Gimie
+## 3: GIMIE info ! Run Gimie
 
 ### As a command line tool
 
