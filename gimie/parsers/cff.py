@@ -123,3 +123,24 @@ def get_cff_doi(data: bytes) -> Optional[str]:
         doi_url = None
 
     return doi_url
+
+get_cff_authors(data: bytes) -> Optional(list(dict)):
+    """Given a CFF file, returns a list of dictionaries containing orcid, first and last names of authors, if any.
+
+    Parameters
+    ----------
+    data
+        The cff file body as bytes.
+
+    Returns
+    -------
+    list(dict), optional
+        orcid, first and last names strings of authors 
+
+    Examples
+    --------
+    >>> get_cff_doi(bytes(CFF_path, encoding="utf8"))
+    [{orcid:'https://orcid.org/1234-5678-9101-1121', family-names: 'Druskat', given-names: 'Stephan'},{orcid:'https://orcid.org/1234-5678-9101-2354', family-names: 'English', given-names: 'Johnny'}
+    orcid: }]
+
+    """
