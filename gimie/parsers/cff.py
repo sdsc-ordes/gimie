@@ -124,6 +124,7 @@ def get_cff_doi(data: bytes) -> Optional[str]:
 
     return doi_url
 
+
 def get_cff_authors(data: bytes) -> Optional[List[Dict[str, str]]]:
     """Given a CFF file, returns a list of dictionaries containing orcid, first and last names of authors, if any.
 
@@ -135,7 +136,7 @@ def get_cff_authors(data: bytes) -> Optional[List[Dict[str, str]]]:
     Returns
     -------
     list(dict), optional
-        orcid, first and last names strings of authors 
+        orcid, first and last names strings of authors
 
     Examples
     --------
@@ -157,7 +158,7 @@ def get_cff_authors(data: bytes) -> Optional[List[Dict[str, str]]]:
             author_dict = {
                 "family-names": author.get("family-names", ""),
                 "given-names": author.get("given-names", ""),
-                "orcid": author.get("orcid", "")
+                "orcid": author.get("orcid", ""),
             }
             authors.append(author_dict)
     except KeyError:
