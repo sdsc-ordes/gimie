@@ -83,6 +83,10 @@ def doi_to_url(doi: str) -> str:
 
     return f"https://doi.org/{short_doi}"
 
+def author_formatting():
+    #to implement
+    pass
+
 
 def get_cff_doi(data: bytes) -> Optional[str]:
     """Given a CFF file, returns the DOI, if any.
@@ -124,7 +128,7 @@ def get_cff_doi(data: bytes) -> Optional[str]:
 
     return doi_url
 
-get_cff_authors(data: bytes) -> Optional(list(dict)):
+def get_cff_authors(data: bytes) -> Optional(list(dict)):
     """Given a CFF file, returns a list of dictionaries containing orcid, first and last names of authors, if any.
 
     Parameters
@@ -144,3 +148,18 @@ get_cff_authors(data: bytes) -> Optional(list(dict)):
     orcid: }]
 
     """
+
+    try:
+        cff = yaml.safe_load(data.decode())
+    except yaml.scanner.ScannerError:
+        logger.warning("cannot read CITATION.cff, skipped.")
+        return None
+    try:
+        author_url = author_formatting(cff["authors"])
+    # No doi in cff file
+    except (KeyError, TypeError):
+        logger.warning("CITATION.cff does not contain a 'authors' key.")
+        authors = None
+    # doi is malformed
+
+    return None
