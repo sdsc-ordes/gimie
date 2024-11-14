@@ -124,7 +124,7 @@ def get_cff_doi(data: bytes) -> Optional[str]:
 
     return doi_url
 
-def get_cff_authors(data: bytes) Optional[List[Dict[str, str]]]:
+def get_cff_authors(data: bytes) -> Optional[List[Dict[str, str]]]:
     """Given a CFF file, returns a list of dictionaries containing orcid, first and last names of authors, if any.
 
     Parameters
