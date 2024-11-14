@@ -27,7 +27,7 @@ from gimie.parsers.abstract import Parser, Property
 
 
 class CffParser(Parser):
-    """Parse DOI from CITATION.cff into schema:citation <doi>."""
+    """Parse DOI and authorsfrom CITATION.cff into schema:citation <doi>. and schema:"""
 
     def __init__(self):
         super().__init__()
@@ -83,10 +83,6 @@ def doi_to_url(doi: str) -> str:
 
     return f"https://doi.org/{short_doi}"
 
-def author_formatting():
-    #to implement
-    pass
-
 
 def get_cff_doi(data: bytes) -> Optional[str]:
     """Given a CFF file, returns the DOI, if any.
@@ -128,7 +124,7 @@ def get_cff_doi(data: bytes) -> Optional[str]:
 
     return doi_url
 
-def get_cff_authors(data: bytes) -> Optional(list(dict)):
+def get_cff_authors(data: bytes) Optional[List[Dict[str, str]]]:
     """Given a CFF file, returns a list of dictionaries containing orcid, first and last names of authors, if any.
 
     Parameters
@@ -154,12 +150,18 @@ def get_cff_authors(data: bytes) -> Optional(list(dict)):
     except yaml.scanner.ScannerError:
         logger.warning("cannot read CITATION.cff, skipped.")
         return None
-    try:
-        author_url = author_formatting(cff["authors"])
-    # No doi in cff file
-    except (KeyError, TypeError):
-        logger.warning("CITATION.cff does not contain a 'authors' key.")
-        authors = None
-    # doi is malformed
 
-    return None
+    authors = []
+    try:
+        for author in cff["authors"]:
+            author_dict = {
+                "family-names": author.get("family-names", ""),
+                "given-names": author.get("given-names", ""),
+                "orcid": author.get("orcid", "")
+            }
+            authors.append(author_dict)
+    except KeyError:
+        logger.warning("CITATION.cff does not contain an 'authors' key.")
+        return None
+
+    return authors if authors else None
