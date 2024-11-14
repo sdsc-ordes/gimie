@@ -1,0 +1,10 @@
+gimie.parsers.license package
+=============================
+
+Module contents
+---------------
+
+.. automodule:: gimie.parsers.license
+   :members:
+   :undoc-members:
+   :show-inheritance:
