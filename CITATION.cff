@@ -1,0 +1,44 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: gimie
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Cyril
+    family-names: Matthey-Doret
+    affiliation: Swiss Data Science Center
+    orcid: 'https://orcid.org/0000-0002-1126-1535'
+  - given-names: Sabine
+    family-names: Maennel
+    orcid: 'https://orcid.org/0009-0001-3022-8239'
+    affiliation: Swiss Data Science Center
+  - given-names: Robin
+    family-names: Franken
+    orcid: 'https://orcid.org/0009-0008-0143-9118'
+    affiliation: Swiss Data Science Center
+  - given-names: Martin
+    family-names: Fontanet
+    orcid: 'https://orcid.org/0000-0002-6441-8540'
+    affiliation: Swiss Data Science Center
+  - given-names: Laure
+    family-names: Vancauwenberghe
+    affiliation: Swiss Data Science Center
+  - given-names: Stefan
+    family-names: Milosavljevic
+    email: supermegaiperste@hotmail.com
+    affiliation: Swiss Data Science Center
+repository-code: 'https://github.com/sdsc-ordes/gimie'
+abstract: Extract linked metadata from repositories
+keywords:
+  - git
+  - cli
+  - library
+  - linked-open-data
+  - metadata-extraction
+  - fair-data
+  - scientific-software
+license: Apache-2.0
