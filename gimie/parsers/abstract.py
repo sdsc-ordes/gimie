@@ -39,7 +39,7 @@ class Parser(ABC):
 
     def parse_all(self, docs: Iterable[bytes]) -> Graph:
         """Parse multiple sources and return the union of
-        triples tuples."""
+        triples."""
 
         properties = map(self.parse, docs)
         return reduce(lambda p1, p2: p1 | p2, properties)

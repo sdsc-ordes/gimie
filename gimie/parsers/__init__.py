@@ -92,11 +92,13 @@ def parse_files(
     parsers: Optional[Set[str]] = None,
 ) -> Graph:
     """For each input file, select appropriate parser among a collection and
-    parse its contents. Return the union of all parsed properties. If no parser
-    is found for a given file, skip it.
+    parse its contents. Return the union of all parsed properties in the form of triples.
+    If no parser is found for a given file, skip it.
 
     Parameters
     ----------
+    subject:
+        The subject URI of the repository.
     files:
         A collection of file-like objects.
     parsers:

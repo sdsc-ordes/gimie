@@ -38,8 +38,8 @@ class LicenseParser(Parser):
 
     def parse(self, data: bytes) -> Graph:
         """Extracts an spdx URL from a license file and returns a
-        set with a single tuple <schema:license> <spdx_url>.
-        If no matching URL is found, an empty set is returned.
+        graph with a single triple <url> <schema:license> <spdx_url>.
+        If no matching URL is found, an empty graph is returned.
         """
         new_graph = Graph()
         license_url = match_license(data)

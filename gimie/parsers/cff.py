@@ -33,9 +33,12 @@ class CffParser(Parser):
         super().__init__(subject)
 
     def parse(self, data: bytes) -> Graph:
-        """Extracts a DOI link from a CFF file and returns a
-        set with a single tuple <schema:citation> <doi>.
-        If no DOI is found, an empty set is returned.
+        """Extracts a DOI link and list of authors from a CFF file and returns a
+        graph with a single triple <subject> <schema:citation> <doi>
+        and a number of author objects with <schema:name> and <md4i:orcid> values.
+        If no DOI is found, it will not be included in the graph.
+        If no authors are found, it will not be included in the graph.
+        If neither authors nor DOI are found, an empty graph is returned.
         """
         rdf_graph = Graph()
         doi = get_cff_doi(data)
@@ -163,7 +166,7 @@ def get_cff_authors(data: bytes) -> Optional[List[dict[str, str]]]:
     Returns
     -------
     list(dict), optional
-        orcid, first and last names strings of authors
+        orcid, names strings of authors
 
     Examples
     --------
@@ -193,6 +196,3 @@ def get_cff_authors(data: bytes) -> Optional[List[dict[str, str]]]:
         return None
 
     return authors if authors else None
-
-
-# todo turn family-name + given name into schema:name and togehter with orcid idea these make up schema:author
