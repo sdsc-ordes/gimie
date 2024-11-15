@@ -18,31 +18,58 @@ from io import BytesIO
 import re
 from typing import List, Optional, Set
 import yaml
-
 from rdflib.term import URIRef
-
+from rdflib import Graph, BNode, URIRef, Literal
+from rdflib.namespace import RDF
 from gimie import logger
-from gimie.graph.namespaces import SDO
+from gimie.graph.namespaces import SDO, MD4I
 from gimie.parsers.abstract import Parser, Property
 
 
 class CffParser(Parser):
     """Parse DOI and authorsfrom CITATION.cff into schema:citation <doi>. and schema:"""
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, subject: str):
+        super().__init__(subject)
 
-    def parse(self, data: bytes) -> Set[Property]:
+    def parse(self, data: bytes) -> Graph:
         """Extracts a DOI link from a CFF file and returns a
         set with a single tuple <schema:citation> <doi>.
         If no DOI is found, an empty set is returned.
         """
-        props = set()
+        rdf_graph = Graph()
         doi = get_cff_doi(data)
+        authors = get_cff_authors(data)
 
         if doi:
-            props.add((SDO.citation, URIRef(doi)))
-        return props
+            rdf_graph.add((self.subject, SDO.citation, URIRef(doi)))
+        if not authors:
+            return rdf_graph
+        for author in authors:
+            if author["orcid"]:
+                rdf_graph.add(
+                    (self.subject, SDO.author, URIRef(author["orcid"]))
+                )
+                rdf_graph.add(
+                    (
+                        URIRef(author["orcid"]),
+                        SDO.name,
+                        Literal(
+                            author["given-names"]
+                            + " "
+                            + author["family-names"]
+                        ),
+                    )
+                )
+                rdf_graph.add(
+                    (
+                        URIRef(author["orcid"]),
+                        MD4I.orcidId,
+                        Literal(author["orcid"]),
+                    )
+                )
+                rdf_graph.add((URIRef(author["orcid"]), RDF.type, SDO.Person))
+        return rdf_graph
 
 
 def doi_to_url(doi: str) -> str:
@@ -125,7 +152,7 @@ def get_cff_doi(data: bytes) -> Optional[str]:
     return doi_url
 
 
-def get_cff_authors(data: bytes) -> Optional[List[Dict[str, str]]]:
+def get_cff_authors(data: bytes) -> Optional[List[dict[str, str]]]:
     """Given a CFF file, returns a list of dictionaries containing orcid, first and last names of authors, if any.
 
     Parameters
@@ -166,3 +193,6 @@ def get_cff_authors(data: bytes) -> Optional[List[Dict[str, str]]]:
         return None
 
     return authors if authors else None
+
+
+# todo turn family-name + given name into schema:name and togehter with orcid idea these make up schema:author

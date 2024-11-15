@@ -89,9 +89,8 @@ class Project:
         repo_graph = repo.to_graph()
 
         files = self.extractor.list_files()
-        properties = parse_files(files, self.parsers)
+        parsed_graph = parse_files(self.url, files, self.parsers)
 
-        parsed_graph = properties_to_graph(URIRef(self.url), properties)
         repo_graph += parsed_graph
         return repo_graph
 
