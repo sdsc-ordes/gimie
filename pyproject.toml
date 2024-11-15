@@ -24,7 +24,7 @@ classifiers = [
 # Dependency management
 
 [tool.poetry.dependencies]
-python = ">=3.9,<=3.13"
+python = ">=3.9"
 gitpython = ">=3.1.35"
 PyDriller = "^2.5"
 pyshacl = "^0.20.0"
