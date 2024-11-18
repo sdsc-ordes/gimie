@@ -175,12 +175,6 @@ def get_cff_authors(data: bytes) -> Optional[List[dict[str, str]]]:
     list(dict), optional
         orcid, names strings of authors
 
-    Examples
-    --------
-    >>> get_cff_doi(bytes(CFF_path, encoding="utf8"))
-    [{orcid:'https://orcid.org/1234-5678-9101-1121', family-names: 'Druskat', given-names: 'Stephan', affiliation: 'EPFL},{orcid:'https://orcid.org/1234-5678-9101-2354', family-names: 'English', given-names: 'Johnny'}
-    orcid: }]
-
     """
 
     try:
