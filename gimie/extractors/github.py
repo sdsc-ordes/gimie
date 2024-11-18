@@ -256,15 +256,21 @@ class GithubExtractor(Extractor):
         try:
             if not self.token:
                 self.token = os.environ.get("GITHUB_TOKEN")
-                assert self.token
+                if not self.token:
+                    raise ValueError(
+                        "GitHub token not found. Please set the GITHUB_TOKEN environment variable "
+                        "with your GitHub personal access token."
+                    )
             headers = {"Authorization": f"token {self.token}"}
 
             login = requests.get(f"{GH_API}/user", headers=headers)
-            assert login.json().get("login")
-        except AssertionError:
-            return {}
-        else:
+            if not login.ok or not login.json().get("login"):
+                raise ValueError(
+                    "GitHub authentication failed. Please check that your GITHUB_TOKEN is valid."
+                )
             return headers
+        except requests.exceptions.RequestException as e:
+            raise ConnectionError(f"Failed to connect to GitHub API: {str(e)}")
 
     def _get_keywords(self, *nodes: Dict[str, Any]) -> List[str]:
         """Extract names from GraphQL topic nodes."""
