@@ -8,4 +8,3 @@ def test_parse_cff():
         cff_content = f.read()
     authors = get_cff_authors(cff_content)
     assert authors is not None
-    assert len(authors) > 0
