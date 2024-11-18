@@ -15,8 +15,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Test the gimie output"""
-from pyshacl import validate
-import pytest
+# from pyshacl import validate
+# import pytest
 from rdflib import Graph
 
 from gimie.project import Project
@@ -35,22 +35,22 @@ def test_validate_output_is_linked_data():
     assert g is not None
 
 
-@pytest.mark.skip("not yet implemented")
-def test_output_conforms_shapes():
-    """Does graph conform SHACL shapes graph?"""
-    with open("shaclgraph.ttl") as shapes:
-        shapes_graph = Graph().parse(shapes.read())
-    valid_graph, _, _ = validate(
-        data_graph=Graph().parse(data=OUT_TTL),
-        shacl_graph=shapes_graph,
-        ont_graph=None,
-        inference="rdfs",
-        abort_on_first=False,
-        allow_infos=False,
-        allow_warnings=False,
-        meta_shacl=False,
-        advanced=False,
-        js=False,
-        debug=False,
-    )
-    assert valid_graph
+# @pytest.mark.skip("not yet implemented")
+# def test_output_conforms_shapes():
+#     """Does graph conform SHACL shapes graph?"""
+#     with open("shaclgraph.ttl") as shapes:
+#         shapes_graph = Graph().parse(shapes.read())
+#     valid_graph, _, _ = validate(
+#         data_graph=Graph().parse(data=OUT_TTL),
+#         shacl_graph=shapes_graph,
+#         ont_graph=None,
+#         inference="rdfs",
+#         abort_on_first=False,
+#         allow_infos=False,
+#         allow_warnings=False,
+#         meta_shacl=False,
+#         advanced=False,
+#         js=False,
+#         debug=False,
+#     )
+#     assert valid_graph

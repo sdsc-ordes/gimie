@@ -2,6 +2,8 @@ import pytest
 
 from gimie.io import LocalResource
 from gimie.parsers import get_parser, list_parsers, parse_files
+from rdflib import URIRef
+from rdflib import Graph, URIRef, Literal
 
 
 def test_get_parser():
@@ -18,11 +20,13 @@ def test_get_bad_parser():
 
 def test_parse_license():
     license_file = LocalResource("LICENSE")
-    properties = parse_files([license_file])
-    assert "license" in next(iter(properties))[0]
+    graph = parse_files(
+        subject=URIRef("https://exmaple.org/"), files=[license_file]
+    )
+    assert "https://spdx.org" in graph.serialize(format="ttl")
 
 
 def test_parse_nothing():
     folder = LocalResource("tests")
-    properties = parse_files([folder])
-    assert len(properties) == 0
+    graph = parse_files(subject=URIRef("https://exmaple.org/"), files=[folder])
+    assert len(graph) == 0

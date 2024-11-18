@@ -1172,20 +1172,20 @@ virtualenv = ">=20.10.0"
 
 [[package]]
 name = "prettytable"
-version = "2.5.0"
+version = "3.12.0"
 description = "A simple Python library for easily displaying tabular data in a visually appealing ASCII table format"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.9"
 files = [
-    {file = "prettytable-2.5.0-py3-none-any.whl", hash = "sha256:1411c65d21dca9eaa505ba1d041bed75a6d629ae22f5109a923f4e719cfecba4"},
-    {file = "prettytable-2.5.0.tar.gz", hash = "sha256:f7da57ba63d55116d65e5acb147bfdfa60dceccabf0d607d6817ee2888a05f2c"},
+    {file = "prettytable-3.12.0-py3-none-any.whl", hash = "sha256:77ca0ad1c435b6e363d7e8623d7cc4fcf2cf15513bf77a1c1b2e814930ac57cc"},
+    {file = "prettytable-3.12.0.tar.gz", hash = "sha256:f04b3e1ba35747ac86e96ec33e3bb9748ce08e254dc2a1c6253945901beec804"},
 ]
 
 [package.dependencies]
 wcwidth = "*"
 
 [package.extras]
-tests = ["pytest", "pytest-cov", "pytest-lazy-fixture"]
+tests = ["pytest", "pytest-cov", "pytest-lazy-fixtures"]
 
 [[package]]
 name = "pydantic"
@@ -1202,8 +1202,8 @@ files = [
 annotated-types = ">=0.6.0"
 pydantic-core = "2.23.4"
 typing-extensions = [
-    {version = ">=4.12.2", markers = "python_version >= \"3.13\""},
     {version = ">=4.6.1", markers = "python_version < \"3.13\""},
+    {version = ">=4.12.2", markers = "python_version >= \"3.13\""},
 ]
 
 [package.extras]
@@ -1380,28 +1380,32 @@ diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
 name = "pyshacl"
-version = "0.20.0"
+version = "0.26.0"
 description = "Python SHACL Validator"
 optional = false
-python-versions = ">=3.7.0,<4.0.0"
+python-versions = "<4.0.0,>=3.8.1"
 files = [
-    {file = "pyshacl-0.20.0-py3-none-any.whl", hash = "sha256:5de57ed490748f621301f69e47224fa5bd84b0fb5aab40126118dc8e90d4ede6"},
-    {file = "pyshacl-0.20.0.tar.gz", hash = "sha256:47f014c52cc69167b902c89b3940dd400f7f5d2169a62f97f837f3419b4a737d"},
+    {file = "pyshacl-0.26.0-py3-none-any.whl", hash = "sha256:a4bef4296d56305a30e0a97509e541ebe4f2cc2d5da73536d0541233e28f2d22"},
+    {file = "pyshacl-0.26.0.tar.gz", hash = "sha256:48d44f317cd9aad8e3fdb5df8aa5706fa92dc6b2746419698035e84a320fb89d"},
 ]
 
 [package.dependencies]
 html5lib = ">=1.1,<2"
+importlib-metadata = {version = ">6", markers = "python_version < \"3.12\""}
 owlrl = ">=6.0.2,<7"
 packaging = ">=21.3"
-prettytable = ">=2.2.1,<3.0.0"
-rdflib = ">=6.2.0,<7"
+prettytable = [
+    {version = ">=3.5.0", markers = "python_version >= \"3.8\" and python_version < \"3.12\""},
+    {version = ">=3.7.0", markers = "python_version >= \"3.12\""},
+]
+rdflib = {version = ">=6.3.2,<8.0", markers = "python_full_version >= \"3.8.1\""}
 
 [package.extras]
 dev-coverage = ["coverage (>6.1,!=6.1.1,<7)", "platformdirs", "pytest-cov (>=2.8.1,<3.0.0)"]
-dev-lint = ["black (==22.8.0)", "flake8 (>=5.0.4,<6.0.0)", "isort (>=5.10.1,<6.0.0)", "platformdirs"]
-dev-type-checking = ["mypy (>=0.800,<0.801)", "platformdirs", "types-setuptools"]
-js = ["pyduktape2 (>=0.4.1,<0.5.0)"]
-jsonld = ["rdflib-jsonld (>=0.4.0,<0.6)"]
+dev-lint = ["black (==24.3.0)", "platformdirs", "ruff (>=0.1.5,<0.2.0)"]
+dev-type-checking = ["mypy (>=0.812,<0.900)", "mypy (>=0.900,<0.1000)", "platformdirs", "types-setuptools"]
+http = ["sanic (>=22.12,<23)", "sanic-cors (==2.2.0)", "sanic-ext (>=23.3,<23.6)"]
+js = ["pyduktape2 (>=0.4.6,<0.5.0)"]
 
 [[package]]
 name = "pytest"
@@ -2019,4 +2023,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0"
-content-hash = "196d3bd6a4432ada731f99667e1163a4bfa2b258daca6272a254d110e34b3607"
+content-hash = "0ef42bb4efef0321a95a0108c759ceb45de4f6702428e5869ebc18ced68cf3c0"
