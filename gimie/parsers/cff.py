@@ -71,6 +71,13 @@ class CffParser(Parser):
                         Literal(author["orcid"]),
                     )
                 )
+                rdf_graph.add(
+                    (
+                        URIRef(author["orcid"]),
+                        SDO.affiliation,
+                        Literal(author["affiliation"]),
+                    )
+                )
                 rdf_graph.add((URIRef(author["orcid"]), RDF.type, SDO.Person))
         return rdf_graph
 
@@ -156,7 +163,7 @@ def get_cff_doi(data: bytes) -> Optional[str]:
 
 
 def get_cff_authors(data: bytes) -> Optional[List[dict[str, str]]]:
-    """Given a CFF file, returns a list of dictionaries containing orcid, first and last names of authors, if any.
+    """Given a CFF file, returns a list of dictionaries containing orcid, affiliation, first and last names of authors, if any.
 
     Parameters
     ----------
@@ -171,7 +178,7 @@ def get_cff_authors(data: bytes) -> Optional[List[dict[str, str]]]:
     Examples
     --------
     >>> get_cff_doi(bytes(CFF_path, encoding="utf8"))
-    [{orcid:'https://orcid.org/1234-5678-9101-1121', family-names: 'Druskat', given-names: 'Stephan'},{orcid:'https://orcid.org/1234-5678-9101-2354', family-names: 'English', given-names: 'Johnny'}
+    [{orcid:'https://orcid.org/1234-5678-9101-1121', family-names: 'Druskat', given-names: 'Stephan', affiliation: 'EPFL},{orcid:'https://orcid.org/1234-5678-9101-2354', family-names: 'English', given-names: 'Johnny'}
     orcid: }]
 
     """
@@ -189,6 +196,7 @@ def get_cff_authors(data: bytes) -> Optional[List[dict[str, str]]]:
                 "family-names": author.get("family-names", ""),
                 "given-names": author.get("given-names", ""),
                 "orcid": author.get("orcid", ""),
+                "affiliation": author.get("affiliation", ""),
             }
             authors.append(author_dict)
     except KeyError:
