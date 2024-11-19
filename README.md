@@ -74,7 +74,7 @@ gimie data https://github.com/numpy/numpy
 
 ```python
 from gimie.project import Project
-proj = Project("https://github.com/numpy/numpy)
+proj = Project("https://github.com/numpy/numpy")
 
 # To retrieve the rdflib.Graph object
 g = proj.extract()
