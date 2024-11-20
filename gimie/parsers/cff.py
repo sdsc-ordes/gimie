@@ -51,13 +51,16 @@ class CffParser(Parser):
         if not authors:
             return extracted_cff_triples
         for author in authors:
-            if author["orcid"]:
+            orcid = URIRef(author["orcid"])
+            if re.match(
+                r"https:\/\/orcid.org\/\d{4}-\d{4}-\d{4}-\d{4}", str(orcid)
+            ):
                 extracted_cff_triples.add(
-                    (self.subject, SDO.author, URIRef(author["orcid"]))
+                    (self.subject, SDO.author, URIRef(orcid))
                 )
                 extracted_cff_triples.add(
                     (
-                        URIRef(author["orcid"]),
+                        URIRef(orcid),
                         SDO.name,
                         Literal(
                             author["given-names"]
@@ -68,21 +71,19 @@ class CffParser(Parser):
                 )
                 extracted_cff_triples.add(
                     (
-                        URIRef(author["orcid"]),
+                        orcid,
                         MD4I.orcidId,
-                        Literal(author["orcid"]),
+                        Literal(orcid),
                     )
                 )
                 extracted_cff_triples.add(
                     (
-                        URIRef(author["orcid"]),
+                        orcid,
                         SDO.affiliation,
                         Literal(author["affiliation"]),
                     )
                 )
-                extracted_cff_triples.add(
-                    (URIRef(author["orcid"]), RDF.type, SDO.Person)
-                )
+                extracted_cff_triples.add((orcid, RDF.type, SDO.Person))
         return extracted_cff_triples
 
 
