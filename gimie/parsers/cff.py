@@ -19,11 +19,11 @@ import re
 from typing import List, Optional, Set
 import yaml
 from rdflib.term import URIRef
-from rdflib import Graph, BNode, URIRef, Literal
+from rdflib import Graph, URIRef, Literal
 from rdflib.namespace import RDF
 from gimie import logger
 from gimie.graph.namespaces import SDO, MD4I
-from gimie.parsers.abstract import Parser, Property
+from gimie.parsers.abstract import Parser
 
 
 class CffParser(Parser):
