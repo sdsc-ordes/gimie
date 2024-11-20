@@ -40,20 +40,22 @@ class CffParser(Parser):
         If no authors are found, it will not be included in the graph.
         If neither authors nor DOI are found, an empty graph is returned.
         """
-        rdf_graph = Graph()
+        extracted_cff_triples = Graph()
         doi = get_cff_doi(data)
         authors = get_cff_authors(data)
 
         if doi:
-            rdf_graph.add((self.subject, SDO.citation, URIRef(doi)))
+            extracted_cff_triples.add(
+                (self.subject, SDO.citation, URIRef(doi))
+            )
         if not authors:
-            return rdf_graph
+            return extracted_cff_triples
         for author in authors:
             if author["orcid"]:
-                rdf_graph.add(
+                extracted_cff_triples.add(
                     (self.subject, SDO.author, URIRef(author["orcid"]))
                 )
-                rdf_graph.add(
+                extracted_cff_triples.add(
                     (
                         URIRef(author["orcid"]),
                         SDO.name,
@@ -64,22 +66,24 @@ class CffParser(Parser):
                         ),
                     )
                 )
-                rdf_graph.add(
+                extracted_cff_triples.add(
                     (
                         URIRef(author["orcid"]),
                         MD4I.orcidId,
                         Literal(author["orcid"]),
                     )
                 )
-                rdf_graph.add(
+                extracted_cff_triples.add(
                     (
                         URIRef(author["orcid"]),
                         SDO.affiliation,
                         Literal(author["affiliation"]),
                     )
                 )
-                rdf_graph.add((URIRef(author["orcid"]), RDF.type, SDO.Person))
-        return rdf_graph
+                extracted_cff_triples.add(
+                    (URIRef(author["orcid"]), RDF.type, SDO.Person)
+                )
+        return extracted_cff_triples
 
 
 def doi_to_url(doi: str) -> str:
