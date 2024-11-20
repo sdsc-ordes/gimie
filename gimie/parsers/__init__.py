@@ -104,11 +104,11 @@ def parse_files(
     parsers:
         A set of parser names. If None, use the default collection.
     """
-    new_graph = Graph()
+    parsed_properties = Graph()
     for file in files:
         parser = select_parser(file.path, parsers)
         if not parser:
             continue
         data = file.open().read()
-        new_graph |= parser(subject).parse(data or b"")
-    return new_graph
+        parsed_properties |= parser(subject).parse(data or b"")
+    return parsed_properties
