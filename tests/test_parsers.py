@@ -28,5 +28,5 @@ def test_parse_license():
 
 def test_parse_nothing():
     folder = LocalResource("tests")
-    graph = parse_files(subject=URIRef("https://exmaple.org/"), files=[folder])
+    graph = parse_files(subject=URIRef("https://example.org/"), files=[folder])
     assert len(graph) == 0
