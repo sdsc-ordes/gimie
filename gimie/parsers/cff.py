@@ -27,7 +27,7 @@ from gimie.parsers.abstract import Parser, Property
 
 
 class CffParser(Parser):
-    """Parse DOI and authorsfrom CITATION.cff into schema:citation <doi>. and schema:"""
+    """Parse DOI and authors from CITATION.cff."""
 
     def __init__(self, subject: str):
         super().__init__(subject)
