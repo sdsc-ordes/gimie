@@ -24,7 +24,7 @@ from gimie.parsers.abstract import Parser
 from gimie.parsers.license import LicenseParser, is_license_filename
 from gimie.parsers.cff import CffParser
 
-from rdflib import Graph, URIRef
+from rdflib import Graph
 
 
 class ParserInfo(NamedTuple):
