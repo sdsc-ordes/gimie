@@ -22,11 +22,17 @@ from gimie.graph import Property
 
 
 class Parser(ABC):
-    """Parser is an Abstract Base Class. It is only meant
+    """
+    Parser is an Abstract Base Class. It is only meant
     to define a standard interface for all parsers.
 
     All subclasses must implement parse(). A parser parses
     bytes data into a set of predicate-object tuples.
+
+    Parameters
+    ----------
+    subject : str
+    The subject of a triple (subject - predicate - object) to be used for writing parsed properties to.
     """
 
     def __init__(self, subject: str):
