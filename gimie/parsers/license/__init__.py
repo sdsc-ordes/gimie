@@ -41,12 +41,14 @@ class LicenseParser(Parser):
         graph with a single triple <url> <schema:license> <spdx_url>.
         If no matching URL is found, an empty graph is returned.
         """
-        new_graph = Graph()
+        extracted_license_triple = Graph()
         license_url = match_license(data)
 
         if license_url:
-            new_graph.add((self.subject, SDO.license, URIRef(license_url)))
-        return new_graph
+            extracted_license_triple.add(
+                (self.subject, SDO.license, URIRef(license_url))
+            )
+        return extracted_license_triple
 
 
 def match_license(data: bytes, min_similarity: float = 0.9) -> Optional[str]:
