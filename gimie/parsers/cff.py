@@ -24,6 +24,7 @@ from rdflib.namespace import RDF
 from gimie import logger
 from gimie.graph.namespaces import SDO, MD4I
 from gimie.parsers.abstract import Parser
+from gimie.utils.uri import is_valid_orcid, valid_doi_match_extractor
 
 
 class CffParser(Parser):
@@ -52,9 +53,7 @@ class CffParser(Parser):
             return extracted_cff_triples
         for author in authors:
             orcid = URIRef(author["orcid"])
-            if re.match(
-                r"https:\/\/orcid.org\/\d{4}-\d{4}-\d{4}-\d{4}", str(orcid)
-            ):
+            if is_valid_orcid(orcid):
                 extracted_cff_triples.add(
                     (self.subject, SDO.author, URIRef(orcid))
                 )
@@ -114,9 +113,7 @@ def doi_to_url(doi: str) -> str:
 
     # regex from:
     # https://www.crossref.org/blog/dois-and-matching-regular-expressions
-    doi_match = re.search(
-        r"10.\d{4,9}/[-._;()/:A-Z0-9]+$", doi, flags=re.IGNORECASE
-    )
+    doi_match = valid_doi_match_extractor(doi)
 
     if doi_match is None:
         raise ValueError(f"Not a valid DOI: {doi}")
