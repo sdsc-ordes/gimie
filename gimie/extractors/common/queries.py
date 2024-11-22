@@ -28,7 +28,13 @@ def send_rest_query(
     )
 
     if resp.status_code != 200:
-        raise ConnectionError(resp.json()["message"])
+        error_msg = resp.json().get("message", "")
+        if "API rate limit exceeded" in error_msg:
+            raise ConnectionError(
+                "Authentication failed: API rate limit exceeded. Please check that you have added "
+                "your GITHUB_TOKEN or GITLAB_TOKEN to your environment variables."
+            )
+        raise ConnectionError(f"API request failed: {error_msg}")
     return resp.json()
 
 
@@ -46,5 +52,11 @@ def send_graphql_query(
     )
 
     if resp.status_code != 200:
-        raise ConnectionError(resp.json()["message"])
+        error_msg = resp.json().get("message", "")
+        if "API rate limit exceeded" in error_msg:
+            raise ConnectionError(
+                "Authentication failed: API rate limit exceeded. Please check that you have added "
+                "your GITHUB_TOKEN or GITLAB_TOKEN to your environment variables."
+            )
+        raise ConnectionError(f"API request failed: {error_msg}")
     return resp.json()
