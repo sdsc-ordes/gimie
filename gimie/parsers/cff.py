@@ -111,8 +111,6 @@ def doi_to_url(doi: str) -> str:
     'https://doi.org/10.0000/example.abcd'
     """
 
-    # regex from:
-    # https://www.crossref.org/blog/dois-and-matching-regular-expressions
     doi_match = valid_doi_match_extractor(doi)
 
     if doi_match is None:
