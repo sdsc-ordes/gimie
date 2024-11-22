@@ -109,17 +109,15 @@ def valid_doi_match_extractor(doi):
 
     Returns
     -------
-    bool:
-        True if the DOI is valid, False otherwise.
+    str:
+        The extracted DOI if it is valid, None otherwise.
 
     Examples
     --------
-    >>> is_valid_doi("10.0000/example.abcd")
-    True
-    >>> is_valid_doi("doi.org/10.0000/example.abcd")
-    False
-    >>> is_valid_doi("https://doi.org/10.0000/example.abcd")
-    False
+    >>> valid_doi_match_extractor("10.5281/zenodo.1234567")
+    '10.5281/zenodo.1234567'
+    >>> valid_doi_match_extractor("https://doi.org/10.5281/zenodo.1234567")
+    '10.5281/zenodo.1234567'
     """
     return re.search(
         r"10.\d{4,9}/[-._;()/:A-Z0-9]+$", doi, flags=re.IGNORECASE
