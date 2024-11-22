@@ -118,9 +118,7 @@ def doi_to_url(doi: str) -> str:
     if doi_match is None:
         raise ValueError(f"Not a valid DOI: {doi}")
 
-    short_doi = doi_match.group()
-
-    return f"https://doi.org/{short_doi}"
+    return f"https://doi.org/{doi_match}"
 
 
 def get_cff_doi(data: bytes) -> Optional[str]:
