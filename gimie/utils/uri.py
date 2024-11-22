@@ -110,7 +110,7 @@ def valid_doi_match_extractor(doi):
     Returns
     -------
     str:
-        The extracted DOI if it is valid, None otherwise.
+        The extracted short DOI if it is valid, None otherwise.
 
     Examples
     --------
@@ -119,6 +119,8 @@ def valid_doi_match_extractor(doi):
     >>> valid_doi_match_extractor("https://doi.org/10.5281/zenodo.1234567")
     '10.5281/zenodo.1234567'
     """
-    return re.search(
+    match = re.search(
         r"10.\d{4,9}/[-._;()/:A-Z0-9]+$", doi, flags=re.IGNORECASE
     )
+    if match:
+        return match.group()
