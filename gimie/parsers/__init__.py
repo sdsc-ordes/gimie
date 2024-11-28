@@ -24,6 +24,8 @@ from gimie.parsers.abstract import Parser
 from gimie.parsers.license import LicenseParser, is_license_filename
 from gimie.parsers.cff import CffParser
 
+from rdflib import Graph
+
 
 class ParserInfo(NamedTuple):
     default: bool
@@ -85,25 +87,28 @@ def select_parser(
 
 
 def parse_files(
+    subject: str,
     files: Iterable[Resource],
     parsers: Optional[Set[str]] = None,
-) -> Set[Property]:
+) -> Graph:
     """For each input file, select appropriate parser among a collection and
-    parse its contents. Return the union of all parsed properties. If no parser
-    is found for a given file, skip it.
+    parse its contents. Return the union of all parsed properties in the form of triples.
+    If no parser is found for a given file, skip it.
 
     Parameters
     ----------
+    subject:
+        The subject URI of the repository.
     files:
         A collection of file-like objects.
     parsers:
         A set of parser names. If None, use the default collection.
     """
-    properties: Set[Property] = set()
+    parsed_properties = Graph()
     for file in files:
         parser = select_parser(file.path, parsers)
         if not parser:
             continue
         data = file.open().read()
-        properties |= parser().parse(data or b"")
-    return properties
+        parsed_properties |= parser(subject).parse(data or b"")
+    return parsed_properties

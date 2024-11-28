@@ -23,7 +23,7 @@ from typing import List, Optional, Set
 import numpy as np
 import scipy.sparse as sp
 from rdflib.term import URIRef
-
+from rdflib import Graph
 from gimie.graph.namespaces import SDO
 from gimie.parsers.abstract import Parser, Property
 from gimie.utils.text_processing import TfidfVectorizer
@@ -33,20 +33,20 @@ class LicenseParser(Parser):
     """Parse LICENSE body into schema:license <spdx-url>.
     Uses tf-idf-based matching."""
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, subject: str):
+        super().__init__(subject)
 
-    def parse(self, data: bytes) -> Set[Property]:
+    def parse(self, data: bytes) -> Graph:
         """Extracts an spdx URL from a license file and returns a
-        set with a single tuple <schema:license> <spdx_url>.
-        If no matching URL is found, an empty set is returned.
+        graph with a single triple <url> <schema:license> <spdx_url>.
+        If no matching URL is found, an empty graph is returned.
         """
-        props = set()
+        license_facts = Graph()
         license_url = match_license(data)
 
         if license_url:
-            props.add((SDO.license, URIRef(license_url)))
-        return props
+            license_facts.add((self.subject, SDO.license, URIRef(license_url)))
+        return license_facts
 
 
 def match_license(data: bytes, min_similarity: float = 0.9) -> Optional[str]:

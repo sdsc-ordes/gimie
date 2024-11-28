@@ -18,6 +18,7 @@
 
 from typing import List, Literal
 from urllib.parse import urlparse
+import re
 
 from gimie.graph.namespaces import GIMIE
 
@@ -64,3 +65,62 @@ def generate_uri(ref: str):
     'https://sdsc-ordes.github.io/gimie/abc'
     """
     return str(GIMIE[ref])
+
+
+def is_valid_orcid(orcid):
+    """Check if the input is a valid ORCID according to definition from orcid.org [1]_.
+    .. [1] [https://support.orcid.org/hc/en-us/articles/360006897674-Structure-of-the-ORCID-Identifier](https://support.orcid.org/hc/en-us/articles/360006897674-Structure-of-the-ORCID-Identifier)
+
+    Parameters
+    ----------
+    orcid:
+        The ORCID to validate.
+
+    Returns
+    -------
+    bool:
+        True if the ORCID is valid, False otherwise.
+
+    Examples
+    --------
+    >>> is_valid_orcid("https://orcid.org/0000-0001-2345-6789")
+    True
+    >>> is_valid_orcid("0000-0001-2345-6789")
+    False
+    >>> is_valid_orcid("http://orcid.org/0000-0001-2345-6789")
+    False
+
+    """
+    return bool(
+        re.match(
+            r"(https:\/\/)?orcid.org\/\d{4}-\d{4}-\d{4}-\d{4}", str(orcid)
+        )
+    )
+
+
+def extract_doi_match(doi):
+    """Extracts doi from the input if it contains a valid DOI according to definition from crossref.org [1]_.
+    .. [1] [https://www.crossref.org/blog/dois-and-matching-regular-expressions](https://www.crossref.org/blog/dois-and-matching-regular-expressions)
+
+    Parameters
+    ----------
+    doi:
+        The DOI to validate.
+
+    Returns
+    -------
+    str:
+        The extracted short DOI if it is valid, None otherwise.
+
+    Examples
+    --------
+    >>> extract_doi_match("10.5281/zenodo.1234567")
+    '10.5281/zenodo.1234567'
+    >>> extract_doi_match("https://doi.org/10.5281/zenodo.1234567")
+    '10.5281/zenodo.1234567'
+    """
+    match = re.search(
+        r"10.\d{4,9}/[-._;()/:A-Z0-9]+$", doi, flags=re.IGNORECASE
+    )
+    if match:
+        return match.group()

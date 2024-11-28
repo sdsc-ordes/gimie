@@ -18,31 +18,72 @@ from io import BytesIO
 import re
 from typing import List, Optional, Set
 import yaml
-
 from rdflib.term import URIRef
-
+from rdflib import Graph, URIRef, Literal
+from rdflib.namespace import RDF
 from gimie import logger
-from gimie.graph.namespaces import SDO
-from gimie.parsers.abstract import Parser, Property
+from gimie.graph.namespaces import SDO, MD4I
+from gimie.parsers.abstract import Parser
+from gimie.utils.uri import is_valid_orcid, extract_doi_match
 
 
 class CffParser(Parser):
-    """Parse DOI from CITATION.cff into schema:citation <doi>."""
+    """Parse DOI and authors from CITATION.cff."""
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, subject: str):
+        super().__init__(subject)
 
-    def parse(self, data: bytes) -> Set[Property]:
-        """Extracts a DOI link from a CFF file and returns a
-        set with a single tuple <schema:citation> <doi>.
-        If no DOI is found, an empty set is returned.
+    def parse(self, data: bytes) -> Graph:
+        """Extracts a DOI link and list of authors from a CFF file and returns a
+        graph with a single triple <subject> <schema:citation> <doi>
+        and a number of author objects with <schema:name> and <md4i:orcid> values.
+        If no DOI is found, it will not be included in the graph.
+        If no authors are found, it will not be included in the graph.
+        If neither authors nor DOI are found, an empty graph is returned.
         """
-        props = set()
+        extracted_cff_triples = Graph()
         doi = get_cff_doi(data)
+        authors = get_cff_authors(data)
 
         if doi:
-            props.add((SDO.citation, URIRef(doi)))
-        return props
+            extracted_cff_triples.add(
+                (self.subject, SDO.citation, URIRef(doi))
+            )
+        if not authors:
+            return extracted_cff_triples
+        for author in authors:
+            if is_valid_orcid(author["orcid"]):
+                orcid = URIRef(author["orcid"])
+                extracted_cff_triples.add(
+                    (self.subject, SDO.author, URIRef(orcid))
+                )
+                extracted_cff_triples.add(
+                    (
+                        URIRef(orcid),
+                        SDO.name,
+                        Literal(
+                            author["given-names"]
+                            + " "
+                            + author["family-names"]
+                        ),
+                    )
+                )
+                extracted_cff_triples.add(
+                    (
+                        orcid,
+                        MD4I.orcidId,
+                        Literal(orcid),
+                    )
+                )
+                extracted_cff_triples.add(
+                    (
+                        orcid,
+                        SDO.affiliation,
+                        Literal(author["affiliation"]),
+                    )
+                )
+                extracted_cff_triples.add((orcid, RDF.type, SDO.Person))
+        return extracted_cff_triples
 
 
 def doi_to_url(doi: str) -> str:
@@ -70,18 +111,12 @@ def doi_to_url(doi: str) -> str:
     'https://doi.org/10.0000/example.abcd'
     """
 
-    # regex from:
-    # https://www.crossref.org/blog/dois-and-matching-regular-expressions
-    doi_match = re.search(
-        r"10.\d{4,9}/[-._;()/:A-Z0-9]+$", doi, flags=re.IGNORECASE
-    )
+    doi_match = extract_doi_match(doi)
 
     if doi_match is None:
         raise ValueError(f"Not a valid DOI: {doi}")
 
-    short_doi = doi_match.group()
-
-    return f"https://doi.org/{short_doi}"
+    return f"https://doi.org/{doi_match}"
 
 
 def get_cff_doi(data: bytes) -> Optional[str]:
@@ -123,3 +158,41 @@ def get_cff_doi(data: bytes) -> Optional[str]:
         doi_url = None
 
     return doi_url
+
+
+def get_cff_authors(data: bytes) -> Optional[List[dict[str, str]]]:
+    """Given a CFF file, returns a list of dictionaries containing orcid, affiliation, first and last names of authors, if any.
+
+    Parameters
+    ----------
+    data
+        The cff file body as bytes.
+
+    Returns
+    -------
+    list(dict), optional
+        orcid, names strings of authors
+
+    """
+
+    try:
+        cff = yaml.safe_load(data.decode())
+    except yaml.scanner.ScannerError:
+        logger.warning("cannot read CITATION.cff, skipped.")
+        return None
+
+    authors = []
+    try:
+        for author in cff["authors"]:
+            author_dict = {
+                "family-names": author.get("family-names", ""),
+                "given-names": author.get("given-names", ""),
+                "orcid": author.get("orcid", ""),
+                "affiliation": author.get("affiliation", ""),
+            }
+            authors.append(author_dict)
+    except KeyError:
+        logger.warning("CITATION.cff does not contain an 'authors' key.")
+        return None
+
+    return authors if authors else None

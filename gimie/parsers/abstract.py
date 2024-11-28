@@ -17,28 +17,35 @@
 from abc import ABC, abstractmethod
 from functools import reduce
 from typing import Iterable, Set
-
+from rdflib import Graph, URIRef
 from gimie.graph import Property
 
 
 class Parser(ABC):
-    """Parser is an Abstract Base Class. It is only meant
+    """
+    Parser is an Abstract Base Class. It is only meant
     to define a standard interface for all parsers.
 
     All subclasses must implement parse(). A parser parses
     bytes data into a set of predicate-object tuples.
+
+    Parameters
+    ----------
+    subject:
+        The subject of a triple (subject - predicate - object) to be used for writing parsed properties to.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, subject: str):
+        self.subject = URIRef(subject)
 
     @abstractmethod
-    def parse(self, data: bytes) -> Set[Property]:
-        """Extract predicate-object tuples from a source."""
+    def parse(self, data: bytes) -> Graph:
+        """Extract rdf graph from a source."""
         ...
 
-    def parse_all(self, docs: Iterable[bytes]) -> Set[Property]:
+    def parse_all(self, docs: Iterable[bytes]) -> Graph:
         """Parse multiple sources and return the union of
-        predicate-object tuples."""
+        triples."""
+
         properties = map(self.parse, docs)
         return reduce(lambda p1, p2: p1 | p2, properties)
