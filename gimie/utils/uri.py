@@ -114,9 +114,9 @@ def extract_doi_match(doi):
 
     Examples
     --------
-    >>> valid_doi_match_extractor("10.5281/zenodo.1234567")
+    >>> extract_doi_match("10.5281/zenodo.1234567")
     '10.5281/zenodo.1234567'
-    >>> valid_doi_match_extractor("https://doi.org/10.5281/zenodo.1234567")
+    >>> extract_doi_match("https://doi.org/10.5281/zenodo.1234567")
     '10.5281/zenodo.1234567'
     """
     match = re.search(
