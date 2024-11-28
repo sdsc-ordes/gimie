@@ -1,18 +1,18 @@
 ARG VERSION_BUILD
 
-FROM python:3.10-slim-bullseye as python
+FROM python:3.12-slim-bookworm AS python
 ENV PYTHONUNBUFFERED=true
 WORKDIR /app
 
 LABEL org.opencontainers.image.source=https://github.com/sdsc-ordes/gimie
 LABEL org.opencontainers.image.description="Extract linked metadata from repositories."
 LABEL org.opencontainers.image.licenses=Apache-2.0
-LABEL org.opencontainers.image.version ${VERSION_BUILD}
+LABEL org.opencontainers.image.version=${VERSION_BUILD}
 
 ##################################################
 # Poetry setup
 ##################################################
-FROM python as poetry
+FROM python AS poetry
 
 # Install poetry
 ENV POETRY_HOME=/opt/poetry
@@ -36,7 +36,7 @@ RUN poetry install --no-interaction --no-ansi -vvv
 ##################################################
 # Gimie setup
 ##################################################
-FROM python as runtime
+FROM python AS runtime
 ENV PATH="/app/.venv/bin:$PATH"
 RUN apt-get update && \
     apt-get install -y git libgomp1 libmagic-dev

@@ -31,8 +31,8 @@ class Parser(ABC):
 
     Parameters
     ----------
-    subject : str
-    The subject of a triple (subject - predicate - object) to be used for writing parsed properties to.
+    subject:
+        The subject of a triple (subject - predicate - object) to be used for writing parsed properties to.
     """
 
     def __init__(self, subject: str):
