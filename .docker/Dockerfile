@@ -1,6 +1,6 @@
 ARG VERSION_BUILD
 
-FROM python:3.10-slim-bullseye as python
+FROM python:3.13-slim-bookworm as python
 ENV PYTHONUNBUFFERED=true
 WORKDIR /app
 
