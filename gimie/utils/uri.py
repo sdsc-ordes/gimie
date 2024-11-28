@@ -98,7 +98,7 @@ def is_valid_orcid(orcid):
     )
 
 
-def valid_doi_match_extractor(doi):
+def extract_doi_match(doi):
     """Extracts doi from the input if it contains a valid DOI according to definition from crossref.org [1]_.
     .. [1] [https://www.crossref.org/blog/dois-and-matching-regular-expressions](https://www.crossref.org/blog/dois-and-matching-regular-expressions)
 

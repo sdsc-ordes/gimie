@@ -24,7 +24,7 @@ from rdflib.namespace import RDF
 from gimie import logger
 from gimie.graph.namespaces import SDO, MD4I
 from gimie.parsers.abstract import Parser
-from gimie.utils.uri import is_valid_orcid, valid_doi_match_extractor
+from gimie.utils.uri import is_valid_orcid, extract_doi_match
 
 
 class CffParser(Parser):
@@ -111,7 +111,7 @@ def doi_to_url(doi: str) -> str:
     'https://doi.org/10.0000/example.abcd'
     """
 
-    doi_match = valid_doi_match_extractor(doi)
+    doi_match = extract_doi_match(doi)
 
     if doi_match is None:
         raise ValueError(f"Not a valid DOI: {doi}")
