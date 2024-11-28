@@ -52,8 +52,8 @@ class CffParser(Parser):
         if not authors:
             return extracted_cff_triples
         for author in authors:
-            orcid = URIRef(author["orcid"])
-            if is_valid_orcid(orcid):
+            if is_valid_orcid(author["orcid"]):
+                orcid = URIRef(author["orcid"])
                 extracted_cff_triples.add(
                     (self.subject, SDO.author, URIRef(orcid))
                 )
