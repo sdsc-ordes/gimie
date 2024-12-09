@@ -1,5 +1,28 @@
 Notable changes introduced in gimie releases are documented in this file
 
+## [0.7.1] - 2024-12-09
+
+### Bug Fixes
+
+- *(dependency missing)* Added pyyaml (#119)
+
+
+## [0.7.0] - 2024-11-28
+
+### Bug Fixes
+
+- *(cff)* enforce valid urls as doi (#108)- spelling mistake in run as library docs (#113)
+
+
+### Documentation
+- update gimie API examples (#105)
+- add CFF file (#111)
+
+
+### Features
+
+- *(parser)* extract authors from CFF files (#115)- add parsers support (#97)
+- cff to doi parser (#107)
 
 ## [0.6.0] - 2023-10-19
 
