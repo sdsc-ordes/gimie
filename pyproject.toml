@@ -114,7 +114,7 @@ conventional_commits = true
 filter_commits = true
 commit_parsers = [
     { message = "^feat", group = "Features" },
-    { message = "^fix", group = "Bug Fixes" },
+    { message = "^(fix|bug)", group = "Bug Fixes" },
     { message = "^doc", group = "Documentation" },
 ]
 
