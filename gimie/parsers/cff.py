@@ -122,21 +122,23 @@ def doi_to_url(doi: str) -> str:
 def get_cff_doi(data: bytes) -> Optional[str]:
     """Given a CFF file, returns the DOI, if any.
 
-    Parameters
-    ----------
-    data
-        The cff file body as bytes.
+        Parameters
+        ----------
+        data
+            The cff file body as bytes.
 
-    Returns
-    -------
-    str, optional
-        doi formatted as a valid url
+        Returns
+        -------
+        str, optional
+            doi formatted as a valid url
 
-    Examples
-    --------
-    >>> get_cff_doi(bytes("doi:   10.5281/zenodo.1234", encoding="utf8"))
-    'https://doi.org/10.5281/zenodo.1234'
-    >>> get_cff_doi(bytes("abc: def", encoding="utf8"))
+        Examples
+        --------
+        >>> get_cff_doi(bytes("identifiers:
+    - type: doi
+      value: 10.5281/zenodo.1234", encoding="utf8"))
+        'https://doi.org/10.5281/zenodo.1234'
+        >>> get_cff_doi(bytes("abc: def", encoding="utf8"))
 
     """
 
