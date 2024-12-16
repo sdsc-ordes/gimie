@@ -145,9 +145,15 @@ def get_cff_doi(data: bytes) -> Optional[str]:
     except yaml.scanner.ScannerError:
         logger.warning("cannot read CITATION.cff, skipped.")
         return None
-
     try:
-        doi_url = doi_to_url(cff["doi"])
+        identifiers = cff.get("identifiers", [])
+        doi_identifier = next(
+            (id for id in identifiers if id.get("type") == "doi"), None
+        )
+        if doi_identifier:
+            doi_url = doi_to_url(doi_identifier["value"])
+        else:
+            raise KeyError("No DOI found in identifiers")
     # No doi in cff file
     except (KeyError, TypeError):
         logger.warning("CITATION.cff does not contain a 'doi' key.")
