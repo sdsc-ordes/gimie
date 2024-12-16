@@ -134,13 +134,9 @@ def get_cff_doi(data: bytes) -> Optional[str]:
 
     Examples
     --------
-    >>> get_cff_doi(bytes(
-    "identifiers:
-    - type: doi
-      value: 10.5281/zenodo.1234", encoding="utf8"))
+    >>> get_cff_doi(bytes("identifiers:\n- type: doi\n  value: 10.5281/zenodo.1234", encoding="utf8"))
     'https://doi.org/10.5281/zenodo.1234'
     >>> get_cff_doi(bytes("abc: def", encoding="utf8"))
-
     """
 
     try:
