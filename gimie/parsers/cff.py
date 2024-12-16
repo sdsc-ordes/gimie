@@ -138,7 +138,6 @@ def get_cff_doi(data: bytes) -> Optional[str]:
     "identifiers:
     - type: doi
       value: 10.5281/zenodo.1234", encoding="utf8"))
-        'https://doi.org/10.5281/zenodo.1234'", encoding="utf8"))
     'https://doi.org/10.5281/zenodo.1234'
     >>> get_cff_doi(bytes("abc: def", encoding="utf8"))
 
