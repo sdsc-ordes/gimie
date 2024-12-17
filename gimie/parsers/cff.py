@@ -149,22 +149,24 @@ def get_cff_doi(data: bytes) -> Optional[List[str]]:
         return None
 
     doi_urls = []
+
     try:
-        identifiers = cff.get("identifiers", [])
-        for identifier in identifiers:
-            if identifier.get("type") == "doi":
-                try:
-                    doi_url = doi_to_url(identifier["value"])
-                    doi_urls.append(doi_url)
-                except ValueError as err:
-                    logger.warning(err)
+        identifiers = cff["identifiers"]
     except (KeyError, TypeError):
         logger.warning(
             "CITATION.cff does not contain a valid 'identifiers' key."
         )
         return None
 
-    return doi_urls if doi_urls else None
+    for identifier in identifiers:
+        if identifier.get("type") == "doi":
+            try:
+                doi_url = doi_to_url(identifier["value"])
+                doi_urls.append(doi_url)
+            except ValueError as err:
+                logger.warning(err)
+
+    return doi_urls or None
 
 
 def get_cff_authors(data: bytes) -> Optional[List[dict[str, str]]]:
