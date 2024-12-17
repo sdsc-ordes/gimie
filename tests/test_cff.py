@@ -78,10 +78,18 @@ def test_parse_doi():
     identifiers:
     - type: doi
       value: 10.5281/zenodo.3555620
+    - type: doi
+      value: 10.21105/joss.01274
     """
-    obj = next(
+    parsed_dois = list(
         CffParser(subject=URIRef("https://example.org/"))
         .parse(data=cff_file)
         .objects()
     )
-    assert URIRef("https://doi.org/10.5281/zenodo.3555620") == obj
+    expected_dois = [
+        URIRef("https://doi.org/10.5281/zenodo.3555620"),
+        URIRef("https://doi.org/10.21105/joss.01274"),
+    ]
+    # parsed_dois already contains all parsed DOI objects
+    for doi in expected_dois:
+        assert doi in parsed_dois
