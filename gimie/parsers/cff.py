@@ -34,21 +34,22 @@ class CffParser(Parser):
         super().__init__(subject)
 
     def parse(self, data: bytes) -> Graph:
-        """Extracts a DOI link and list of authors from a CFF file and returns a
-        graph with a single triple <subject> <schema:citation> <doi>
+        """Extracts DOIs and list of authors from a CFF file and returns a
+        graph with triples <subject> <schema:citation> <doi>
         and a number of author objects with <schema:name> and <md4i:orcid> values.
-        If no DOI is found, it will not be included in the graph.
-        If no authors are found, it will not be included in the graph.
-        If neither authors nor DOI are found, an empty graph is returned.
+        If no DOIs are found, they will not be included in the graph.
+        If no authors are found, they will not be included in the graph.
+        If neither authors nor DOIs are found, an empty graph is returned.
         """
         extracted_cff_triples = Graph()
-        doi = get_cff_doi(data)
+        dois = get_cff_doi(data)
         authors = get_cff_authors(data)
 
-        if doi:
-            extracted_cff_triples.add(
-                (self.subject, SDO.citation, URIRef(doi))
-            )
+        if dois:
+            for doi in dois:
+                extracted_cff_triples.add(
+                    (self.subject, SDO.citation, URIRef(doi))
+                )
         if not authors:
             return extracted_cff_triples
         for author in authors:
@@ -119,8 +120,8 @@ def doi_to_url(doi: str) -> str:
     return f"https://doi.org/{doi_match}"
 
 
-def get_cff_doi(data: bytes) -> Optional[str]:
-    """Given a CFF file, returns the DOI, if any.
+def get_cff_doi(data: bytes) -> Optional[list[str]]:
+    """Given a CFF file, returns a list of DOIs, if any.
 
     Parameters
     ----------
@@ -129,15 +130,16 @@ def get_cff_doi(data: bytes) -> Optional[str]:
 
     Returns
     -------
-    str, optional
-        doi formatted as a valid url
+    list of str, optional
+        DOIs formatted as valid URLs
 
     Examples
     --------
-    >>> get_cff_doi(bytes("doi:   10.5281/zenodo.1234", encoding="utf8"))
-    'https://doi.org/10.5281/zenodo.1234'
+    >>> get_cff_doi(bytes("identifiers:\\n    - type: doi\\n      value: 10.5281/zenodo.1234\\n    - type: doi\\n      value: 10.5281/zenodo.5678", encoding="utf8"))
+    ['https://doi.org/10.5281/zenodo.1234', 'https://doi.org/10.5281/zenodo.5678']
+    >>> get_cff_doi(bytes("identifiers:\\n    - type: doi\\n      value: 10.5281/zenodo.9012", encoding="utf8"))
+    ['https://doi.org/10.5281/zenodo.9012']
     >>> get_cff_doi(bytes("abc: def", encoding="utf8"))
-
     """
 
     try:
@@ -146,18 +148,25 @@ def get_cff_doi(data: bytes) -> Optional[str]:
         logger.warning("cannot read CITATION.cff, skipped.")
         return None
 
-    try:
-        doi_url = doi_to_url(cff["doi"])
-    # No doi in cff file
-    except (KeyError, TypeError):
-        logger.warning("CITATION.cff does not contain a 'doi' key.")
-        doi_url = None
-    # doi is malformed
-    except ValueError as err:
-        logger.warning(err)
-        doi_url = None
+    doi_urls = []
 
-    return doi_url
+    try:
+        identifiers = cff["identifiers"]
+    except (KeyError, TypeError):
+        logger.warning(
+            "CITATION.cff does not contain a valid 'identifiers' key."
+        )
+        return None
+
+    for identifier in identifiers:
+        if identifier.get("type") == "doi":
+            try:
+                doi_url = doi_to_url(identifier["value"])
+                doi_urls.append(doi_url)
+            except ValueError as err:
+                logger.warning(err)
+
+    return doi_urls or None
 
 
 def get_cff_authors(data: bytes) -> Optional[List[dict[str, str]]]:
