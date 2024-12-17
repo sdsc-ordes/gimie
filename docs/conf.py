@@ -9,7 +9,7 @@
 project = "gimie"
 copyright = "2023, sdsc-ordes"
 author = "sdsc-ordes"
-release = "0.6.1"
+release = "0.7.1"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
