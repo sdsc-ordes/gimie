@@ -120,7 +120,7 @@ def doi_to_url(doi: str) -> str:
     return f"https://doi.org/{doi_match}"
 
 
-def get_cff_doi(data: bytes) -> Optional[List[str]]:
+def get_cff_doi(data: bytes) -> Optional[list[str]]:
     """Given a CFF file, returns a list of DOIs, if any.
 
     Parameters
