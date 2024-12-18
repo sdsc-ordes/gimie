@@ -1,18 +1,68 @@
-name: Publish on Pypi
+# Workflow following resources at:
+#  - https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python#publishing-to-pypi
+#  - https://packaging.python.org/en/latest/tutorials/packaging-projects/#uploading-the-distribution-archives
+# Jobs are split to prevent unneccessary priviledge elevation through write permissions during building.
+
+name: Build and publish on Pypi
 
 on:
   release:
     types: [published]
-    branches: [main]
+
+permissions:
+  contents: read
 
 jobs:
-  build:
+  run-tests:
+    uses: ./.github/workflows/poetry-pytest.yml
+    secrets: inherit
+
+  release-build:
+    name: Build python wheels
+    needs:
+      - run-tests
     runs-on: ubuntu-latest
     steps:
       # https://github.com/actions/checkout
       - uses: actions/checkout@v4
-      # https://github.com/JRubics/poetry-publish
-      - name: Build and publish to pypi
-        uses: JRubics/poetry-publish@v1.17
+      - name: Set up Python
+      # https://github.com/actions/setup-python
+        uses: actions/setup-python@v5.1.1
         with:
-          pypi_token: ${{ secrets.PYPI_API_TOKEN }}
+          python-version: "3.12"
+
+      - name: Install Poetry
+        run: |
+          pip install poetry
+
+      - name: Build source and wheel archives
+        run: poetry build
+
+      - name: Upload distributions
+      # https://github.com/actions/upload-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-dists
+          path: dist/
+
+  pypi-publish:
+    name: Upload release to PyPI
+    needs:
+      - release-build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/gimie
+    permissions:
+      id-token: write
+      # IMPORTANT: this permission is mandatory for trusted publishing
+    steps:
+    - name: Retrieve release distributions
+    # https://github.com/actions/download-artifact
+      uses: actions/download-artifact@v4.1.8
+      with:
+        name: release-dists
+        path: dist/
+    - name: Publish package distributions to PyPI
+    # https://github.com/pypa/gh-action-pypi-publish
+      uses: pypa/gh-action-pypi-publish@release/v1
