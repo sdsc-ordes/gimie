@@ -136,5 +136,5 @@ make doc
 Releases are done via github release
 
 - a release will trigger a github workflow to publish the package on Pypi
-- Make sure to update to a new version in `pyproject.toml` before making the release
+- Make sure to update to a new version in `pyproject.toml` and `conf.py` before making the release
 - It is possible to test the publishing on Pypi.test by running a manual workflow: go to github actions and run the Workflow: 'Publish on Pypi Test'
