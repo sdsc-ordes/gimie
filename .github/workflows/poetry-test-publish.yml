@@ -14,6 +14,8 @@ permissions:
 jobs:
   run-tests:
     uses: ./.github/workflows/poetry-pytest.yml
+    secrets: inherit
+
   test-build:
     name: Build python wheels
     needs:
