@@ -1,0 +1,45 @@
+gimie.extractors package
+========================
+
+Submodules
+----------
+
+gimie.extractors.abstract module
+--------------------------------
+
+.. automodule:: gimie.extractors.abstract
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gimie.extractors.git module
+---------------------------
+
+.. automodule:: gimie.extractors.git
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gimie.extractors.github module
+------------------------------
+
+.. automodule:: gimie.extractors.github
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+gimie.extractors.gitlab module
+------------------------------
+
+.. automodule:: gimie.extractors.gitlab
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: gimie.extractors
+   :members:
+   :undoc-members:
+   :show-inheritance:

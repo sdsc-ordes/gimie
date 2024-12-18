@@ -1,0 +1,339 @@
+
+  <!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  
+  <title>gimie.parsers.license | gimie 0.7.2 documentation</title>
+  <link rel="stylesheet" href="../../../_static/pygments.css" />
+  <link rel="stylesheet" href="../../../_static/theme.c973b470ab69573097f3.css" />
+  <link rel="stylesheet" href="../../../_static/copybutton.css" />
+  <link rel="stylesheet" href="../../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+  <link rel="icon" href="../../../_static/favicon.ico" />
+  <link rel="search" title="Search" href="../../../search.html" />
+  <link rel="index" title="Index" href="../../../genindex.html" />
+</head>
+
+<body class="antialiased text-gray">
+    <div id="page" data-controller="sidebar search scroll "
+      data-action="keydown@window->search#focus "
+      class="min-h-screen xl:h-screen flex flex-col xl:grid xl:grid-layout print:block print:h-auto"
+    >
+      <a class="block transition -translate-x-full focus:translate-x-0 opacity-0 focus:opacity-100 text-xl bg-white p-4 z-20 absolute top-0 left-0 h-14" href="#gimie-parsers-license" title="Skip navigation links">Skip to content</a>
+
+    <header class="grid-area-header z-10 h-14 fixed w-full top-0 print:hidden">
+      <div class="bg-gray-dark shadow-md flex items-center h-full xl:px-2 relative"><div class="flex items-center">
+    <button data-action="sidebar#open" data-sidebar-target="hamburger"
+  class="xl:hidden h-14 w-14 leading-14 text-gray-100 hover:bg-gray-700 hover:text-brand focus:outline-none focus:bg-gray-700 focus:text-brand">
+  <span class="sr-only">Open navigation menu</span>
+  <svg aria-hidden="true" class="inline fill-current h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+  </svg>
+</button><a class="hover:bg-gray-700 focus:bg-gray-700 focus:outline-none" href="../../../index.html"
+  title="Back to homepage">
+  <img class="h-14 w-14 p-3 inline-block" src="../../../_static/logo_notext.svg" alt="Logo" /><span class="hidden lg:inline-block shrink-0 font-medium text-gray-100 mx-5 leading-14 tracking-wider">gimie 0.7.2 documentation</span>
+</a></div><div class="flex justify-end items-center flex-1"><form
+  id="searchbox"
+  action="../../../search.html"
+  data-action="click->search#focusSearchInput"
+  method="get"
+  class="flex print:hidden justify-between items-center leading-14 md:ml-4 bg-gray-dark text-gray-300 focus-within:bg-gray-50 focus-within:text-gray-800 focus-within:absolute focus-within:inset-x-0 focus-within:top-0 md:focus-within:w-full md:focus-within:static z-10">
+
+  <button
+    class="text-inherit h-14 w-14"
+    aria-label="Get search results"
+    tabindex="-1"
+  >
+    <svg aria-hidden="true" class="fill-current stroke-current h-8 w-8" stroke-width="0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+  </button>
+
+  <input
+    name="q"
+    id="search-input"
+    data-search-target="searchInput"
+    type="search"
+    aria-label="Search the docs"
+    placeholder="Search the docs"
+    class="pr-2 bg-transparent text-inherit focus:outline-none w-0 md:w-auto focus:w-full transition-all duration-100"
+  />
+</form></div>
+</div>
+    </header>
+
+    
+<aside data-sidebar-target="sidebar" class="grid-area-sidebar h-full fixed pt-14 xl:relative inset-y-0 left-0 z-20 xl:z-0 print:hidden overflow-y-auto transition-all transform transform-gpu -translate-x-full opacity-0 duration-300 xl:translate-x-0 xl:opacity-100">
+  <nav
+  role="navigation"
+  class="h-full overflow-y-auto bg-white text-gray-600 pt-8 flex flex-col"
+>
+  <div class="nav-toc flex-1 pl-6"><p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro/linked_data.html">Linked data - What is it and why do we use it?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro/git.html">Git repositories  - Where code lives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro/tokens.html">Access tokens - Authenticate gimie on your behalf</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../intro/tokens.html#encrypting-tokens">Encrypting tokens</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../intro/usage_python.html">Python Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/modules.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/gimie.html">gimie package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gimie.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gimie.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gimie.html#module-gimie.cli">gimie.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gimie.html#module-gimie.io">gimie.io module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gimie.html#module-gimie.models">gimie.models module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gimie.html#module-gimie.project">gimie.project module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../api/gimie.html#module-gimie">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../cli.html">CLI Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../cli.html#gimie">gimie</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../cli.html#gimie"></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog_link.html">[0.7.2] - 2024-12-18</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog_link.html#bug-fixes">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog_link.html#id2">[0.7.1] - 2024-12-09</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog_link.html#id3">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog_link.html#id4">[0.7.0] - 2024-11-28</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog_link.html#id5">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog_link.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog_link.html#features">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog_link.html#id6">[0.6.0] - 2023-10-19</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog_link.html#id7">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog_link.html#id8">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog_link.html#id9">[0.5.1] - 2023-07-10</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog_link.html#id10">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog_link.html#id11">[0.5.0] - 2023-07-04</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog_link.html#id12">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog_link.html#id13">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog_link.html#id14">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog_link.html#id15">[0.4.0] - 2023-06-09</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog_link.html#id16">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog_link.html#id17">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog_link.html#id18">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog_link.html#id19">[0.3.0] - 2023-02-24</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog_link.html#id20">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog_link.html#id21">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../changelog_link.html#id22">Features</a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+  <button
+      data-action="sidebar#close"
+      title="Close navigation menu"
+      class="text-4xl text-gray-800 p-4 bottom-0 hover:text-brand xl:hidden focus:text-brand self-center">
+    <span class="sr-only">Close navigation menu</span>
+    <svg aria-hidden="true" class="fill-current stroke-current h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+  </button>
+</nav>
+</aside>
+
+<main
+  class="px-4 pt-14 xl:ml-fluid grid-area-main overflow-y-auto flex flex-col flex-1 h-full mx-0 md:mx-auto xl:mr-0"
+><nav role="navigation"
+     aria-label="breadcrumbs"
+     class="print:hidden mt-12 text-sm text-gray-light">
+  <a class="text-gray-light text-sm hover:text-gray-dark font-medium focus:text-gray-dark" href="../../../index.html">gimie 0.7.2 documentation</a>
+  <span class="mr-1">/</span><a class="text-gray-light text-sm hover:text-gray-dark" href="../../index.html">Module code</a>
+    <span class="mr-1">/</span><a class="text-gray-light text-sm hover:text-gray-dark" href="../parsers.html">gimie.parsers</a>
+    <span class="mr-1">/</span><span aria-current="page">gimie.parsers.license</span>
+</nav>
+
+  <article role="main" class="flex-1 prose">
+    
+  <h1>Source code for gimie.parsers.license</h1><div class="highlight"><pre>
+<span></span><code><span class="c1"># Gimie</span>
+<span class="c1"># Copyright 2022 - Swiss Data Science Center (SDSC)</span>
+<span class="c1"># A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and</span>
+<span class="c1"># Eidgenössische Technische Hochschule Zürich (ETHZ).</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1"># http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">import</span> <span class="nn">pkgutil</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Set</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sp</span>
+<span class="kn">from</span> <span class="nn">rdflib.term</span> <span class="kn">import</span> <span class="n">URIRef</span>
+<span class="kn">from</span> <span class="nn">rdflib</span> <span class="kn">import</span> <span class="n">Graph</span>
+<span class="kn">from</span> <span class="nn">gimie.graph.namespaces</span> <span class="kn">import</span> <span class="n">SDO</span>
+<span class="kn">from</span> <span class="nn">gimie.parsers.abstract</span> <span class="kn">import</span> <span class="n">Parser</span><span class="p">,</span> <span class="n">Property</span>
+<span class="kn">from</span> <span class="nn">gimie.utils.text_processing</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+
+
+<div class="viewcode-block" id="LicenseParser"><a class="viewcode-back" href="../../../api/gimie.parsers.license.html#gimie.parsers.license.LicenseParser">[docs]</a><span class="k">class</span> <span class="nc">LicenseParser</span><span class="p">(</span><span class="n">Parser</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse LICENSE body into schema:license &lt;spdx-url&gt;.</span>
+<span class="sd">    Uses tf-idf-based matching.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subject</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">subject</span><span class="p">)</span>
+
+<div class="viewcode-block" id="LicenseParser.parse"><a class="viewcode-back" href="../../../api/gimie.parsers.license.html#gimie.parsers.license.LicenseParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Graph</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Extracts an spdx URL from a license file and returns a</span>
+<span class="sd">        graph with a single triple &lt;url&gt; &lt;schema:license&gt; &lt;spdx_url&gt;.</span>
+<span class="sd">        If no matching URL is found, an empty graph is returned.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">license_facts</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">()</span>
+        <span class="n">license_url</span> <span class="o">=</span> <span class="n">match_license</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">license_url</span><span class="p">:</span>
+            <span class="n">license_facts</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">subject</span><span class="p">,</span> <span class="n">SDO</span><span class="o">.</span><span class="n">license</span><span class="p">,</span> <span class="n">URIRef</span><span class="p">(</span><span class="n">license_url</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">license_facts</span></div></div>
+
+
+<div class="viewcode-block" id="match_license"><a class="viewcode-back" href="../../../api/gimie.parsers.license.html#gimie.parsers.license.match_license">[docs]</a><span class="k">def</span> <span class="nf">match_license</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">min_similarity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a license file, returns the url of the most similar spdx license.</span>
+<span class="sd">    This is done using TF-IDF on the license text and getting the</span>
+<span class="sd">    closest match in the SPDX license corpus based on cosine similarity.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data:</span>
+<span class="sd">        The license body as bytes.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; match_license(open(&#39;LICENSE&#39;, &#39;rb&#39;).read())</span>
+<span class="sd">    &#39;https://spdx.org/licenses/Apache-2.0.html&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Compute tfidf vector for input license</span>
+    <span class="n">vectorizer</span> <span class="o">=</span> <span class="n">load_tfidf_vectorizer</span><span class="p">()</span>
+    <span class="n">input_vec</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()])</span>
+
+    <span class="c1"># Load ids and tfidf vectors for spdx licenses</span>
+    <span class="n">spdx_licenses</span> <span class="o">=</span> <span class="n">load_spdx_ids</span><span class="p">()</span>
+    <span class="n">spdx_vecs</span> <span class="o">=</span> <span class="n">load_tfidf_matrix</span><span class="p">()</span>
+    <span class="c1"># Compute cosine similarity between input_vec and spdx vectors</span>
+    <span class="n">sim</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="p">(</span><span class="n">input_vec</span> <span class="o">*</span> <span class="n">spdx_vecs</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">todense</span><span class="p">()</span>
+    <span class="c1"># Pick the most similar spdx vector</span>
+    <span class="n">closest_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">sim</span><span class="p">)</span>
+    <span class="c1"># If similarity is below threshold, return None</span>
+    <span class="k">if</span> <span class="n">sim</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">closest_idx</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">min_similarity</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">closest_id</span> <span class="o">=</span> <span class="n">spdx_licenses</span><span class="p">[</span><span class="n">closest_idx</span><span class="p">]</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;https://spdx.org/licenses/</span><span class="si">{</span><span class="n">closest_id</span><span class="si">}</span><span class="s2">.html&quot;</span></div>
+
+
+<div class="viewcode-block" id="load_tfidf_vectorizer"><a class="viewcode-back" href="../../../api/gimie.parsers.license.html#gimie.parsers.license.load_tfidf_vectorizer">[docs]</a><span class="k">def</span> <span class="nf">load_tfidf_vectorizer</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">TfidfVectorizer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load tfidf matrix and vectorizer from disk.&quot;&quot;&quot;</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="s2">&quot;data/tfidf_vectorizer.json&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;Could not find tfidf_vectorizer.json&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">TfidfVectorizer</span><span class="o">.</span><span class="n">model_validate_json</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_spdx_ids"><a class="viewcode-back" href="../../../api/gimie.parsers.license.html#gimie.parsers.license.load_spdx_ids">[docs]</a><span class="k">def</span> <span class="nf">load_spdx_ids</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load spdx licenses from disk.&quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="s2">&quot;data/spdx_licenses.csv&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;Could not find spdx_licenses.csv&quot;</span><span class="p">)</span>
+    <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">reader</span> <span class="k">if</span> <span class="n">l</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="load_tfidf_matrix"><a class="viewcode-back" href="../../../api/gimie.parsers.license.html#gimie.parsers.license.load_tfidf_matrix">[docs]</a><span class="k">def</span> <span class="nf">load_tfidf_matrix</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">sp</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load pre-computed tfidf matrix of spdx licenses from disk.</span>
+<span class="sd">    Matrix has dimensions (n_licenses, n_features).&quot;&quot;&quot;</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">pkgutil</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="s2">&quot;data/tfidf_matrix.npz&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="s2">&quot;Could not find tfidf_matrix.npz&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sp</span><span class="o">.</span><span class="n">load_npz</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">data</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="is_license_filename"><a class="viewcode-back" href="../../../api/gimie.parsers.license.html#gimie.parsers.license.is_license_filename">[docs]</a><span class="k">def</span> <span class="nf">is_license_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given an input filename, returns a boolean indicating whether the filename path looks like a license.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    filename:</span>
+<span class="sd">        A filename to check.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; is_license_filename(&#39;LICENSE-APACHE&#39;)</span>
+<span class="sd">    True</span>
+<span class="sd">    &gt;&gt;&gt; is_license_filename(&#39;README.md&#39;)</span>
+<span class="sd">    False</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">&quot;.*(license(s)?.*|lizenz|reus(e|ing).*|copy(ing)?.*)(\.(txt|md|rst))?$&quot;</span>
+    <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+</code></pre></div>
+
+  </article>
+
+  <footer><div class="mt-20 mb-4 text-sm text-gray-700 print:mt-4">&copy; 2023, sdsc-ordes&nbsp;Made with <a class="text-link hover:text-brand focus:text-brand hover:underline focus:underline" href="https://www.sphinx-doc.org">Sphinx 6.2.1</a></div>
+  </footer></main>
+
+
+    <button
+  data-search-target="snackbar"
+  data-action="search#hideSnackbar"
+  class="fixed bottom-0 right-0 z-20 opacity-0 p-4 m-4 tracking-wide bg-gray-900 text-gray-100 transition transform transform-gpu duration-500 translate-y-full"
+>
+  Clear highlights
+</button><div
+  data-sidebar-target="screen"
+  data-action="click->sidebar#close"
+  class="fixed hidden inset-0 bg-black bg-opacity-50">
+</div>
+  </div>
+  
+  
+<script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+<script src="../../../_static/doctools.js"></script>
+<script src="../../../_static/sphinx_highlight.js"></script>
+<script src="../../../_static/clipboard.min.js"></script>
+<script src="../../../_static/copybutton.js"></script>
+<script src="../../../_static/design-tabs.js"></script>
+<script src="../../../_static/theme.c8991bd7bb6e57cbeea8.js"></script>
+  
+</body>
+
+</html>

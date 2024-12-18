@@ -1,0 +1,243 @@
+
+  <!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <title>Welcome to gimie’s documentation! | gimie 0.7.2 documentation</title>
+  <link rel="stylesheet" href="_static/pygments.css" />
+  <link rel="stylesheet" href="_static/theme.c973b470ab69573097f3.css" />
+  <link rel="stylesheet" href="_static/copybutton.css" />
+  <link rel="stylesheet" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+  <link rel="icon" href="_static/favicon.ico" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="next" title="Linked data" href="intro/linked_data.html" />
+</head>
+
+<body class="antialiased text-gray">
+    <div id="page" data-controller="sidebar search scroll "
+      data-action="keydown@window->search#focus "
+      class="min-h-screen xl:h-screen flex flex-col xl:grid xl:grid-layout print:block print:h-auto"
+    >
+      <a class="block transition -translate-x-full focus:translate-x-0 opacity-0 focus:opacity-100 text-xl bg-white p-4 z-20 absolute top-0 left-0 h-14" href="#welcome-to-gimies-documentation" title="Skip navigation links">Skip to content</a>
+
+    <header class="grid-area-header z-10 h-14 fixed w-full top-0 print:hidden">
+      <div class="bg-gray-dark shadow-md flex items-center h-full xl:px-2 relative"><div class="flex items-center">
+    <button data-action="sidebar#open" data-sidebar-target="hamburger"
+  class="xl:hidden h-14 w-14 leading-14 text-gray-100 hover:bg-gray-700 hover:text-brand focus:outline-none focus:bg-gray-700 focus:text-brand">
+  <span class="sr-only">Open navigation menu</span>
+  <svg aria-hidden="true" class="inline fill-current h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+  </svg>
+</button><a class="hover:bg-gray-700 focus:bg-gray-700 focus:outline-none" href="#"
+  title="Back to homepage">
+  <img class="h-14 w-14 p-3 inline-block" src="_static/logo_notext.svg" alt="Logo" /><span class="hidden lg:inline-block shrink-0 font-medium text-gray-100 mx-5 leading-14 tracking-wider">gimie 0.7.2 documentation</span>
+</a></div><div class="flex justify-end items-center flex-1"><form
+  id="searchbox"
+  action="search.html"
+  data-action="click->search#focusSearchInput"
+  method="get"
+  class="flex print:hidden justify-between items-center leading-14 md:ml-4 bg-gray-dark text-gray-300 focus-within:bg-gray-50 focus-within:text-gray-800 focus-within:absolute focus-within:inset-x-0 focus-within:top-0 md:focus-within:w-full md:focus-within:static z-10">
+
+  <button
+    class="text-inherit h-14 w-14"
+    aria-label="Get search results"
+    tabindex="-1"
+  >
+    <svg aria-hidden="true" class="fill-current stroke-current h-8 w-8" stroke-width="0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+  </button>
+
+  <input
+    name="q"
+    id="search-input"
+    data-search-target="searchInput"
+    type="search"
+    aria-label="Search the docs"
+    placeholder="Search the docs"
+    class="pr-2 bg-transparent text-inherit focus:outline-none w-0 md:w-auto focus:w-full transition-all duration-100"
+  />
+</form></div>
+</div>
+    </header>
+
+    
+<aside data-sidebar-target="sidebar" class="grid-area-sidebar h-full fixed pt-14 xl:relative inset-y-0 left-0 z-20 xl:z-0 print:hidden overflow-y-auto transition-all transform transform-gpu -translate-x-full opacity-0 duration-300 xl:translate-x-0 xl:opacity-100">
+  <nav
+  role="navigation"
+  class="h-full overflow-y-auto bg-white text-gray-600 pt-8 flex flex-col"
+>
+  <div class="nav-toc flex-1 pl-6"><p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro/linked_data.html">Linked data - What is it and why do we use it?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro/git.html">Git repositories  - Where code lives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro/tokens.html">Access tokens - Authenticate gimie on your behalf</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro/tokens.html#encrypting-tokens">Encrypting tokens</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro/usage_python.html">Python Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/gimie.html">gimie package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/gimie.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/gimie.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/gimie.html#module-gimie.cli">gimie.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/gimie.html#module-gimie.io">gimie.io module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/gimie.html#module-gimie.models">gimie.models module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/gimie.html#module-gimie.project">gimie.project module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/gimie.html#module-gimie">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli.html#gimie">gimie</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cli.html#gimie"></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog_link.html">[0.7.2] - 2024-12-18</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog_link.html#bug-fixes">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog_link.html#id2">[0.7.1] - 2024-12-09</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog_link.html#id3">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog_link.html#id4">[0.7.0] - 2024-11-28</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog_link.html#id5">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog_link.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog_link.html#features">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog_link.html#id6">[0.6.0] - 2023-10-19</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog_link.html#id7">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog_link.html#id8">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog_link.html#id9">[0.5.1] - 2023-07-10</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog_link.html#id10">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog_link.html#id11">[0.5.0] - 2023-07-04</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog_link.html#id12">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog_link.html#id13">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog_link.html#id14">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog_link.html#id15">[0.4.0] - 2023-06-09</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog_link.html#id16">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog_link.html#id17">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog_link.html#id18">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog_link.html#id19">[0.3.0] - 2023-02-24</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog_link.html#id20">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog_link.html#id21">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog_link.html#id22">Features</a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+  <button
+      data-action="sidebar#close"
+      title="Close navigation menu"
+      class="text-4xl text-gray-800 p-4 bottom-0 hover:text-brand xl:hidden focus:text-brand self-center">
+    <span class="sr-only">Close navigation menu</span>
+    <svg aria-hidden="true" class="fill-current stroke-current h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+  </button>
+</nav>
+</aside>
+
+<main
+  class="px-4 pt-14 xl:ml-fluid grid-area-main overflow-y-auto flex flex-col flex-1 h-full mx-0 md:mx-auto xl:mr-0"
+>
+
+  <article role="main" class="flex-1 prose">
+    
+  <a class="reference internal image-reference" href="_images/logo.svg"><img alt="gimie logo" src="_images/logo.svg" width="200" /></a>
+<section id="welcome-to-gimie-s-documentation">
+<h1>Welcome to gimie’s documentation!<a class="headerlink" href="#welcome-to-gimie-s-documentation" title="Permalink to this heading">¶</a></h1>
+<p>gimie (Git Meta Information Extractor) is a python library and command line tool to extract structured metadata from git repositories.</p>
+<div class="sd-card sd-sphinx-override sd-mb-3 sd-shadow-sm docutils">
+<div class="sd-card-body docutils">
+<div class="sd-card-title sd-font-weight-bold docutils">
+<svg version="1.1" width="2.0em" height="2.0em" class="sd-octicon sd-octicon-mark-github" viewBox="0 0 16 16" aria-hidden="true"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg> <a class="reference external" href="https://github.com/sdsc-ordes/gimie">GitHub repository</a></div>
+<p class="sd-card-text">Visit gimie’s GitHub repository to follow the latest developments!</p>
+</div>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro/linked_data.html">Linked data - What is it and why do we use it?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro/git.html">Git repositories  - Where code lives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro/tokens.html">Access tokens - Authenticate gimie on your behalf</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro/usage_python.html">Python Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/modules.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">CLI Documentation</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog_link.html">[0.7.2] - 2024-12-18</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog_link.html#id2">[0.7.1] - 2024-12-09</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog_link.html#id4">[0.7.0] - 2024-11-28</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog_link.html#id6">[0.6.0] - 2023-10-19</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog_link.html#id9">[0.5.1] - 2023-07-10</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog_link.html#id11">[0.5.0] - 2023-07-04</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog_link.html#id15">[0.4.0] - 2023-06-09</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog_link.html#id19">[0.3.0] - 2023-02-24</a></li>
+</ul>
+</div>
+</section>
+
+
+  </article>
+
+  <footer><div class="mt-20 mb-4 text-sm text-gray-700 print:mt-4">&copy; 2023, sdsc-ordes&nbsp;Made with <a class="text-link hover:text-brand focus:text-brand hover:underline focus:underline" href="https://www.sphinx-doc.org">Sphinx 6.2.1</a></div>
+  </footer></main>
+
+
+    <button
+  data-search-target="snackbar"
+  data-action="search#hideSnackbar"
+  class="fixed bottom-0 right-0 z-20 opacity-0 p-4 m-4 tracking-wide bg-gray-900 text-gray-100 transition transform transform-gpu duration-500 translate-y-full"
+>
+  Clear highlights
+</button><div
+  data-sidebar-target="screen"
+  data-action="click->sidebar#close"
+  class="fixed hidden inset-0 bg-black bg-opacity-50">
+</div>
+  </div>
+  
+  
+<script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+<script src="_static/doctools.js"></script>
+<script src="_static/sphinx_highlight.js"></script>
+<script src="_static/clipboard.min.js"></script>
+<script src="_static/copybutton.js"></script>
+<script src="_static/design-tabs.js"></script>
+<script src="_static/theme.c8991bd7bb6e57cbeea8.js"></script>
+  
+</body>
+
+</html>

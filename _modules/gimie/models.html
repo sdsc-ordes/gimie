@@ -1,0 +1,386 @@
+
+  <!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  
+  <title>gimie.models | gimie 0.7.2 documentation</title>
+  <link rel="stylesheet" href="../../_static/pygments.css" />
+  <link rel="stylesheet" href="../../_static/theme.c973b470ab69573097f3.css" />
+  <link rel="stylesheet" href="../../_static/copybutton.css" />
+  <link rel="stylesheet" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+  <link rel="icon" href="../../_static/favicon.ico" />
+  <link rel="search" title="Search" href="../../search.html" />
+  <link rel="index" title="Index" href="../../genindex.html" />
+</head>
+
+<body class="antialiased text-gray">
+    <div id="page" data-controller="sidebar search scroll "
+      data-action="keydown@window->search#focus "
+      class="min-h-screen xl:h-screen flex flex-col xl:grid xl:grid-layout print:block print:h-auto"
+    >
+      <a class="block transition -translate-x-full focus:translate-x-0 opacity-0 focus:opacity-100 text-xl bg-white p-4 z-20 absolute top-0 left-0 h-14" href="#gimie-models" title="Skip navigation links">Skip to content</a>
+
+    <header class="grid-area-header z-10 h-14 fixed w-full top-0 print:hidden">
+      <div class="bg-gray-dark shadow-md flex items-center h-full xl:px-2 relative"><div class="flex items-center">
+    <button data-action="sidebar#open" data-sidebar-target="hamburger"
+  class="xl:hidden h-14 w-14 leading-14 text-gray-100 hover:bg-gray-700 hover:text-brand focus:outline-none focus:bg-gray-700 focus:text-brand">
+  <span class="sr-only">Open navigation menu</span>
+  <svg aria-hidden="true" class="inline fill-current h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+  </svg>
+</button><a class="hover:bg-gray-700 focus:bg-gray-700 focus:outline-none" href="../../index.html"
+  title="Back to homepage">
+  <img class="h-14 w-14 p-3 inline-block" src="../../_static/logo_notext.svg" alt="Logo" /><span class="hidden lg:inline-block shrink-0 font-medium text-gray-100 mx-5 leading-14 tracking-wider">gimie 0.7.2 documentation</span>
+</a></div><div class="flex justify-end items-center flex-1"><form
+  id="searchbox"
+  action="../../search.html"
+  data-action="click->search#focusSearchInput"
+  method="get"
+  class="flex print:hidden justify-between items-center leading-14 md:ml-4 bg-gray-dark text-gray-300 focus-within:bg-gray-50 focus-within:text-gray-800 focus-within:absolute focus-within:inset-x-0 focus-within:top-0 md:focus-within:w-full md:focus-within:static z-10">
+
+  <button
+    class="text-inherit h-14 w-14"
+    aria-label="Get search results"
+    tabindex="-1"
+  >
+    <svg aria-hidden="true" class="fill-current stroke-current h-8 w-8" stroke-width="0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+  </button>
+
+  <input
+    name="q"
+    id="search-input"
+    data-search-target="searchInput"
+    type="search"
+    aria-label="Search the docs"
+    placeholder="Search the docs"
+    class="pr-2 bg-transparent text-inherit focus:outline-none w-0 md:w-auto focus:w-full transition-all duration-100"
+  />
+</form></div>
+</div>
+    </header>
+
+    
+<aside data-sidebar-target="sidebar" class="grid-area-sidebar h-full fixed pt-14 xl:relative inset-y-0 left-0 z-20 xl:z-0 print:hidden overflow-y-auto transition-all transform transform-gpu -translate-x-full opacity-0 duration-300 xl:translate-x-0 xl:opacity-100">
+  <nav
+  role="navigation"
+  class="h-full overflow-y-auto bg-white text-gray-600 pt-8 flex flex-col"
+>
+  <div class="nav-toc flex-1 pl-6"><p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro/linked_data.html">Linked data - What is it and why do we use it?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../intro/git.html">Git repositories  - Where code lives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../intro/tokens.html">Access tokens - Authenticate gimie on your behalf</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../intro/tokens.html#encrypting-tokens">Encrypting tokens</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../intro/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../intro/usage_python.html">Python Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../api/gimie.html">gimie package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gimie.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gimie.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gimie.html#module-gimie.cli">gimie.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gimie.html#module-gimie.io">gimie.io module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gimie.html#module-gimie.models">gimie.models module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gimie.html#module-gimie.project">gimie.project module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../api/gimie.html#module-gimie">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../cli.html">CLI Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cli.html#gimie">gimie</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../cli.html#gimie"></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog_link.html">[0.7.2] - 2024-12-18</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog_link.html#bug-fixes">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog_link.html#id2">[0.7.1] - 2024-12-09</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog_link.html#id3">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog_link.html#id4">[0.7.0] - 2024-11-28</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog_link.html#id5">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog_link.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog_link.html#features">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog_link.html#id6">[0.6.0] - 2023-10-19</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog_link.html#id7">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog_link.html#id8">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog_link.html#id9">[0.5.1] - 2023-07-10</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog_link.html#id10">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog_link.html#id11">[0.5.0] - 2023-07-04</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog_link.html#id12">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog_link.html#id13">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog_link.html#id14">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog_link.html#id15">[0.4.0] - 2023-06-09</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog_link.html#id16">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog_link.html#id17">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog_link.html#id18">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog_link.html#id19">[0.3.0] - 2023-02-24</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog_link.html#id20">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog_link.html#id21">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../changelog_link.html#id22">Features</a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+  <button
+      data-action="sidebar#close"
+      title="Close navigation menu"
+      class="text-4xl text-gray-800 p-4 bottom-0 hover:text-brand xl:hidden focus:text-brand self-center">
+    <span class="sr-only">Close navigation menu</span>
+    <svg aria-hidden="true" class="fill-current stroke-current h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+  </button>
+</nav>
+</aside>
+
+<main
+  class="px-4 pt-14 xl:ml-fluid grid-area-main overflow-y-auto flex flex-col flex-1 h-full mx-0 md:mx-auto xl:mr-0"
+><nav role="navigation"
+     aria-label="breadcrumbs"
+     class="print:hidden mt-12 text-sm text-gray-light">
+  <a class="text-gray-light text-sm hover:text-gray-dark font-medium focus:text-gray-dark" href="../../index.html">gimie 0.7.2 documentation</a>
+  <span class="mr-1">/</span><a class="text-gray-light text-sm hover:text-gray-dark" href="../index.html">Module code</a>
+    <span class="mr-1">/</span><span aria-current="page">gimie.models</span>
+</nav>
+
+  <article role="main" class="flex-1 prose">
+    
+  <h1>Source code for gimie.models</h1><div class="highlight"><pre>
+<span></span><code><span class="c1"># Gimie</span>
+<span class="c1"># Copyright 2022 - Swiss Data Science Center (SDSC)</span>
+<span class="c1"># A partnership between École Polytechnique Fédérale de Lausanne (EPFL) and</span>
+<span class="c1"># Eidgenössische Technische Hochschule Zürich (ETHZ).</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1"># http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;Data models to represent nodes in the graph generated by gimie.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">calamus.schema</span> <span class="kn">import</span> <span class="n">JsonLDSchema</span>
+<span class="kn">from</span> <span class="nn">calamus</span> <span class="kn">import</span> <span class="n">fields</span>
+<span class="kn">from</span> <span class="nn">rdflib</span> <span class="kn">import</span> <span class="n">Graph</span>
+
+<span class="kn">from</span> <span class="nn">gimie.graph.namespaces</span> <span class="kn">import</span> <span class="n">SDO</span>
+
+
+<div class="viewcode-block" id="Release"><a class="viewcode-back" href="../../api/gimie.html#gimie.models.Release">[docs]</a><span class="nd">@dataclass</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Release</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class represents a release of a repository.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tag: str</span>
+<span class="sd">        The tag of the release.</span>
+<span class="sd">    date: datetime.datetime</span>
+<span class="sd">        The date of the release.</span>
+<span class="sd">    commit_hash: str</span>
+<span class="sd">        The commit hash of the release.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">tag</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">compare</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">date</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">compare</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">commit_hash</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">compare</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Organization"><a class="viewcode-back" href="../../api/gimie.html#gimie.models.Organization">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Organization</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;See http//schema.org/Organization&quot;&quot;&quot;</span>
+
+    <span class="n">_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">legal_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">email</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">logo</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="OrganizationSchema"><a class="viewcode-back" href="../../api/gimie.html#gimie.models.OrganizationSchema">[docs]</a><span class="k">class</span> <span class="nc">OrganizationSchema</span><span class="p">(</span><span class="n">JsonLDSchema</span><span class="p">):</span>
+    <span class="n">_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Id</span><span class="p">()</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">legal_name</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">legalName</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">email</span><span class="p">)</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+    <span class="n">logo</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">IRI</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">logo</span><span class="p">)</span>
+
+<div class="viewcode-block" id="OrganizationSchema.Meta"><a class="viewcode-back" href="../../api/gimie.html#gimie.models.OrganizationSchema.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">rdf_type</span> <span class="o">=</span> <span class="n">SDO</span><span class="o">.</span><span class="n">Organization</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Organization</span></div></div>
+
+
+<div class="viewcode-block" id="Person"><a class="viewcode-back" href="../../api/gimie.html#gimie.models.Person">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Person</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;See http//schema.org/Person&quot;&quot;&quot;</span>
+
+    <span class="n">_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">identifier</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">email</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">affiliations</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Organization</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">) &quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">email</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&lt;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">email</span><span class="si">}</span><span class="s2">&gt; &quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">email</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">orgs</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">org</span><span class="o">.</span><span class="n">name</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">org</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">affiliations</span><span class="p">])</span><span class="si">}</span><span class="s2">]&quot;</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">affiliations</span>
+            <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">identifier</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">name</span><span class="si">}{</span><span class="n">email</span><span class="si">}{</span><span class="n">orgs</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PersonSchema"><a class="viewcode-back" href="../../api/gimie.html#gimie.models.PersonSchema">[docs]</a><span class="k">class</span> <span class="nc">PersonSchema</span><span class="p">(</span><span class="n">JsonLDSchema</span><span class="p">):</span>
+    <span class="n">_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Id</span><span class="p">()</span>
+    <span class="n">identifier</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">affiliations</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Nested</span><span class="p">(</span>
+        <span class="n">SDO</span><span class="o">.</span><span class="n">affiliation</span><span class="p">,</span> <span class="n">OrganizationSchema</span><span class="p">,</span> <span class="n">many</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="PersonSchema.Meta"><a class="viewcode-back" href="../../api/gimie.html#gimie.models.PersonSchema.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">rdf_type</span> <span class="o">=</span> <span class="n">SDO</span><span class="o">.</span><span class="n">Person</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Person</span></div></div>
+
+
+<div class="viewcode-block" id="Repository"><a class="viewcode-back" href="../../api/gimie.html#gimie.models.Repository">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Repository</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This class represents a git repository.</span>
+<span class="sd">    It does not contain any information about the content of the repository.</span>
+<span class="sd">    See https://schema.org/SoftwareSourceCode</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">url</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="n">authors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">Organization</span><span class="p">,</span> <span class="n">Person</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">contributors</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Person</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">date_created</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">date_modified</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">date_published</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">download_url</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">identifier</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">keywords</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">licenses</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">parent_repository</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">prog_langs</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">version</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Unique identifier for the repository.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span>
+
+<div class="viewcode-block" id="Repository.to_graph"><a class="viewcode-back" href="../../api/gimie.html#gimie.models.Repository.to_graph">[docs]</a>    <span class="k">def</span> <span class="nf">to_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Graph</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert repository to RDF graph.&quot;&quot;&quot;</span>
+        <span class="n">jd</span> <span class="o">=</span> <span class="n">RepositorySchema</span><span class="p">()</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">g</span><span class="p">:</span> <span class="n">Graph</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">()</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;json-ld&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">jd</span><span class="p">))</span>
+        <span class="n">g</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;schema&quot;</span><span class="p">,</span> <span class="n">SDO</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">g</span></div>
+
+<div class="viewcode-block" id="Repository.serialize"><a class="viewcode-back" href="../../api/gimie.html#gimie.models.Repository.serialize">[docs]</a>    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ttl&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Serialize the RDF graph representing the instance.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_graph</span><span class="p">()</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="nb">format</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># type: ignore</span></div>
+
+<div class="viewcode-block" id="Repository.jsonld"><a class="viewcode-back" href="../../api/gimie.html#gimie.models.Repository.jsonld">[docs]</a>    <span class="k">def</span> <span class="nf">jsonld</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Alias for jsonld serialization.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="s2">&quot;json-ld&quot;</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="RepositorySchema"><a class="viewcode-back" href="../../api/gimie.html#gimie.models.RepositorySchema">[docs]</a><span class="k">class</span> <span class="nc">RepositorySchema</span><span class="p">(</span><span class="n">JsonLDSchema</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;This defines the schema used for json-ld serialization.&quot;&quot;&quot;</span>
+
+    <span class="n">_id</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Id</span><span class="p">()</span>
+    <span class="n">authors</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Nested</span><span class="p">(</span>
+        <span class="n">SDO</span><span class="o">.</span><span class="n">author</span><span class="p">,</span> <span class="p">[</span><span class="n">PersonSchema</span><span class="p">,</span> <span class="n">OrganizationSchema</span><span class="p">],</span> <span class="n">many</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="n">contributors</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Nested</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">contributor</span><span class="p">,</span> <span class="n">PersonSchema</span><span class="p">,</span> <span class="n">many</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">date_created</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Date</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">dateCreated</span><span class="p">)</span>
+    <span class="n">date_modified</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Date</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">dateModified</span><span class="p">)</span>
+    <span class="n">date_published</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Date</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">datePublished</span><span class="p">)</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+    <span class="n">download_url</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">IRI</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">downloadUrl</span><span class="p">)</span>
+    <span class="n">identifier</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+    <span class="n">keywords</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">keywords</span><span class="p">,</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">licenses</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">license</span><span class="p">,</span> <span class="n">fields</span><span class="o">.</span><span class="n">IRI</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">parent_repository</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">IRI</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">isBasedOn</span><span class="p">)</span>
+    <span class="n">prog_langs</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">List</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">programmingLanguage</span><span class="p">,</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">IRI</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">codeRepository</span><span class="p">)</span>
+    <span class="n">version</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="n">SDO</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RepositorySchema.Meta"><a class="viewcode-back" href="../../api/gimie.html#gimie.models.RepositorySchema.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">rdf_type</span> <span class="o">=</span> <span class="n">SDO</span><span class="o">.</span><span class="n">SoftwareSourceCode</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">Repository</span>
+        <span class="n">add_value_types</span> <span class="o">=</span> <span class="kc">False</span></div></div>
+</code></pre></div>
+
+  </article>
+
+  <footer><div class="mt-20 mb-4 text-sm text-gray-700 print:mt-4">&copy; 2023, sdsc-ordes&nbsp;Made with <a class="text-link hover:text-brand focus:text-brand hover:underline focus:underline" href="https://www.sphinx-doc.org">Sphinx 6.2.1</a></div>
+  </footer></main>
+
+
+    <button
+  data-search-target="snackbar"
+  data-action="search#hideSnackbar"
+  class="fixed bottom-0 right-0 z-20 opacity-0 p-4 m-4 tracking-wide bg-gray-900 text-gray-100 transition transform transform-gpu duration-500 translate-y-full"
+>
+  Clear highlights
+</button><div
+  data-sidebar-target="screen"
+  data-action="click->sidebar#close"
+  class="fixed hidden inset-0 bg-black bg-opacity-50">
+</div>
+  </div>
+  
+  
+<script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+<script src="../../_static/doctools.js"></script>
+<script src="../../_static/sphinx_highlight.js"></script>
+<script src="../../_static/clipboard.min.js"></script>
+<script src="../../_static/copybutton.js"></script>
+<script src="../../_static/design-tabs.js"></script>
+<script src="../../_static/theme.c8991bd7bb6e57cbeea8.js"></script>
+  
+</body>
+
+</html>

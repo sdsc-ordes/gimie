@@ -1,0 +1,428 @@
+
+  <!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <title>gimie.parsers package | gimie 0.7.2 documentation</title>
+  <link rel="stylesheet" href="../_static/pygments.css" />
+  <link rel="stylesheet" href="../_static/theme.c973b470ab69573097f3.css" />
+  <link rel="stylesheet" href="../_static/copybutton.css" />
+  <link rel="stylesheet" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+  <link rel="icon" href="../_static/favicon.ico" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="next" title="gimie.parsers.license package" href="gimie.parsers.license.html" />
+  <link rel="prev" title="gimie.graph package" href="gimie.graph.html" />
+</head>
+
+<body class="antialiased text-gray">
+    <div id="page" data-controller="sidebar search scroll "
+      data-action="keydown@window->search#focus "
+      class="min-h-screen xl:h-screen flex flex-col xl:grid xl:grid-layout print:block print:h-auto"
+    >
+      <a class="block transition -translate-x-full focus:translate-x-0 opacity-0 focus:opacity-100 text-xl bg-white p-4 z-20 absolute top-0 left-0 h-14" href="#gimie-parsers-package" title="Skip navigation links">Skip to content</a>
+
+    <header class="grid-area-header z-10 h-14 fixed w-full top-0 print:hidden">
+      <div class="bg-gray-dark shadow-md flex items-center h-full xl:px-2 relative"><div class="flex items-center">
+    <button data-action="sidebar#open" data-sidebar-target="hamburger"
+  class="xl:hidden h-14 w-14 leading-14 text-gray-100 hover:bg-gray-700 hover:text-brand focus:outline-none focus:bg-gray-700 focus:text-brand">
+  <span class="sr-only">Open navigation menu</span>
+  <svg aria-hidden="true" class="inline fill-current h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+  </svg>
+</button><a class="hover:bg-gray-700 focus:bg-gray-700 focus:outline-none" href="../index.html"
+  title="Back to homepage">
+  <img class="h-14 w-14 p-3 inline-block" src="../_static/logo_notext.svg" alt="Logo" /><span class="hidden lg:inline-block shrink-0 font-medium text-gray-100 mx-5 leading-14 tracking-wider">gimie 0.7.2 documentation</span>
+</a></div><div class="flex justify-end items-center flex-1"><form
+  id="searchbox"
+  action="../search.html"
+  data-action="click->search#focusSearchInput"
+  method="get"
+  class="flex print:hidden justify-between items-center leading-14 md:ml-4 bg-gray-dark text-gray-300 focus-within:bg-gray-50 focus-within:text-gray-800 focus-within:absolute focus-within:inset-x-0 focus-within:top-0 md:focus-within:w-full md:focus-within:static z-10">
+
+  <button
+    class="text-inherit h-14 w-14"
+    aria-label="Get search results"
+    tabindex="-1"
+  >
+    <svg aria-hidden="true" class="fill-current stroke-current h-8 w-8" stroke-width="0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+  </button>
+
+  <input
+    name="q"
+    id="search-input"
+    data-search-target="searchInput"
+    type="search"
+    aria-label="Search the docs"
+    placeholder="Search the docs"
+    class="pr-2 bg-transparent text-inherit focus:outline-none w-0 md:w-auto focus:w-full transition-all duration-100"
+  />
+</form></div>
+</div>
+    </header>
+
+    
+<aside data-sidebar-target="sidebar" class="grid-area-sidebar h-full fixed pt-14 xl:relative inset-y-0 left-0 z-20 xl:z-0 print:hidden overflow-y-auto transition-all transform transform-gpu -translate-x-full opacity-0 duration-300 xl:translate-x-0 xl:opacity-100">
+  <nav
+  role="navigation"
+  class="h-full overflow-y-auto bg-white text-gray-600 pt-8 flex flex-col"
+>
+  <div class="nav-toc flex-1 pl-6"><p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/linked_data.html">Linked data - What is it and why do we use it?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/git.html">Git repositories  - Where code lives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/tokens.html">Access tokens - Authenticate gimie on your behalf</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../intro/tokens.html#encrypting-tokens">Encrypting tokens</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/usage_python.html">Python Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API Documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="gimie.html">gimie package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="gimie.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.html#module-gimie.cli">gimie.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.html#module-gimie.io">gimie.io module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.html#module-gimie.models">gimie.models module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.html#module-gimie.project">gimie.project module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.html#module-gimie">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">CLI Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cli.html#gimie">gimie</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cli.html#gimie"></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html">[0.7.2] - 2024-12-18</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#bug-fixes">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id2">[0.7.1] - 2024-12-09</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id3">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id4">[0.7.0] - 2024-11-28</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id5">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#features">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id6">[0.6.0] - 2023-10-19</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id7">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id8">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id9">[0.5.1] - 2023-07-10</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id10">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id11">[0.5.0] - 2023-07-04</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id12">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id13">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id14">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id15">[0.4.0] - 2023-06-09</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id16">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id17">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id18">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id19">[0.3.0] - 2023-02-24</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id20">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id21">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id22">Features</a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+  <button
+      data-action="sidebar#close"
+      title="Close navigation menu"
+      class="text-4xl text-gray-800 p-4 bottom-0 hover:text-brand xl:hidden focus:text-brand self-center">
+    <span class="sr-only">Close navigation menu</span>
+    <svg aria-hidden="true" class="fill-current stroke-current h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+  </button>
+</nav>
+</aside>
+
+<main
+  class="px-4 pt-14 xl:ml-fluid grid-area-main overflow-y-auto flex flex-col flex-1 h-full mx-0 md:mx-auto xl:mr-0"
+><nav role="navigation"
+     aria-label="breadcrumbs"
+     class="print:hidden mt-12 text-sm text-gray-light">
+  <a class="text-gray-light text-sm hover:text-gray-dark font-medium focus:text-gray-dark" href="../index.html">gimie 0.7.2 documentation</a>
+  <span class="mr-1">/</span><a class="text-gray-light text-sm hover:text-gray-dark" href="modules.html">gimie</a>
+    <span class="mr-1">/</span><a class="text-gray-light text-sm hover:text-gray-dark" href="gimie.html">gimie package</a>
+    <span class="mr-1">/</span><span aria-current="page">gimie.parsers package</span>
+</nav>
+
+  <article role="main" class="flex-1 prose">
+    
+  <section id="gimie-parsers-package">
+<h1>gimie.parsers package<a class="headerlink" href="#gimie-parsers-package" title="Permalink to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gimie.parsers.license.html">gimie.parsers.license package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gimie.parsers.license.html#module-gimie.parsers.license">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.license.html#gimie.parsers.license.LicenseParser"><code class="docutils literal notranslate"><span class="pre">LicenseParser</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.license.html#gimie.parsers.license.is_license_filename"><code class="docutils literal notranslate"><span class="pre">is_license_filename()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.license.html#gimie.parsers.license.load_spdx_ids"><code class="docutils literal notranslate"><span class="pre">load_spdx_ids()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.license.html#gimie.parsers.license.load_tfidf_matrix"><code class="docutils literal notranslate"><span class="pre">load_tfidf_matrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.license.html#gimie.parsers.license.load_tfidf_vectorizer"><code class="docutils literal notranslate"><span class="pre">load_tfidf_vectorizer()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.license.html#gimie.parsers.license.match_license"><code class="docutils literal notranslate"><span class="pre">match_license()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-gimie.parsers.abstract">
+<span id="gimie-parsers-abstract-module"></span><h2>gimie.parsers.abstract module<a class="headerlink" href="#module-gimie.parsers.abstract" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gimie.parsers.abstract.Parser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gimie.parsers.abstract.</span></span><span class="sig-name descname"><span class="pre">Parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/parsers/abstract.html#Parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.parsers.abstract.Parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
+<p>Parser is an Abstract Base Class. It is only meant
+to define a standard interface for all parsers.</p>
+<p>All subclasses must implement parse(). A parser parses
+bytes data into a set of predicate-object tuples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>subject</strong> – The subject of a triple (subject - predicate - object) to be used for writing parsed properties to.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gimie.parsers.abstract.Parser.parse">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.13)"><span class="pre">bytes</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html#rdflib.graph.Graph" title="(in rdflib v)"><span class="pre">Graph</span></a></span></span><a class="reference internal" href="../_modules/gimie/parsers/abstract.html#Parser.parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.parsers.abstract.Parser.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract rdf graph from a source.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gimie.parsers.abstract.Parser.parse_all">
+<span class="sig-name descname"><span class="pre">parse_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">docs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.13)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html#rdflib.graph.Graph" title="(in rdflib v)"><span class="pre">Graph</span></a></span></span><a class="reference internal" href="../_modules/gimie/parsers/abstract.html#Parser.parse_all"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.parsers.abstract.Parser.parse_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse multiple sources and return the union of
+triples.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gimie.parsers.cff">
+<span id="gimie-parsers-cff-module"></span><h2>gimie.parsers.cff module<a class="headerlink" href="#module-gimie.parsers.cff" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gimie.parsers.cff.CffParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gimie.parsers.cff.</span></span><span class="sig-name descname"><span class="pre">CffParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/parsers/cff.html#CffParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.parsers.cff.CffParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gimie.parsers.abstract.Parser" title="gimie.parsers.abstract.Parser"><code class="xref py py-class docutils literal notranslate"><span class="pre">Parser</span></code></a></p>
+<p>Parse DOI and authors from CITATION.cff.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gimie.parsers.cff.CffParser.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.13)"><span class="pre">bytes</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html#rdflib.graph.Graph" title="(in rdflib v)"><span class="pre">Graph</span></a></span></span><a class="reference internal" href="../_modules/gimie/parsers/cff.html#CffParser.parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.parsers.cff.CffParser.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts DOIs and list of authors from a CFF file and returns a
+graph with triples &lt;subject&gt; &lt;schema:citation&gt; &lt;doi&gt;
+and a number of author objects with &lt;schema:name&gt; and &lt;md4i:orcid&gt; values.
+If no DOIs are found, they will not be included in the graph.
+If no authors are found, they will not be included in the graph.
+If neither authors nor DOIs are found, an empty graph is returned.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gimie.parsers.cff.doi_to_url">
+<span class="sig-prename descclassname"><span class="pre">gimie.parsers.cff.</span></span><span class="sig-name descname"><span class="pre">doi_to_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">doi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../_modules/gimie/parsers/cff.html#doi_to_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.parsers.cff.doi_to_url" title="Permalink to this definition">¶</a></dt>
+<dd><p>Formats a doi to an https URL to doi.org.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>doi</strong> – doi where the scheme (e.g. <a class="reference external" href="https://">https://</a>) and
+hostname (e.g. doi.org) may be missing.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>doi formatted as a valid url. Base url
+is set to <a class="reference external" href="https://doi.org">https://doi.org</a> when missing.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">doi_to_url</span><span class="p">(</span><span class="s2">&quot;10.0000/example.abcd&quot;</span><span class="p">)</span>
+<span class="go">&#39;https://doi.org/10.0000/example.abcd&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">doi_to_url</span><span class="p">(</span><span class="s2">&quot;doi.org/10.0000/example.abcd&quot;</span><span class="p">)</span>
+<span class="go">&#39;https://doi.org/10.0000/example.abcd&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">doi_to_url</span><span class="p">(</span><span class="s2">&quot;https://doi.org/10.0000/example.abcd&quot;</span><span class="p">)</span>
+<span class="go">&#39;https://doi.org/10.0000/example.abcd&#39;</span>
+</code></pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gimie.parsers.cff.get_cff_authors">
+<span class="sig-prename descclassname"><span class="pre">gimie.parsers.cff.</span></span><span class="sig-name descname"><span class="pre">get_cff_authors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.13)"><span class="pre">bytes</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/gimie/parsers/cff.html#get_cff_authors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.parsers.cff.get_cff_authors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a CFF file, returns a list of dictionaries containing orcid, affiliation, first and last names of authors, if any.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – The cff file body as bytes.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>orcid, names strings of authors</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)">dict</a>), optional</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gimie.parsers.cff.get_cff_doi">
+<span class="sig-prename descclassname"><span class="pre">gimie.parsers.cff.</span></span><span class="sig-name descname"><span class="pre">get_cff_doi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.13)"><span class="pre">bytes</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/gimie/parsers/cff.html#get_cff_doi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.parsers.cff.get_cff_doi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a CFF file, returns a list of DOIs, if any.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – The cff file body as bytes.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DOIs formatted as valid URLs</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)">str</a>, optional</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span class="gp">&gt;&gt;&gt; </span><span class="n">get_cff_doi</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;identifiers:</span><span class="se">\n</span><span class="s2">    - type: doi</span><span class="se">\n</span><span class="s2">      value: 10.5281/zenodo.1234</span><span class="se">\n</span><span class="s2">    - type: doi</span><span class="se">\n</span><span class="s2">      value: 10.5281/zenodo.5678&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf8&quot;</span><span class="p">))</span>
+<span class="go">[&#39;https://doi.org/10.5281/zenodo.1234&#39;, &#39;https://doi.org/10.5281/zenodo.5678&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_cff_doi</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;identifiers:</span><span class="se">\n</span><span class="s2">    - type: doi</span><span class="se">\n</span><span class="s2">      value: 10.5281/zenodo.9012&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf8&quot;</span><span class="p">))</span>
+<span class="go">[&#39;https://doi.org/10.5281/zenodo.9012&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">get_cff_doi</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;abc: def&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf8&quot;</span><span class="p">))</span>
+</code></pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="module-gimie.parsers">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gimie.parsers" title="Permalink to this heading">¶</a></h2>
+<p>Files which can be parsed by gimie.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gimie.parsers.ParserInfo">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gimie.parsers.</span></span><span class="sig-name descname"><span class="pre">ParserInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">default</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/parsers.html#ParserInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.parsers.ParserInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NamedTuple" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">NamedTuple</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.parsers.ParserInfo.default">
+<span class="sig-name descname"><span class="pre">default</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></em><a class="headerlink" href="#gimie.parsers.ParserInfo.default" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.parsers.ParserInfo.type">
+<span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.13)"><span class="pre">Type</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gimie.parsers.abstract.Parser" title="gimie.parsers.abstract.Parser"><span class="pre">Parser</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#gimie.parsers.ParserInfo.type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gimie.parsers.get_parser">
+<span class="sig-prename descclassname"><span class="pre">gimie.parsers.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.13)"><span class="pre">Type</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gimie.parsers.abstract.Parser" title="gimie.parsers.abstract.Parser"><span class="pre">Parser</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gimie/parsers.html#get_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.parsers.get_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a parser by name.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gimie.parsers.list_default_parsers">
+<span class="sig-prename descclassname"><span class="pre">gimie.parsers.</span></span><span class="sig-name descname"><span class="pre">list_default_parsers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.13)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gimie/parsers.html#list_default_parsers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.parsers.list_default_parsers" title="Permalink to this definition">¶</a></dt>
+<dd><p>List the names of all default parsers.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gimie.parsers.list_parsers">
+<span class="sig-prename descclassname"><span class="pre">gimie.parsers.</span></span><span class="sig-name descname"><span class="pre">list_parsers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.13)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gimie/parsers.html#list_parsers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.parsers.list_parsers" title="Permalink to this definition">¶</a></dt>
+<dd><p>List the names of all parsers.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gimie.parsers.parse_files">
+<span class="sig-prename descclassname"><span class="pre">gimie.parsers.</span></span><span class="sig-name descname"><span class="pre">parse_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subject</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.13)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="gimie.html#gimie.io.Resource" title="gimie.io.Resource"><span class="pre">Resource</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parsers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.13)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.html#rdflib.graph.Graph" title="(in rdflib v)"><span class="pre">Graph</span></a></span></span><a class="reference internal" href="../_modules/gimie/parsers.html#parse_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.parsers.parse_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each input file, select appropriate parser among a collection and
+parse its contents. Return the union of all parsed properties in the form of triples.
+If no parser is found for a given file, skip it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subject</strong> – The subject URI of the repository.</p></li>
+<li><p><strong>files</strong> – A collection of file-like objects.</p></li>
+<li><p><strong>parsers</strong> – A set of parser names. If None, use the default collection.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="gimie.parsers.select_parser">
+<span class="sig-prename descclassname"><span class="pre">gimie.parsers.</span></span><span class="sig-name descname"><span class="pre">select_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.13)"><span class="pre">Path</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parsers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Set" title="(in Python v3.13)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Type" title="(in Python v3.13)"><span class="pre">Type</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gimie.parsers.abstract.Parser" title="gimie.parsers.abstract.Parser"><span class="pre">Parser</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/gimie/parsers.html#select_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.parsers.select_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Select the appropriate parser from a collection based on a file path.
+If no parser is found, return None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> – The path of the file to parse.</p></li>
+<li><p><strong>parsers</strong> – A set of parser names. If None, use the default collection.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+  </article>
+
+  <footer><div class="mt-20 mb-4 text-sm text-gray-700 print:mt-4">&copy; 2023, sdsc-ordes&nbsp;Made with <a class="text-link hover:text-brand focus:text-brand hover:underline focus:underline" href="https://www.sphinx-doc.org">Sphinx 6.2.1</a></div>
+  </footer></main>
+
+
+    <button
+  data-search-target="snackbar"
+  data-action="search#hideSnackbar"
+  class="fixed bottom-0 right-0 z-20 opacity-0 p-4 m-4 tracking-wide bg-gray-900 text-gray-100 transition transform transform-gpu duration-500 translate-y-full"
+>
+  Clear highlights
+</button><div
+  data-sidebar-target="screen"
+  data-action="click->sidebar#close"
+  class="fixed hidden inset-0 bg-black bg-opacity-50">
+</div>
+  </div>
+  
+  
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/sphinx_highlight.js"></script>
+<script src="../_static/clipboard.min.js"></script>
+<script src="../_static/copybutton.js"></script>
+<script src="../_static/design-tabs.js"></script>
+<script src="../_static/theme.c8991bd7bb6e57cbeea8.js"></script>
+  
+</body>
+
+</html>

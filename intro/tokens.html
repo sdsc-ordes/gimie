@@ -1,0 +1,294 @@
+
+  <!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <title>Token management | gimie 0.7.2 documentation</title>
+  <link rel="stylesheet" href="../_static/pygments.css" />
+  <link rel="stylesheet" href="../_static/theme.c973b470ab69573097f3.css" />
+  <link rel="stylesheet" href="../_static/copybutton.css" />
+  <link rel="stylesheet" href="../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css" />
+  <link rel="icon" href="../_static/favicon.ico" />
+  <link rel="search" title="Search" href="../search.html" />
+  <link rel="index" title="Index" href="../genindex.html" />
+  <link rel="next" title="Quick start" href="quickstart.html" />
+  <link rel="prev" title="Git repositories" href="git.html" />
+</head>
+
+<body class="antialiased text-gray">
+    <div id="page" data-controller="sidebar search scroll "
+      data-action="keydown@window->search#focus "
+      class="min-h-screen xl:h-screen flex flex-col xl:grid xl:grid-layout print:block print:h-auto"
+    >
+      <a class="block transition -translate-x-full focus:translate-x-0 opacity-0 focus:opacity-100 text-xl bg-white p-4 z-20 absolute top-0 left-0 h-14" href="#token-management" title="Skip navigation links">Skip to content</a>
+
+    <header class="grid-area-header z-10 h-14 fixed w-full top-0 print:hidden">
+      <div class="bg-gray-dark shadow-md flex items-center h-full xl:px-2 relative"><div class="flex items-center">
+    <button data-action="sidebar#open" data-sidebar-target="hamburger"
+  class="xl:hidden h-14 w-14 leading-14 text-gray-100 hover:bg-gray-700 hover:text-brand focus:outline-none focus:bg-gray-700 focus:text-brand">
+  <span class="sr-only">Open navigation menu</span>
+  <svg aria-hidden="true" class="inline fill-current h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+  </svg>
+</button><a class="hover:bg-gray-700 focus:bg-gray-700 focus:outline-none" href="../index.html"
+  title="Back to homepage">
+  <img class="h-14 w-14 p-3 inline-block" src="../_static/logo_notext.svg" alt="Logo" /><span class="hidden lg:inline-block shrink-0 font-medium text-gray-100 mx-5 leading-14 tracking-wider">gimie 0.7.2 documentation</span>
+</a></div><div class="flex justify-end items-center flex-1"><form
+  id="searchbox"
+  action="../search.html"
+  data-action="click->search#focusSearchInput"
+  method="get"
+  class="flex print:hidden justify-between items-center leading-14 md:ml-4 bg-gray-dark text-gray-300 focus-within:bg-gray-50 focus-within:text-gray-800 focus-within:absolute focus-within:inset-x-0 focus-within:top-0 md:focus-within:w-full md:focus-within:static z-10">
+
+  <button
+    class="text-inherit h-14 w-14"
+    aria-label="Get search results"
+    tabindex="-1"
+  >
+    <svg aria-hidden="true" class="fill-current stroke-current h-8 w-8" stroke-width="0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+  </button>
+
+  <input
+    name="q"
+    id="search-input"
+    data-search-target="searchInput"
+    type="search"
+    aria-label="Search the docs"
+    placeholder="Search the docs"
+    class="pr-2 bg-transparent text-inherit focus:outline-none w-0 md:w-auto focus:w-full transition-all duration-100"
+  />
+</form></div>
+</div>
+    </header>
+
+    
+<aside data-sidebar-target="sidebar" class="grid-area-sidebar h-full fixed pt-14 xl:relative inset-y-0 left-0 z-20 xl:z-0 print:hidden overflow-y-auto transition-all transform transform-gpu -translate-x-full opacity-0 duration-300 xl:translate-x-0 xl:opacity-100">
+  <nav
+  role="navigation"
+  class="h-full overflow-y-auto bg-white text-gray-600 pt-8 flex flex-col"
+>
+  <div class="nav-toc flex-1 pl-6"><p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="linked_data.html">Linked data - What is it and why do we use it?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="git.html">Git repositories  - Where code lives</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Access tokens - Authenticate gimie on your behalf</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#encrypting-tokens">Encrypting tokens</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage_python.html">Python Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api/modules.html">API Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../api/gimie.html">gimie package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../api/gimie.html#subpackages">Subpackages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/gimie.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/gimie.html#module-gimie.cli">gimie.cli module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/gimie.html#module-gimie.io">gimie.io module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/gimie.html#module-gimie.models">gimie.models module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/gimie.html#module-gimie.project">gimie.project module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../api/gimie.html#module-gimie">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">CLI Documentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cli.html#gimie">gimie</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cli.html#gimie"></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html">[0.7.2] - 2024-12-18</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#bug-fixes">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id2">[0.7.1] - 2024-12-09</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id3">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id4">[0.7.0] - 2024-11-28</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id5">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#documentation">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#features">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id6">[0.6.0] - 2023-10-19</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id7">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id8">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id9">[0.5.1] - 2023-07-10</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id10">Bug Fixes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id11">[0.5.0] - 2023-07-04</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id12">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id13">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id14">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id15">[0.4.0] - 2023-06-09</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id16">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id17">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id18">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id19">[0.3.0] - 2023-02-24</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id20">Bug Fixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id21">Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../changelog_link.html#id22">Features</a></li>
+</ul>
+</li>
+</ul>
+</div>
+
+  <button
+      data-action="sidebar#close"
+      title="Close navigation menu"
+      class="text-4xl text-gray-800 p-4 bottom-0 hover:text-brand xl:hidden focus:text-brand self-center">
+    <span class="sr-only">Close navigation menu</span>
+    <svg aria-hidden="true" class="fill-current stroke-current h-6 w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+  </button>
+</nav>
+</aside>
+
+<main
+  class="px-4 pt-14 xl:ml-fluid grid-area-main overflow-y-auto flex flex-col flex-1 h-full mx-0 md:mx-auto xl:mr-0"
+><nav role="navigation"
+     aria-label="breadcrumbs"
+     class="print:hidden mt-12 text-sm text-gray-light">
+  <a class="text-gray-light text-sm hover:text-gray-dark font-medium focus:text-gray-dark" href="../index.html">gimie 0.7.2 documentation</a>
+  <span class="mr-1">/</span><span aria-current="page">Token management</span>
+</nav>
+
+  <article role="main" class="flex-1 prose">
+    
+  <section id="token-management">
+<h1>Token management<a class="headerlink" href="#token-management" title="Permalink to this heading">¶</a></h1>
+<p>Gimie requests data from third party APIs (Gitlab, Github) which require authentication to work. This authentication usually works with Personal Authentication Tokens (PATs). PATs are secret codes that can be used as passwords to perform actions on your behalf, but whose permissions can be limited to specific actions. Since Gimie only consumes data, it will normally work with tokens that have read-only permission.</p>
+<p>Generating tokens can usually be done via the web interface of the service provider, and they must then be provided to Gimie. There are 2 ways to pass your token to Gimie:</p>
+<ol class="arabic simple">
+<li><p>Set the corresponding Environment variable. The token will only be accessible for the current session:</p></li>
+</ol>
+<div class="sd-tab-set docutils">
+<input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-0">
+Linux/Mac/BSD</label><div class="sd-tab-content docutils">
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><code><span class="go">export GITLAB_TOKEN=&lt;your-gitlab-token&gt;</span>
+<span class="go">export GITHUB_TOKEN=&lt;your-github-token&gt;</span>
+</code></pre></div>
+</div>
+</div>
+<input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
+</input><label class="sd-tab-label" for="sd-tab-item-1">
+Windows</label><div class="sd-tab-content docutils">
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><code><span class="gp"># </span>You<span class="w"> </span>may<span class="w"> </span>need<span class="w"> </span>to<span class="w"> </span>restart<span class="w"> </span>windows<span class="w"> </span>after<span class="w"> </span>this
+<span class="go">setx GITLAB_TOKEN &lt;your-gitlab-token&gt;</span>
+<span class="go">setx GITHUB_TOKEN &lt;your-github-token&gt;</span>
+</code></pre></div>
+</div>
+</div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Use a <code class="docutils literal notranslate"><span class="pre">.env</span></code> file in the current directory. Gimie will look for a file named <code class="docutils literal notranslate"><span class="pre">.env</span></code> and source it. The file contents should be as follows:</p></li>
+</ol>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">File: .env</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><code><span class="n">GITLAB_TOKEN</span><span class="o">=&lt;</span><span class="n">your</span><span class="o">-</span><span class="n">gitlab</span><span class="o">-</span><span class="n">token</span><span class="o">&gt;</span>
+<span class="n">GITHUB_TOKEN</span><span class="o">=&lt;</span><span class="n">your</span><span class="o">-</span><span class="n">github</span><span class="o">-</span><span class="n">token</span><span class="o">&gt;</span>
+</code></pre></div>
+</div>
+</div>
+<p>While the latter approach can be convenient to persist your token locally, it is generally not recommended to store your tokens in plain text as they are sensitive information. Hence the first approach should be preferred in most cases.</p>
+<section id="encrypting-tokens">
+<h2>Encrypting tokens<a class="headerlink" href="#encrypting-tokens" title="Permalink to this heading">¶</a></h2>
+<p>If you are serious about security, you should use a tool like <a class="reference external" href="https://github.com/mozilla/sops">sops</a> or <a class="reference external" href="https://www.passwordstore.org/">pass</a> to encrypt your secrets.</p>
+<p>Below is a quick guide on how to use <code class="docutils literal notranslate"><span class="pre">sops</span></code> to store encrypted tokens, and decrypt them on the fly when using gimie.</p>
+<details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+Generating PGP key<div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">PGP is a public key encryption system. If you don’t already have one, you will need to generate a key pair to encrypt your secrets.
+You can use the following command to generate a key pair. You will be prompted for a passphrase, but you may leave it empty if you wish.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code>gpg<span class="w"> </span>--gen-key
+</code></pre></div>
+</div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+Set up SOPS<div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">SOPS needs to be configured to use your PGP key. You can do so by running the following command:
+Replace <code class="docutils literal notranslate"><span class="pre">&lt;FINGERPRINT&gt;</span></code> with the fingerprint of your PGP key (it looks like <code class="docutils literal notranslate"><span class="pre">69AB</span> <span class="pre">B75E</span> <span class="pre">...</span></code>). You can find it by running <code class="docutils literal notranslate"><span class="pre">gpg</span> <span class="pre">--fingerprint</span></code>
+Upon running the command below, <cite>sops</cite> will open a <cite>vim</cite> buffer where you can enter the desired content of your .env file.
+Upon saving the file (<code class="docutils literal notranslate"><span class="pre">:wq</span></code>), <code class="docutils literal notranslate"><span class="pre">sops</span></code> will encrypt the file and save it as <code class="docutils literal notranslate"><span class="pre">.enc.env</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code>sops<span class="w"> </span>--pgp<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">FINGERPRINT</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>.enc.env
+</code></pre></div>
+</div>
+</div>
+</details><details class="sd-sphinx-override sd-dropdown sd-card sd-mb-3">
+<summary class="sd-summary-title sd-card-header">
+Source tokens<div class="sd-summary-down docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-down" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M5.22 8.72a.75.75 0 000 1.06l6.25 6.25a.75.75 0 001.06 0l6.25-6.25a.75.75 0 00-1.06-1.06L12 14.44 6.28 8.72a.75.75 0 00-1.06 0z"></path></svg></div>
+<div class="sd-summary-up docutils">
+<svg version="1.1" width="1.5em" height="1.5em" class="sd-octicon sd-octicon-chevron-up" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M18.78 15.28a.75.75 0 000-1.06l-6.25-6.25a.75.75 0 00-1.06 0l-6.25 6.25a.75.75 0 101.06 1.06L12 9.56l5.72 5.72a.75.75 0 001.06 0z"></path></svg></div>
+</summary><div class="sd-summary-content sd-card-body docutils">
+<p class="sd-card-text">Whenever you want to run gimie, you can decrypt secrets on the fly and pass them to gimie using the following command:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code>sops<span class="w"> </span>exec-env<span class="w"> </span>.enc.env<span class="w"> </span><span class="s1">&#39;gimie data </span><span class="ge">&lt;repository-url&gt;</span><span class="s1">&#39;</span>
+</code></pre></div>
+</div>
+<p class="sd-card-text">Or if you just want to inspect the decrypted file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><code>sops<span class="w"> </span>--decrypt<span class="w"> </span>.enc.env
+</code></pre></div>
+</div>
+</div>
+</details></section>
+</section>
+
+
+  </article>
+
+  <footer><div class="mt-20 mb-4 text-sm text-gray-700 print:mt-4">&copy; 2023, sdsc-ordes&nbsp;Made with <a class="text-link hover:text-brand focus:text-brand hover:underline focus:underline" href="https://www.sphinx-doc.org">Sphinx 6.2.1</a></div>
+  </footer></main>
+
+
+    <button
+  data-search-target="snackbar"
+  data-action="search#hideSnackbar"
+  class="fixed bottom-0 right-0 z-20 opacity-0 p-4 m-4 tracking-wide bg-gray-900 text-gray-100 transition transform transform-gpu duration-500 translate-y-full"
+>
+  Clear highlights
+</button><div
+  data-sidebar-target="screen"
+  data-action="click->sidebar#close"
+  class="fixed hidden inset-0 bg-black bg-opacity-50">
+</div>
+  </div>
+  
+  
+<script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+<script src="../_static/doctools.js"></script>
+<script src="../_static/sphinx_highlight.js"></script>
+<script src="../_static/clipboard.min.js"></script>
+<script src="../_static/copybutton.js"></script>
+<script src="../_static/design-tabs.js"></script>
+<script src="../_static/theme.c8991bd7bb6e57cbeea8.js"></script>
+  
+</body>
+
+</html>
