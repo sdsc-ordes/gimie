@@ -1,5 +1,13 @@
 Notable changes introduced in gimie releases are documented in this file
 
+
+## [0.7.2] - 2024-12-18
+
+### Bug Fixes
+
+- *(cff)* doi structure parsing (#121)
+
+
 ## [0.7.1] - 2024-12-09
 
 ### Bug Fixes
@@ -13,16 +21,15 @@ Notable changes introduced in gimie releases are documented in this file
 
 - *(cff)* enforce valid urls as doi (#108)- spelling mistake in run as library docs (#113)
 
-
 ### Documentation
 - update gimie API examples (#105)
 - add CFF file (#111)
-
 
 ### Features
 
 - *(parser)* extract authors from CFF files (#115)- add parsers support (#97)
 - cff to doi parser (#107)
+
 
 ## [0.6.0] - 2023-10-19
 
@@ -33,7 +40,6 @@ Notable changes introduced in gimie releases are documented in this file
 - *(github)* replace superseded schema:isBasedOnUrl property (#80)- incorrect mapping for schema:codeRepository (#64)
 - *(license)* NOASSERTION should not return triples. (#66)
 
-
 ### Features
 
 - *(conventional-PRs)* all PRs will need to follow conventional format
@@ -41,10 +47,13 @@ Notable changes introduced in gimie releases are documented in this file
 - *(github.py)* Get "forked from" property of a repository (#79)
 - *(io)* file-like interface to remote resources (#70)- license matcher for git extractor (#78)
 
+
 ## [0.5.1] - 2023-07-10
 
 ### Bug Fixes
+
 - incorrect mapping for schema:codeRepository (#64)
+
 
 ## [0.5.0] - 2023-07-04
 
@@ -53,12 +62,13 @@ Notable changes introduced in gimie releases are documented in this file
 - *(gitlab)* extraction of author on user-owned projects (#57)
 
 ### Documentation
-- add docs website (#58)
 
+- add docs website (#58)
 
 ### Features
 
 - *(gitlab)* support private instances (#62)
+
 
 ## [0.4.0] - 2023-06-09
 
@@ -70,7 +80,6 @@ Notable changes introduced in gimie releases are documented in this file
 - *(gitlab)* rm debug breakpoint
 - *(gitlab)* extraction of author on user-owned projects (#57)- gitlab download url
 - prevent license finder from picking up docs files
-
 
 ### Documentation
 
@@ -100,7 +109,6 @@ Notable changes introduced in gimie releases are documented in this file
 - add docs website (#58)
 - update readme and add docs badge
 
-
 ### Features
 
 - *(gitlab)* fallback to rest api if author missing from graphql. make type hints py38 compat.
@@ -109,10 +117,10 @@ Notable changes introduced in gimie releases are documented in this file
 - disallow local paths (#46)
 
 
-
 ## [0.3.0] - 2023-02-24
 
 ### Bug Fixes
+
 - exclude hidden files from license search
 - correctly handle one or multiple license paths
 - temporarily disable scancode (#19)
@@ -124,8 +132,8 @@ Notable changes introduced in gimie releases are documented in this file
 - rename container-publish.yml into docker-publish.yml
 - 'building docker image' instead of 'building docker container'
 
-
 ### Documentation
+
 - define initial contributing guidelines
 - add usage examples in README
 - update copyright notice in license
@@ -140,7 +148,6 @@ Notable changes introduced in gimie releases are documented in this file
 - add message for docker-build Makefile rule
 - add image annotations to dockerfile
 - add docker instructions in readme
-
 
 ### Features
 
