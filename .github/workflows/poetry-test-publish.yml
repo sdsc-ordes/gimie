@@ -1,18 +1,67 @@
-name: Publish on Pypi Test
+# Workflow following resources at:
+#  - https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python#publishing-to-pypi
+#  - https://packaging.python.org/en/latest/tutorials/packaging-projects/#uploading-the-distribution-archives
+# Jobs are split to prevent unneccessary priviledge elevation through write permissions during building.
+
+name: Build and publish on Pypi Test
 
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-  build:
+  run-tests:
+    uses: ./.github/workflows/poetry-pytest.yml
+  test-build:
+    name: Build python wheels
+    needs:
+      - run-tests
     runs-on: ubuntu-latest
     steps:
       # https://github.com/actions/checkout
       - uses: actions/checkout@v4
-      - name: Build and publish to pypi
-      # https://github.com/JRubics/poetry-publish
-        uses: JRubics/poetry-publish@v1.17
+      - name: Set up Python
+      # https://github.com/actions/setup-python
+        uses: actions/setup-python@v5.1.1
         with:
-          pypi_token: ${{ secrets.PYPI_TEST_API_TOKEN }}
-          repository_name: "testpypi"
-          repository_url: "https://test.pypi.org/legacy/"
+          python-version: "3.12"
+
+      - name: Install Poetry
+        run: |
+          pip install poetry
+
+      - name: Build source and wheel archives
+        run: poetry build
+
+      - name: Upload distributions
+      # https://github.com/actions/upload-artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-dists
+          path: dist/
+
+  pypi-test-publish:
+    name: Upload release to PyPI Test
+    needs:
+      - test-build
+    runs-on: ubuntu-latest
+    environment:
+      name: test-pypi
+      url: https://test.pypi.org/p/gimie
+    permissions:
+      id-token: write
+      # IMPORTANT: this permission is mandatory for trusted publishing
+    steps:
+    - name: Retrieve release distributions
+    # https://github.com/actions/download-artifact
+      uses: actions/download-artifact@v4.1.8
+      with:
+        name: test-dists
+        path: dist/
+    - name: Publish package distributions to TestPyPI
+    # https://github.com/pypa/gh-action-pypi-publish
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/
