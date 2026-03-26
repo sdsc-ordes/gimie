@@ -91,6 +91,9 @@ Supported formats are turtle, json-ld and n-triples (by specifying the `--format
 
 With no specifications, Gimie will print results in the terminal. Want to save Gimie output to a file? Add your file path to the end : `gimie data https://github.com/numpy/numpy > path_to_output/gimie_output.ttl`
 
+For querying the output of gimie, you can check out the below SHACL-based UML diagram:
+
+![alt text](gimie-shacl-schema.png)
 ----------------------------------------------------------------------
 
 ## Contributing
