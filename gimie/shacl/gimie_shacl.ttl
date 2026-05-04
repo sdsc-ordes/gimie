@@ -2,6 +2,7 @@
 @prefix schema:  <http://schema.org/> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix md4i:    <http://w3id.org/nfdi4ing/metadata4ing#> .
 @prefix gimie:   <https://sdsc-ordes.github.io/gimie/shacl/> .
 
@@ -12,6 +13,8 @@
 gimie:SoftwareSourceCodeShape
     a sh:NodeShape ;
     sh:targetClass schema:SoftwareSourceCode ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
     rdfs:label "Software Source Code"@en ;
     rdfs:comment "Shape for a software source code repository as described by gimie. Maps to schema:SoftwareSourceCode / codemeta:SoftwareSourceCode."@en ;
 
@@ -158,6 +161,8 @@ gimie:SoftwareSourceCodeShape
 gimie:PersonShape
     a sh:NodeShape ;
     sh:targetClass schema:Person ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
     rdfs:label "Person"@en ;
     rdfs:comment "Shape for a person who authored or contributed to a software project. Maps to schema:Person / codemeta:Person."@en ;
 
@@ -211,6 +216,8 @@ gimie:PersonShape
 gimie:OrganizationShape
     a sh:NodeShape ;
     sh:targetClass schema:Organization ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
     rdfs:label "Organization"@en ;
     rdfs:comment "Shape for an organization that owns or is affiliated with a software project. Maps to schema:Organization / codemeta:Organization."@en ;
 
