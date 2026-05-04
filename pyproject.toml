@@ -58,6 +58,11 @@ myst-parser = "^1.0.0"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[dependency-groups]
+dev = [
+    "pyshacl>=0.31.0",
+]
+
 [tool.poetry.scripts]
 gimie = 'gimie.cli:app'
 
