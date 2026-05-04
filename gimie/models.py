@@ -18,7 +18,6 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime
-import datetime
 from typing import List, Optional, Union
 
 from calamus.schema import JsonLDSchema
@@ -64,7 +63,7 @@ class OrganizationSchema(JsonLDSchema):
     _id = fields.Id()
     name = fields.String(SDO.name)
     legal_name = fields.String(SDO.legalName)
-    email = fields.String(SDO.email)
+    email = fields.List(SDO.email, fields.String)
     description = fields.String(SDO.description)
     logo = fields.IRI(SDO.logo)
 
@@ -98,6 +97,7 @@ class PersonSchema(JsonLDSchema):
     _id = fields.Id()
     identifier = fields.String(SDO.identifier)
     name = fields.String(SDO.name)
+    email = fields.String(SDO.email)
     affiliations = fields.Nested(
         SDO.affiliation, OrganizationSchema, many=True
     )
