@@ -171,7 +171,6 @@ gimie:PersonShape
         sh:name "identifier"@en ;
         sh:description "A unique identifier for the person (e.g. a username or slug)."@en ;
         sh:datatype xsd:string ;
-        sh:minCount 1 ;
         sh:maxCount 1 ;
     ] ;
 
