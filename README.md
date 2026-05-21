@@ -125,7 +125,7 @@ nix develop --command bash -c 'uv run gimie data https://github.com/numpy/numpy'
 
 #### Without Nix
 
-Activate a conda or virtual environment with Python 3.8 or higher:
+Activate a conda or virtual environment with Python 3.9 or higher:
 
 ```shell
 git clone https://github.com/sdsc-ordes/gimie && cd gimie
