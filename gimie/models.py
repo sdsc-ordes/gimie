@@ -161,9 +161,9 @@ class RepositorySchema(JsonLDSchema):
         SDO.author, [PersonSchema, OrganizationSchema], many=True
     )
     contributors = fields.Nested(SDO.contributor, PersonSchema, many=True)
-    date_created = fields.Date(SDO.dateCreated)
-    date_modified = fields.Date(SDO.dateModified)
-    date_published = fields.Date(SDO.datePublished)
+    date_created = fields.Date(SDO.dateCreated, add_value_types=True)
+    date_modified = fields.Date(SDO.dateModified, add_value_types=True)
+    date_published = fields.Date(SDO.datePublished, add_value_types=True)
     description = fields.String(SDO.description)
     download_url = fields.IRI(SDO.downloadUrl)
     identifier = fields.String(SDO.identifier)
