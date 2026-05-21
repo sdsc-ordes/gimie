@@ -16,6 +16,7 @@
 # limitations under the License.
 
 """Git providers from which metadata can be extracted by gimie."""
+
 from typing import Dict, Optional, Type
 from gimie.extractors.abstract import Extractor
 from gimie.extractors.github import GithubExtractor

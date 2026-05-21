@@ -1,4 +1,5 @@
 """Test the project module."""
+
 import pytest
 
 from gimie.extractors import GIT_PROVIDERS

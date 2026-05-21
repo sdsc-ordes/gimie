@@ -15,11 +15,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Test the gimie output"""
+
 import pytest
 from rdflib import Graph
 
 from gimie.project import Project
-
 
 OUT_TTL = (
     Project("https://github.com/sdsc-ordes/gimie", git_provider="github")

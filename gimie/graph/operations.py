@@ -15,6 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Operations on graphs."""
+
 from functools import reduce
 from typing import Set
 
