@@ -93,7 +93,7 @@ With no specifications, Gimie will print results in the terminal. Want to save G
 
 For querying the output of gimie, you can check out the below SHACL-based UML diagram:
 
-![alt text](gimie-shacl-schema.png)
+![Gimie SHACL Schema](gimie-shacl-schema.svg)
 ----------------------------------------------------------------------
 
 ## Contributing
