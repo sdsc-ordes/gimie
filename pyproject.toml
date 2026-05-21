@@ -60,6 +60,11 @@ build-backend = "poetry.core.masonry.api"
 
 [dependency-groups]
 dev = [
+    "black>=22.10.0",
+    "coveralls>=3.3.1",
+    "pre-commit>=3.0.0",
+    "pytest>=7.2.0",
+    "pytest-cov>=4.1.0",
     "pyshacl>=0.31.0",
 ]
 
