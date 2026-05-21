@@ -10,17 +10,17 @@ It can be used to detect when changes to models.py require updates to:
 2. Example instance data
 
 Usage:
-    python validate_shacl.py [--shapes SHAPES_FILE] [--data DATA_FILE] [--verbose]
+    python validate_shacl.py --data DATA_FILE [--shapes SHAPES_FILE] [--verbose]
 
 Examples:
-    # Validate default files
-    python validate_shacl.py
+    # Validate gimie output against default shapes
+    python validate_shacl.py --data output.ttl
 
-    # Validate specific files
+    # Validate with custom shapes
     python validate_shacl.py --shapes custom_shapes.ttl --data custom_data.ttl
 
     # Verbose output with detailed validation report
-    python validate_shacl.py --verbose
+    python validate_shacl.py --data output.ttl --verbose
 
 Exit codes:
     0: Validation successful (data conforms to shapes)
@@ -96,37 +96,33 @@ def validate_with_shacl(
     Returns:
         Tuple of (is_valid, report_text)
     """
-    try:
-        # Run SHACL validation
-        conforms, results_graph, results_text = pyshacl.validate(
-            data_graph=data_graph,
-            shacl_graph=shapes_graph,
-            inference="rdfs",
-            debug=verbose,
-            serialize_report_graph="turtle",
-        )
+    # Run SHACL validation
+    conforms, results_graph, results_text = pyshacl.validate(
+        data_graph=data_graph,
+        shacl_graph=shapes_graph,
+        inference="rdfs",
+        debug=verbose,
+        serialize_report_graph="turtle",
+    )
 
-        if verbose or not conforms:
-            # Include results graph in the report for detailed analysis
-            report = f"Validation Results:\n"
-            report += f"Conforms: {conforms}\n\n"
+    if verbose or not conforms:
+        # Include results graph in the report for detailed analysis
+        report = f"Validation Results:\n"
+        report += f"Conforms: {conforms}\n\n"
 
-            if results_text:
-                report += f"Validation Report:\n{results_text}\n"
+        if results_text:
+            report += f"Validation Report:\n{results_text}\n"
 
-            if not conforms and results_graph:
-                report += f"\nDetailed Results (Turtle):\n"
-                if hasattr(results_graph, "serialize"):
-                    report += results_graph.serialize(format="turtle")
-                else:
-                    report += str(results_graph)
+        if not conforms and results_graph:
+            report += f"\nDetailed Results (Turtle):\n"
+            if hasattr(results_graph, "serialize"):
+                report += results_graph.serialize(format="turtle")
+            else:
+                report += str(results_graph)
 
-            return conforms, report
-        else:
-            return conforms, "Validation passed successfully!"
-
-    except Exception as e:
-        return False, f"SHACL validation failed with error: {e}"
+        return conforms, report
+    else:
+        return conforms, "Validation passed successfully!"
 
 
 def main():
@@ -172,6 +168,8 @@ def main():
             break
         gitroot = gitroot.parent
     else:
+        # No .git found, fall back to cwd
+        gitroot = current_dir
         if not (current_dir / ".git").exists():
             print(
                 "Warning: Not running from git repository root. Some paths may be incorrect."
