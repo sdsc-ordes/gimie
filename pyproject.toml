@@ -1,14 +1,11 @@
-# Package description
-
-[tool.poetry]
+[project]
 name = "gimie"
 version = "0.7.2"
 description = "Extract structured metadata from git repositories."
-authors = ["Swiss Data Science Center <contact@datascience.ch>"]
-license = "Apache-2.0"
-homepage = "https://github.com/sdsc-ordes/gimie"
-keywords = ["metadata", "git", "extraction", "linked-data"]
 readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.12"
+keywords = ["metadata", "git", "extraction", "linked-data"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Programming Language :: Python :: 3.12",
@@ -18,43 +15,27 @@ classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
 ]
+dependencies = [
+    "gitpython>=3.1.35",
+    "PyDriller>=2.5",
+    "typer>=0.7.0",
+    "calamus>=0.4.2",
+    "requests>=2.28.2",
+    "python-dotenv>=0.21.1",
+    "python-dateutil>=2.8.2",
+    "spdx-license-list>=3.22",
+    "numpy>=2.0",
+    "pydantic>=2.4.2",
+    "scipy>=1.14",
+    "pyyaml>=6.0.2",
+]
 
-# Dependency management
-
-[tool.poetry.dependencies]
-python = ">=3.12,<4.0"
-gitpython = ">=3.1.35"
-PyDriller = "^2.5"
-typer = "^0.7.0"
-calamus = "^0.4.2"
-requests = "^2.28.2"
-python-dotenv = "^0.21.1"
-python-dateutil = "^2.8.2"
-spdx-license-list = "^3.22"
-numpy = "^1.26.1"
-pydantic = "^2.4.2"
-scipy = "^1.11.3"
-pyyaml = "^6.0.2"
-
-[tool.poetry.group.dev.dependencies]
-black = "^22.10.0"
-coveralls = "^3.3.1"
-pre-commit = "^3.0.0"
-pytest = "^7.2.0"
-pytest-cov = "^4.1.0"
-
-
-[tool.poetry.group.doc.dependencies]
-sphinx = "<7.0.0"
-sphinx-click = "^4.4.0"
-sphinxawesome-theme = "^4.1.0"
-sphinx-copybutton = "^0.5.2"
-sphinx-design = "^0.4.1"
-myst-parser = "^1.0.0"
+[project.scripts]
+gimie = "gimie.cli:app"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [dependency-groups]
 dev = [
@@ -65,15 +46,11 @@ dev = [
     "pytest-cov>=4.1.0",
 ]
 
-[tool.poetry.scripts]
-gimie = 'gimie.cli:app'
-
-
 # Tooling configuration
 
 [tool.black]
 line-length = 79
-target-version = ["py38", "py39"]
+target-version = ["py312", "py313"]
 
 [tool.pytest.ini_options]
 addopts = ["--doctest-modules", "--cov"]
