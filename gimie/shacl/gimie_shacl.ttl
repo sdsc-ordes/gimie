@@ -1,0 +1,261 @@
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix schema:  <http://schema.org/> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix md4i:    <http://w3id.org/nfdi4ing/metadata4ing#> .
+@prefix gimie:   <https://sdsc-ordes.github.io/gimie/shacl/> .
+
+# ─────────────────────────────────────────────
+# SoftwareSourceCode shape
+# ─────────────────────────────────────────────
+
+gimie:SoftwareSourceCodeShape
+    a sh:NodeShape ;
+    sh:targetClass schema:SoftwareSourceCode ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    rdfs:label "Software Source Code"@en ;
+    rdfs:comment "Shape for a software source code repository as described by gimie. Maps to schema:SoftwareSourceCode / codemeta:SoftwareSourceCode."@en ;
+
+    # ── Required properties ──────────────────
+
+    sh:property [
+        sh:path schema:codeRepository ;
+        sh:name "code repository"@en ;
+        sh:description "URL of the source code repository (e.g. Git remote)."@en ;
+        sh:nodeKind sh:IRI ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] ;
+
+    sh:property [
+        sh:path schema:name ;
+        sh:name "name"@en ;
+        sh:description "The name of the software project, typically owner/repo."@en ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] ;
+
+    # ── Optional scalar properties ───────────
+
+    sh:property [
+        sh:path schema:description ;
+        sh:name "description"@en ;
+        sh:description "A short textual description of the software."@en ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+    ] ;
+
+    sh:property [
+        sh:path schema:identifier ;
+        sh:name "identifier"@en ;
+        sh:description "A unique identifier for the software (e.g. a DOI or slug)."@en ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+    ] ;
+
+    sh:property [
+        sh:path schema:version ;
+        sh:name "version"@en ;
+        sh:description "The current version of the software (e.g. a release tag)."@en ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+    ] ;
+
+    sh:property [
+        sh:path schema:dateCreated ;
+        sh:name "date created"@en ;
+        sh:description "Date on which the repository was created."@en ;
+        sh:datatype xsd:date ;
+        sh:maxCount 1 ;
+    ] ;
+
+    sh:property [
+        sh:path schema:dateModified ;
+        sh:name "date modified"@en ;
+        sh:description "Date on which the repository was last modified."@en ;
+        sh:datatype xsd:date ;
+        sh:maxCount 1 ;
+    ] ;
+
+    sh:property [
+        sh:path schema:datePublished ;
+        sh:name "date published"@en ;
+        sh:description "Date of the latest release / publication."@en ;
+        sh:datatype xsd:date ;
+        sh:maxCount 1 ;
+    ] ;
+
+    sh:property [
+        sh:path schema:downloadUrl ;
+        sh:name "download URL"@en ;
+        sh:description "URL to download the software archive (e.g. a tarball of the latest release)."@en ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+    ] ;
+
+    sh:property [
+        sh:path schema:isBasedOn ;
+        sh:name "is based on"@en ;
+        sh:description "URL of the parent / upstream repository this software was forked from."@en ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+    ] ;
+
+    # ── Repeatable literal properties ────────
+
+    sh:property [
+        sh:path schema:keywords ;
+        sh:name "keywords"@en ;
+        sh:description "Keywords or tags describing the software (e.g. GitHub topics)."@en ;
+        sh:datatype xsd:string ;
+    ] ;
+
+    sh:property [
+        sh:path schema:programmingLanguage ;
+        sh:name "programming language"@en ;
+        sh:description "The primary programming language(s) of the software."@en ;
+        sh:datatype xsd:string ;
+    ] ;
+
+    sh:property [
+        sh:path schema:license ;
+        sh:name "license"@en ;
+        sh:description "An SPDX license URL identifying the license of the software."@en ;
+        sh:nodeKind sh:IRI ;
+    ] ;
+
+    sh:property [
+        sh:path schema:citation ;
+        sh:name "citation"@en ;
+        sh:description "A DOI or URL referencing a citable publication for this software (typically from CITATION.cff)."@en ;
+        sh:nodeKind sh:IRI ;
+    ] ;
+
+    # ── Relationship properties ──────────────
+
+    sh:property [
+        sh:path schema:author ;
+        sh:name "author"@en ;
+        sh:description "The author(s) of the software. May be a Person or an Organization."@en ;
+        sh:or (
+            [ sh:node gimie:PersonShape ]
+            [ sh:node gimie:OrganizationShape ]
+        ) ;
+    ] ;
+
+    sh:property [
+        sh:path schema:contributor ;
+        sh:name "contributor"@en ;
+        sh:description "A contributor to the software repository."@en ;
+        sh:node gimie:PersonShape ;
+    ] .
+
+
+# ─────────────────────────────────────────────
+# Person shape
+# ─────────────────────────────────────────────
+
+gimie:PersonShape
+    a sh:NodeShape ;
+    sh:targetClass schema:Person ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    rdfs:label "Person"@en ;
+    rdfs:comment "Shape for a person who authored or contributed to a software project. Maps to schema:Person / codemeta:Person."@en ;
+
+    sh:property [
+        sh:path schema:identifier ;
+        sh:name "identifier"@en ;
+        sh:description "A unique identifier for the person (e.g. a username or slug)."@en ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+    ] ;
+
+    sh:property [
+        sh:path schema:name ;
+        sh:name "name"@en ;
+        sh:description "The full name of the person."@en ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+    ] ;
+
+    sh:property [
+        sh:path schema:email ;
+        sh:name "email"@en ;
+        sh:description "The email address of the person."@en ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+    ] ;
+
+    sh:property [
+        sh:path md4i:orcidId ;
+        sh:name "ORCID iD"@en ;
+        sh:description "The ORCID identifier of the person, extracted from CITATION.cff."@en ;
+        sh:maxCount 1 ;
+    ] ;
+
+    sh:property [
+        sh:path schema:affiliation ;
+        sh:name "affiliation"@en ;
+        sh:description "Organization(s) the person is affiliated with."@en ;
+        sh:or (
+            [ sh:node gimie:OrganizationShape ]
+            [ sh:datatype xsd:string ]
+        ) ;
+    ] .
+
+
+# ─────────────────────────────────────────────
+# Organization shape
+# ─────────────────────────────────────────────
+
+gimie:OrganizationShape
+    a sh:NodeShape ;
+    sh:targetClass schema:Organization ;
+    sh:closed true ;
+    sh:ignoredProperties ( rdf:type ) ;
+    rdfs:label "Organization"@en ;
+    rdfs:comment "Shape for an organization that owns or is affiliated with a software project. Maps to schema:Organization / codemeta:Organization."@en ;
+
+    sh:property [
+        sh:path schema:name ;
+        sh:name "name"@en ;
+        sh:description "The name of the organization."@en ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+    ] ;
+
+    sh:property [
+        sh:path schema:legalName ;
+        sh:name "legal name"@en ;
+        sh:description "The official legal name of the organization."@en ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+    ] ;
+
+    sh:property [
+        sh:path schema:email ;
+        sh:name "email"@en ;
+        sh:description "Contact email address(es) of the organization."@en ;
+        sh:datatype xsd:string ;
+    ] ;
+
+    sh:property [
+        sh:path schema:description ;
+        sh:name "description"@en ;
+        sh:description "A short textual description of the organization."@en ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+    ] ;
+
+    sh:property [
+        sh:path schema:logo ;
+        sh:name "logo"@en ;
+        sh:description "URL of the organization's logo or avatar."@en ;
+        sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+    ] .
