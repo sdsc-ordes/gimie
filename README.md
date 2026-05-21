@@ -91,6 +91,9 @@ Supported formats are turtle, json-ld and n-triples (by specifying the `--format
 
 With no specifications, Gimie will print results in the terminal. Want to save Gimie output to a file? Add your file path to the end : `gimie data https://github.com/numpy/numpy > path_to_output/gimie_output.ttl`
 
+For querying the output of gimie, you can check out the below SHACL-based UML diagram:
+
+![Gimie SHACL Schema](gimie-shacl-schema.svg)
 ----------------------------------------------------------------------
 
 ## Contributing
@@ -101,7 +104,31 @@ The code formatting standard we use is [black](https://github.com/psf/black), wi
 
 ### For development:
 
-activate a conda or virtual environment with Python 3.8 or higher
+#### Using Nix (recommended)
+
+If you have [Nix](https://nixos.org/) installed with flakes enabled, you can use the provided `flake.nix` to set up the development environment. This ensures all system dependencies (e.g. `libstdc++` for numpy) are available:
+
+```shell
+git clone https://github.com/sdsc-ordes/gimie && cd gimie
+nix develop
+```
+
+This drops you into a shell with Python 3.13, `uv`, and the required system libraries. From there:
+
+```shell
+uv sync
+uv run pytest
+```
+
+To run a single command without entering the shell:
+
+```shell
+nix develop --command bash -c 'uv run gimie data https://github.com/numpy/numpy'
+```
+
+#### Without Nix
+
+Activate a conda or virtual environment with Python 3.8 or higher:
 
 ```shell
 git clone https://github.com/sdsc-ordes/gimie && cd gimie
@@ -138,3 +165,6 @@ Releases are done via github release
 - a release will trigger a github workflow to publish the package on Pypi
 - Make sure to update to a new version in `pyproject.toml` and `conf.py` before making the release
 - It is possible to test the publishing on Pypi.test by running a manual workflow: go to github actions and run the Workflow: 'Publish on Pypi Test'
+
+## Copyright
+Copyright © 2024-2025 Swiss Data Science Center (SDSC),[www.datascience.ch](http://www.datascience.ch/), ROR: [ror.org/02hdt9m26](https://ror.org/02hdt9m26). All rights reserved. The SDSC is a Swiss National Research Infrastructure, jointly established and legally represented by the École Polytechnique Fédérale de Lausanne (EPFL) and the Eidgenössische Technische Hochschule Zürich (ETH Zürich) as a société simple. This copyright encompasses all materials, software, documentation, and other content created and developed by the SDSC.
