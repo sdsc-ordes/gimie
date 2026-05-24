@@ -9,8 +9,6 @@ authors = [
     { name = "Swiss Data Science Center", email = "contact@datascience.ch" },
 ]
 
-[project.urls]
-Homepage = "https://github.com/sdsc-ordes/gimie"
 keywords = ["metadata", "git", "extraction", "linked-data"]
 classifiers = [
     "Development Status :: 4 - Beta",
