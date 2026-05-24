@@ -6,6 +6,8 @@ install: ## Install the project and dev dependencies with uv
 
 .PHONY: check
 check: ## Run code quality tools.
+	@echo "🚀 Checking lock file consistency with pyproject.toml"
+	@uv lock --check
 	@echo "🚀 Linting code: Running pre-commit"
 	@uv run pre-commit run -a
 
