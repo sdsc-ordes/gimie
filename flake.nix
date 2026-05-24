@@ -10,23 +10,20 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        libs = with pkgs; [
+          stdenv.cc.cc.lib
+          zlib
+        ];
       in
       {
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
             python313
             uv
-            # Explicit library dependencies
-            stdenv.cc.cc.lib
-            glibc
-            glib
-            zlib
-            libffi
-            openssl
-          ];
+          ] ++ libs;
 
           shellHook = ''
-            export LD_LIBRARY_PATH="${pkgs.stdenv.cc.cc.lib}/lib:${pkgs.glibc}/lib:$LD_LIBRARY_PATH"
+            export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath libs}:$LD_LIBRARY_PATH"
             echo "Development environment loaded"
           '';
         };
