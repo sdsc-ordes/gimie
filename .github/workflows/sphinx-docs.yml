@@ -1,0 +1,61 @@
+name: docs
+on:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - 'docs/**'
+
+permissions:
+    contents: write
+jobs:
+  docs-build:
+    runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main'
+    steps:
+      # https://github.com/actions/checkout
+      - uses: actions/checkout@v4
+
+      # https://github.com/astral-sh/setup-uv
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      # https://github.com/actions/setup-python
+      - uses: actions/setup-python@v5
+
+      - name: Install dependencies
+        run: uv sync --group doc
+
+      - name: Sphinx build
+        run: |
+          make doc
+
+  docs-push:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      # https://github.com/actions/checkout
+      - uses: actions/checkout@v4
+
+      # https://github.com/astral-sh/setup-uv
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+
+      # https://github.com/actions/setup-python
+      - uses: actions/setup-python@v5
+
+      - name: Install dependencies
+        run: uv sync --group doc
+
+      - name: Sphinx build
+        run: |
+          make doc
+
+      # https://github.com/peaceiris/actions-gh-pages
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: docs/_build/
+          force_orphan: true
