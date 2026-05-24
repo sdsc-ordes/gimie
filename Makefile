@@ -1,13 +1,11 @@
 .PHONY: install
-install: ## Install with uv and add pre-commit hooks
-	@echo "🚀 Installing packages with poetry"
-	@uv sync --group dev && uv pip install -e . --no-deps
+install: ## Install the project and dev dependencies with uv
+	@echo "🚀 Installing packages with uv"
+	@uv sync --group dev
 	@uv run pre-commit install
 
 .PHONY: check
 check: ## Run code quality tools.
-	@echo "🚀 Checking Poetry lock file consistency with 'pyproject.toml': Running echo "Skipping lock check (using uv)""
-	@echo "Skipping lock check (using uv)"
 	@echo "🚀 Linting code: Running pre-commit"
 	@uv run pre-commit run -a
 
