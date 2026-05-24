@@ -162,3 +162,6 @@ Releases are done via github release
 - a release will trigger a github workflow to publish the package on Pypi
 - Make sure to update to a new version in `pyproject.toml` and `conf.py` before making the release
 - It is possible to test the publishing on Pypi.test by running a manual workflow: go to github actions and run the Workflow: 'Publish on Pypi Test'
+
+## Copyright
+Copyright © 2024-2025 Swiss Data Science Center (SDSC),[www.datascience.ch](http://www.datascience.ch/), ROR: [ror.org/02hdt9m26](https://ror.org/02hdt9m26). All rights reserved. The SDSC is a Swiss National Research Infrastructure, jointly established and legally represented by the École Polytechnique Fédérale de Lausanne (EPFL) and the Eidgenössische Technische Hochschule Zürich (ETH Zürich) as a société simple. This copyright encompasses all materials, software, documentation, and other content created and developed by the SDSC.
