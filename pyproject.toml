@@ -5,6 +5,12 @@ description = "Extract structured metadata from git repositories."
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.12"
+authors = [
+    { name = "Swiss Data Science Center", email = "contact@datascience.ch" },
+]
+
+[project.urls]
+Homepage = "https://github.com/sdsc-ordes/gimie"
 keywords = ["metadata", "git", "extraction", "linked-data"]
 classifiers = [
     "Development Status :: 4 - Beta",
