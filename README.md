@@ -101,7 +101,31 @@ The code formatting standard we use is [black](https://github.com/psf/black), wi
 
 ### For development:
 
-activate a conda or virtual environment with Python 3.8 or higher
+#### Using Nix (recommended)
+
+If you have [Nix](https://nixos.org/) installed with flakes enabled, you can use the provided `flake.nix` to set up the development environment. This ensures all system dependencies (e.g. `libstdc++` for numpy) are available:
+
+```shell
+git clone https://github.com/sdsc-ordes/gimie && cd gimie
+nix develop
+```
+
+This drops you into a shell with Python 3.13, `uv`, and the required system libraries. From there:
+
+```shell
+uv sync
+uv run pytest
+```
+
+To run a single command without entering the shell:
+
+```shell
+nix develop --command bash -c 'uv run gimie data https://github.com/numpy/numpy'
+```
+
+#### Without Nix
+
+Requires Python 3.12+ and [uv](https://docs.astral.sh/uv/):
 
 ```shell
 git clone https://github.com/sdsc-ordes/gimie && cd gimie
@@ -119,7 +143,8 @@ run checks:
 ```shell
 make check
 ```
-for an easier use Github/Gitlab APIs, place your access tokens in the `.env` file: (and don't worry, the `.gitignore` will ignore them when you push to GitHub)
+
+For easier use of Github/Gitlab APIs, place your access tokens in the `.env` file (the `.gitignore` will ignore them when you push to GitHub):
 
 ```
 cp .env.dist .env
