@@ -16,6 +16,7 @@
 # limitations under the License.
 """Orchestration of multiple extractors for a given project.
 This is the main entry point for end-to-end analysis."""
+
 from typing import Iterable, Optional, Tuple
 
 from rdflib import Graph

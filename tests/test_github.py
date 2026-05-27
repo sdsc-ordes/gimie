@@ -4,7 +4,6 @@ import pytest
 from gimie.extractors.github import GithubExtractor
 from gimie.io import RemoteResource
 
-
 TEST_REPOS = [
     "https://github.com/sdsc-ordes/gimie",  # Owned by organization, has releases
     "https://github.com/apache/openoffice",  # Owned by organization, no releases

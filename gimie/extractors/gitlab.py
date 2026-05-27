@@ -104,9 +104,9 @@ class GitlabExtractor(Extractor):
             # go into releases and take the name from the first node (most recent)
             version = data["releases"]["edges"][0]["node"]["name"]
             repo_meta["version"] = version
-            repo_meta[
-                "download_url"
-            ] = f"{self.url}/-/archive/{version}/{self.path.split('/')[-1]}-{version}.tar.gz"
+            repo_meta["download_url"] = (
+                f"{self.url}/-/archive/{version}/{self.path.split('/')[-1]}-{version}.tar.gz"
+            )
         return Repository(**repo_meta)  # type: ignore
 
     def _safe_extract_author(
