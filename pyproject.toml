@@ -20,12 +20,12 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
-    "gitpython>=3.1.35",
+    "gitpython>=3.1.49",
     "PyDriller>=2.5",
     "typer>=0.7.0",
     "calamus>=0.4.2",
-    "requests>=2.28.2",
-    "python-dotenv>=0.21.1",
+    "requests>=2.33.0",
+    "python-dotenv>=1.2.2",
     "python-dateutil>=2.8.2",
     "spdx-license-list>=3.22",
     "numpy>=2.0",
@@ -53,9 +53,9 @@ dev = [
     "pytest-cov>=4.1.0",
 ]
 doc = [
-    "sphinx<7.0.0",
+    "sphinx>=8,<9",
     "sphinx-click>=4.4.0",
-    "sphinxawesome-theme>=4.1.0",
+    "sphinxawesome-theme>=5.3.0",
     "sphinx-copybutton>=0.5.2",
     "sphinx-design>=0.4.1",
     "myst-parser>=1.0.0",
