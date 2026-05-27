@@ -80,12 +80,12 @@ class Person:
     _id: str
     identifier: str
     name: Optional[str] = None
-    email: Optional[str] = None
+    email: Optional[List[str]] = None
     affiliations: Optional[List[Organization]] = None
 
     def __str__(self):
         name = f"({self.name}) " if self.name else ""
-        email = f"<{self.email}> " if self.email else ""
+        email = f"<{', '.join(self.email)}> " if self.email else ""
         orgs = (
             f"[{', '.join([org.name for org in self.affiliations])}]"
             if self.affiliations
@@ -98,7 +98,7 @@ class PersonSchema(JsonLDSchema):
     _id = fields.Id()
     identifier = fields.String(SDO.identifier)
     name = fields.String(SDO.name)
-    email = fields.String(SDO.email)
+    email = fields.List(SDO.email, fields.String)
     affiliations = fields.Nested(
         SDO.affiliation, OrganizationSchema, many=True
     )
