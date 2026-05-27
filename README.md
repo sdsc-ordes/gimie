@@ -128,7 +128,7 @@ nix develop --command bash -c 'uv run gimie data https://github.com/numpy/numpy'
 
 #### Without Nix
 
-Activate a conda or virtual environment with Python 3.8 or higher:
+Requires Python 3.12+ and [uv](https://docs.astral.sh/uv/):
 
 ```shell
 git clone https://github.com/sdsc-ordes/gimie && cd gimie
@@ -146,7 +146,8 @@ run checks:
 ```shell
 make check
 ```
-for an easier use Github/Gitlab APIs, place your access tokens in the `.env` file: (and don't worry, the `.gitignore` will ignore them when you push to GitHub)
+
+For easier use of Github/Gitlab APIs, place your access tokens in the `.env` file (the `.gitignore` will ignore them when you push to GitHub):
 
 ```
 cp .env.dist .env

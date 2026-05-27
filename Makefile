@@ -1,22 +1,22 @@
 .PHONY: install
-install: ## Install with the poetry and add pre-commit hooks
-	@echo "🚀 Installing packages with poetry"
-	@poetry install
-	@poetry run pre-commit install
+install: ## Install the project and dev dependencies with uv
+	@echo "🚀 Installing packages with uv"
+	@uv sync --group dev
+	@uv run pre-commit install
 
 .PHONY: check
 check: ## Run code quality tools.
-	@echo "🚀 Checking Poetry lock file consistency with 'pyproject.toml': Running poetry lock --check"
-	@poetry lock --check
+	@echo "🚀 Checking lock file consistency with pyproject.toml"
+	@uv lock --check
 	@echo "🚀 Linting code: Running pre-commit"
-	@poetry run pre-commit run -a
+	@uv run pre-commit run -a
 
 .PHONY: doc
 doc: ## Build sphinx documentation website locally
 	@echo "📖 Building documentation"
 	@cd docs
-	@poetry run sphinx-apidoc -d 3 -f -o docs/api gimie
-	@poetry run sphinx-build docs/ docs/_build
+	@uv run sphinx-apidoc -d 3 -f -o docs/api gimie
+	@uv run sphinx-build docs/ docs/_build
 
 .PHONY: docker-build
 docker-build: ## Build the gimie Docker image
@@ -26,7 +26,7 @@ docker-build: ## Build the gimie Docker image
 .PHONY: test
 test: ## Test the code with pytest
 	@echo "🚀 Testing code: Running pytest"
-	@poetry run pytest
+	@uv run pytest
 
 .PHONY: changelog
 changelog: ## Generate the changelog

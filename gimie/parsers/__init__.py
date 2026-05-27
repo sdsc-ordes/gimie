@@ -15,6 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Files which can be parsed by gimie."""
+
 from pathlib import Path
 from typing import Iterable, NamedTuple, Optional, Set, Type
 
