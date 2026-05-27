@@ -21,6 +21,7 @@ licenses = filter(lambda l: l["isOsiApproved"], all_licenses)
 licenses = filter(lambda l: not l["isDeprecatedLicenseId"], licenses)
 licenses = list(licenses)
 
+
 # Assemble corpus of license texts (this takes a while)
 class License(NamedTuple):
     license_id: str
