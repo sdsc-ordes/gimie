@@ -240,8 +240,9 @@ gimie:OrganizationShape
     sh:property [
         sh:path schema:email ;
         sh:name "email"@en ;
-        sh:description "Contact email address(es) of the organization."@en ;
+        sh:description "Contact email address of the organization."@en ;
         sh:datatype xsd:string ;
+        sh:maxCount 1 ;
     ] ;
 
     sh:property [

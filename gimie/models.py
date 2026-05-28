@@ -55,7 +55,7 @@ class Organization:
     _id: str
     name: str
     legal_name: Optional[str] = None
-    email: Optional[List[str]] = None
+    email: Optional[str] = None
     description: Optional[str] = None
     logo: Optional[str] = None
 
@@ -64,7 +64,7 @@ class OrganizationSchema(JsonLDSchema):
     _id = fields.Id()
     name = fields.String(SDO.name)
     legal_name = fields.String(SDO.legalName)
-    email = fields.List(SDO.email, fields.String)
+    email = fields.String(SDO.email)
     description = fields.String(SDO.description)
     logo = fields.IRI(SDO.logo)
 
@@ -80,12 +80,12 @@ class Person:
     _id: str
     identifier: str
     name: Optional[str] = None
-    email: Optional[List[str]] = None
+    email: Optional[str] = None
     affiliations: Optional[List[Organization]] = None
 
     def __str__(self):
         name = f"({self.name}) " if self.name else ""
-        email = f"<{', '.join(self.email)}> " if self.email else ""
+        email = f"<{self.email}> " if self.email else ""
         orgs = (
             f"[{', '.join([org.name for org in self.affiliations])}]"
             if self.affiliations
@@ -98,7 +98,7 @@ class PersonSchema(JsonLDSchema):
     _id = fields.Id()
     identifier = fields.String(SDO.identifier)
     name = fields.String(SDO.name)
-    email = fields.List(SDO.email, fields.String)
+    email = fields.String(SDO.email)
     affiliations = fields.Nested(
         SDO.affiliation, OrganizationSchema, many=True
     )
