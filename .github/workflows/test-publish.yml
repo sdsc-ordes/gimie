@@ -58,7 +58,7 @@ jobs:
     steps:
     - name: Retrieve release distributions
     # https://github.com/actions/download-artifact
-      uses: actions/download-artifact@v4.1.8
+      uses: actions/download-artifact@v8
       with:
         name: test-dists
         path: dist/
