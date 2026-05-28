@@ -39,13 +39,12 @@ jobs:
 
       - name: Upload coverage report
         env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.ACCESS_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLAB_TOKEN: ${{ secrets.GITLAB_ACCESS_TOKEN }}
           COVERALLS_PARALLEL: true
           COVERALLS_FLAG_NAME: ${{ matrix.test-name }}
         run: |
-          uv run coveralls --service=github-actions
+          uv run coveralls --service=github
         continue-on-error: true
 
   finish:
@@ -59,3 +58,4 @@ jobs:
       run: coveralls --finish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        COVERALLS_FLAG_NAME: ${{ matrix.test-name }}
