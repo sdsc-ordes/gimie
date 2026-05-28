@@ -4,7 +4,8 @@ from rdflib.namespace import RDF
 from gimie.graph.namespaces import SDO
 from gimie.parsers.publiccode import (
     PublicCodeParser,
-    _sanitize_identifier,
+    get_publiccode_contacts,
+    get_publiccode_is_based_on,
 )
 
 SUBJECT = "https://example.org/repo"
@@ -47,19 +48,57 @@ localisation:
 """
 
 
-def test_sanitize_identifier():
-    assert _sanitize_identifier("Jane Doe") == "jane_doe"
-    assert _sanitize_identifier("Alice") == "alice"
+def test_get_is_based_on():
+    assert get_publiccode_is_based_on(
+        {"isBasedOn": "https://github.com/org/upstream"}
+    ) == ["https://github.com/org/upstream"]
 
 
-def test_parse_extracts_is_based_on():
+def test_get_is_based_on_list():
+    assert get_publiccode_is_based_on(
+        {"isBasedOn": ["https://a.com", "https://b.com"]}
+    ) == ["https://a.com", "https://b.com"]
+
+
+def test_get_is_based_on_missing():
+    assert get_publiccode_is_based_on({"name": "test"}) is None
+
+
+def test_get_contacts():
+    pc = {
+        "maintenance": {
+            "contacts": [
+                {
+                    "name": "Jane Doe",
+                    "email": "jane@example.org",
+                    "affiliation": "Example Corp",
+                },
+                {"name": "John Smith"},
+            ]
+        }
+    }
+    contacts = get_publiccode_contacts(pc)
+    assert contacts is not None
+    assert len(contacts) == 2
+    assert contacts[0] == {
+        "name": "Jane Doe",
+        "email": "jane@example.org",
+        "affiliation": "Example Corp",
+    }
+    assert contacts[1] == {"name": "John Smith"}
+
+
+def test_get_contacts_missing():
+    assert get_publiccode_contacts({"name": "test"}) is None
+
+
+def test_parse_builds_graph():
     graph = PublicCodeParser(subject=SUBJECT).parse(FULL_PUBLICCODE)
-    parents = list(graph.objects(URIRef(SUBJECT), SDO.isBasedOn))
-    assert URIRef("https://github.com/org/upstream") in parents
 
+    assert URIRef("https://github.com/org/upstream") in list(
+        graph.objects(URIRef(SUBJECT), SDO.isBasedOn)
+    )
 
-def test_parse_extracts_contacts():
-    graph = PublicCodeParser(subject=SUBJECT).parse(FULL_PUBLICCODE)
     authors = list(graph.objects(URIRef(SUBJECT), SDO.author))
     assert len(authors) == 2
 
@@ -75,24 +114,11 @@ def test_parse_extracts_contacts():
 
 
 def test_parse_does_not_add_extractor_fields():
-    """Fields already covered by extractors/parsers are not duplicated."""
     graph = PublicCodeParser(subject=SUBJECT).parse(FULL_PUBLICCODE)
     assert not list(graph.objects(URIRef(SUBJECT), SDO.description))
     assert not list(graph.objects(URIRef(SUBJECT), SDO.version))
     assert not list(graph.objects(URIRef(SUBJECT), SDO.datePublished))
     assert not list(graph.objects(URIRef(SUBJECT), SDO.license))
-
-
-def test_parse_no_contacts():
-    data = b"""
-publiccodeYmlVersion: "0.5"
-name: test
-url: https://example.org/test
-legal:
-  license: MIT
-"""
-    graph = PublicCodeParser(subject=SUBJECT).parse(data)
-    assert not list(graph.objects(URIRef(SUBJECT), SDO.author))
 
 
 def test_parse_invalid_yaml():
