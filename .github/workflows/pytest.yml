@@ -43,6 +43,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.ACCESS_GITHUB_TOKEN }}
           GITLAB_TOKEN: ${{ secrets.GITLAB_ACCESS_TOKEN }}
           COVERALLS_PARALLEL: true
+          COVERALLS_FLAG_NAME: ${{ matrix.test-name }}
         run: |
           uv run coveralls --service=github-actions
         continue-on-error: true
