@@ -11,17 +11,17 @@ jobs:
         python-version: ["3.12", "3.13"]
     steps:
       # https://github.com/actions/checkout
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       # https://github.com/astral-sh/setup-uv
       - name: Install uv
-        uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@v8.1.0
 
       # https://github.com/actions/setup-python
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -39,12 +39,12 @@ jobs:
 
       - name: Upload coverage report
         env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.ACCESS_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITLAB_TOKEN: ${{ secrets.GITLAB_ACCESS_TOKEN }}
           COVERALLS_PARALLEL: true
+          COVERALLS_FLAG_NAME: ${{ matrix.test-name }}
         run: |
-          uv run coveralls --service=github-actions
+          uv run coveralls --service=github
         continue-on-error: true
 
   finish:
@@ -52,8 +52,10 @@ jobs:
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
-    # https://github.com/coverallsapp/github-action
-    - name: Coveralls Finished
-      uses: coverallsapp/github-action@v2
-      with:
-        parallel-finished: true
+    - name: Install coveralls
+      run: pip3 install --upgrade coveralls
+    - name: Finished
+      run: coveralls --finish
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        COVERALLS_FLAG_NAME: ${{ matrix.test-name }}
