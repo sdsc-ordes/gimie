@@ -28,7 +28,10 @@ def send_rest_query(
     )
 
     if resp.status_code != 200:
-        error_msg = resp.json().get("message", "")
+        try:
+            error_msg = resp.json().get("message", "")
+        except requests.exceptions.JSONDecodeError:
+            error_msg = resp.text or f"HTTP {resp.status_code}"
         if "API rate limit exceeded" in error_msg:
             raise ConnectionError(
                 "Authentication failed: API rate limit exceeded. Please check that you have added "
@@ -52,7 +55,10 @@ def send_graphql_query(
     )
 
     if resp.status_code != 200:
-        error_msg = resp.json().get("message", "")
+        try:
+            error_msg = resp.json().get("message", "")
+        except requests.exceptions.JSONDecodeError:
+            error_msg = resp.text or f"HTTP {resp.status_code}"
         if "API rate limit exceeded" in error_msg:
             raise ConnectionError(
                 "Authentication failed: API rate limit exceeded. Please check that you have added "
