@@ -19,7 +19,6 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 from datetime import datetime
-import datetime
 from typing import List, Optional, Union
 
 from calamus.schema import JsonLDSchema
@@ -56,7 +55,7 @@ class Organization:
     _id: str
     name: str
     legal_name: Optional[str] = None
-    email: Optional[List[str]] = None
+    email: Optional[str] = None
     description: Optional[str] = None
     logo: Optional[str] = None
 
@@ -99,6 +98,7 @@ class PersonSchema(JsonLDSchema):
     _id = fields.Id()
     identifier = fields.String(SDO.identifier)
     name = fields.String(SDO.name)
+    email = fields.String(SDO.email)
     affiliations = fields.Nested(
         SDO.affiliation, OrganizationSchema, many=True
     )
@@ -161,9 +161,9 @@ class RepositorySchema(JsonLDSchema):
         SDO.author, [PersonSchema, OrganizationSchema], many=True
     )
     contributors = fields.Nested(SDO.contributor, PersonSchema, many=True)
-    date_created = fields.Date(SDO.dateCreated)
-    date_modified = fields.Date(SDO.dateModified)
-    date_published = fields.Date(SDO.datePublished)
+    date_created = fields.Date(SDO.dateCreated, add_value_types=True)
+    date_modified = fields.Date(SDO.dateModified, add_value_types=True)
+    date_published = fields.Date(SDO.datePublished, add_value_types=True)
     description = fields.String(SDO.description)
     download_url = fields.IRI(SDO.downloadUrl)
     identifier = fields.String(SDO.identifier)
