@@ -81,7 +81,10 @@ def select_parser(
         name = "license"
     elif path.name == "CITATION.cff" and len(path.parts) == 1:
         name = "cff"
-    elif path.name in ("publiccode.yml", "publiccode.yaml") and len(path.parts) == 1:
+    elif (
+        path.name in ("publiccode.yml", "publiccode.yaml")
+        and len(path.parts) == 1
+    ):
         name = "publiccode"
     else:
         return None

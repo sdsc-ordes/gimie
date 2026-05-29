@@ -45,9 +45,7 @@ class PublicCodeParser(Parser):
 
         if is_based_on:
             for url in is_based_on:
-                graph.add(
-                    (self.subject, SDO.isBasedOn, URIRef(url))
-                )
+                graph.add((self.subject, SDO.isBasedOn, URIRef(url)))
 
         if contacts:
             for contact in contacts:
