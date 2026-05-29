@@ -23,14 +23,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # https://github.com/actions/checkout
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       # https://github.com/astral-sh/setup-uv
       - name: Install uv
-        uses: astral-sh/setup-uv@v4
+        uses: astral-sh/setup-uv@v8.1.0
 
       - name: Set up Python
       # https://github.com/actions/setup-python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -39,7 +39,7 @@ jobs:
 
       - name: Upload distributions
       # https://github.com/actions/upload-artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-dists
           path: dist/
@@ -58,7 +58,7 @@ jobs:
     steps:
     - name: Retrieve release distributions
     # https://github.com/actions/download-artifact
-      uses: actions/download-artifact@v4.1.8
+      uses: actions/download-artifact@v8
       with:
         name: test-dists
         path: dist/

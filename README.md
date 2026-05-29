@@ -1,6 +1,6 @@
 [![gimie](docs/logo.svg)](https://github.com/sdsc-ordes/gimie)
 
-[![PyPI version](https://badge.fury.io/py/gimie.svg)](https://badge.fury.io/py/gimie) [![Python Poetry Test](https://github.com/sdsc-ordes/gimie/actions/workflows/poetry-pytest.yml/badge.svg)](https://github.com/sdsc-ordes/gimie/actions/workflows/poetry-pytest.yml) [![docs](https://github.com/sdsc-ordes/gimie/actions/workflows/sphinx-docs.yml/badge.svg)](https://sdsc-ordes.github.io/gimie) [![Coverage Status](https://coveralls.io/repos/github/sdsc-ordes/gimie/badge.svg?branch=main)](https://coveralls.io/github/sdsc-ordes/gimie?branch=main)
+[![PyPI version](https://badge.fury.io/py/gimie.svg)](https://badge.fury.io/py/gimie) [![Python Poetry Test](https://github.com/sdsc-ordes/gimie/actions/workflows/pytest.yml/badge.svg)](https://github.com/sdsc-ordes/gimie/actions/workflows/poetry-pytest.yml) [![docs](https://github.com/sdsc-ordes/gimie/actions/workflows/sphinx-docs.yml/badge.svg)](https://sdsc-ordes.github.io/gimie) [![Coverage Status](https://coveralls.io/repos/github/sdsc-ordes/gimie/badge.svg?branch=main)](https://coveralls.io/github/sdsc-ordes/gimie?branch=main)
 
 Gimie (GIt Meta Information Extractor) is a python library and command line tool to extract structured metadata from git repositories.
 
@@ -91,6 +91,9 @@ Supported formats are turtle, json-ld and n-triples (by specifying the `--format
 
 With no specifications, Gimie will print results in the terminal. Want to save Gimie output to a file? Add your file path to the end : `gimie data https://github.com/numpy/numpy > path_to_output/gimie_output.ttl`
 
+For querying the output of gimie, you can check out the below SHACL-based UML diagram:
+
+![Gimie SHACL Schema](gimie-shacl-schema.svg)
 ----------------------------------------------------------------------
 
 ## Contributing
