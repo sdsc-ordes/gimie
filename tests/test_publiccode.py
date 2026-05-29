@@ -113,7 +113,6 @@ def test_parse_builds_graph():
     assert not list(graph.objects(john_uri, SDO.email))
 
 
-
 def test_parse_invalid_yaml():
     graph = PublicCodeParser(subject=SUBJECT).parse(b"{{invalid yaml")
     assert len(graph) == 0
