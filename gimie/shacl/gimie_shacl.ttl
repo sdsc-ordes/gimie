@@ -105,7 +105,7 @@ gimie:SoftwareSourceCodeShape
     ] ;
 
     sh:property [
-        sh:path gimie:distinctPullRequestAuthors ;
+        sh:path gimie:distinctPRAuthors ;
         sh:name "distinct pull request authors"@en ;
         sh:description "Number of distinct authors who opened pull requests."@en ;
         sh:datatype xsd:integer ;
@@ -113,7 +113,7 @@ gimie:SoftwareSourceCodeShape
     ] ;
 
     sh:property [
-        sh:path gimie:distinctNonMaintainerPullRequestAuthors ;
+        sh:path gimie:distinctNonMaintainerPRAuthors ;
         sh:name "distinct non-maintainer pull request authors"@en ;
         sh:description "Number of distinct non-maintainer authors who opened pull requests."@en ;
         sh:datatype xsd:integer ;
