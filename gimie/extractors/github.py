@@ -41,6 +41,52 @@ from gimie.extractors.common.queries import (
 GH_API = "https://api.github.com"
 load_dotenv()
 
+NON_MAINTAINER_ASSOCIATIONS = frozenset(
+    {"NONE", "FIRST_TIME_CONTRIBUTOR", "FIRST_TIMER"}
+)
+
+_PR_AUTHORS_QUERY = """
+query prAuthors($owner: String!, $name: String!, $after: String) {
+    repository(owner: $owner, name: $name) {
+        pullRequests(
+            first: 100
+            after: $after
+            states: [OPEN, CLOSED, MERGED]
+            orderBy: {field: CREATED_AT, direction: DESC}
+        ) {
+            pageInfo { hasNextPage endCursor }
+            nodes {
+                authorAssociation
+                author {
+                    __typename
+                    ... on User { login }
+                    ... on Bot { login }
+                    ... on Organization { login }
+                }
+            }
+        }
+    }
+}
+"""
+
+
+def is_non_maintainer_pr_author(association: str) -> bool:
+    """True when GitHub marks the PR author as external to the repo team."""
+    return association in NON_MAINTAINER_ASSOCIATIONS
+
+
+def distinct_non_maintainer_pr_author_count(
+    authors: List[tuple[str, str]],
+) -> int:
+    """Count unique logins with a non-maintainer authorAssociation."""
+    return len(
+        {
+            login
+            for login, association in authors
+            if is_non_maintainer_pr_author(association)
+        }
+    )
+
 
 def query_contributors(
     url: str, headers: Dict[str, str]
@@ -99,6 +145,7 @@ class GithubExtractor(Extractor):
     local_path: Optional[str] = None
 
     token: Optional[str] = None
+    max_pr_pages: int = 10
 
     def list_files(self) -> List[RemoteResource]:
         """takes the root repository folder and returns the list of files present"""
@@ -146,6 +193,14 @@ class GithubExtractor(Extractor):
             download_url = f"{self.url}/archive/refs/tags/{version}.tar.gz"
             repo_meta["download_url"] = download_url
             repo_meta["version"] = version
+
+        pr_authors = self.fetch_pr_authors(max_pages=self.max_pr_pages)
+        repo_meta["distinct_pr_authors"] = len(
+            {login for login, _ in pr_authors}
+        )
+        repo_meta["distinct_non_maintainer_pr_authors"] = (
+            distinct_non_maintainer_pr_author_count(pr_authors)
+        )
 
         return Repository(**repo_meta)  # type: ignore
 
@@ -239,6 +294,45 @@ class GithubExtractor(Extractor):
             raise ValueError(response["errors"])
 
         return response["data"]["repository"]
+
+    def fetch_pr_authors(self, max_pages: int = 10) -> List[tuple[str, str]]:
+        """Fetch PR authors as (login, authorAssociation) pairs.
+
+        Paginates up to ``max_pages`` (100 PRs each). Bots and PRs without
+        an author login are skipped.
+        """
+        owner, name = self.path.split("/")
+        cursor: Optional[str] = None
+        authors: List[tuple[str, str]] = []
+
+        for _ in range(max_pages):
+            response = send_graphql_query(
+                GH_API,
+                _PR_AUTHORS_QUERY,
+                {"owner": owner, "name": name, "after": cursor},
+                self._headers,
+            )
+            if "errors" in response:
+                raise ValueError(response["errors"])
+
+            pull_requests = response["data"]["repository"]["pullRequests"]
+            for node in pull_requests["nodes"]:
+                author = node.get("author") or {}
+                login = author.get("login")
+                if not login:
+                    continue
+                if author.get("__typename") == "Bot" or login.endswith(
+                    "[bot]"
+                ):
+                    continue
+                authors.append((login, node["authorAssociation"]))
+
+            page_info = pull_requests["pageInfo"]
+            if not page_info["hasNextPage"]:
+                break
+            cursor = page_info["endCursor"]
+
+        return authors
 
     def _fetch_contributors(self) -> List[Person]:
         """Queries the GitHub GraphQL API to extract contributors through the commit list.

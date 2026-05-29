@@ -16,6 +16,7 @@
 # limitations under the License.
 """Command line interface to the gimie package."""
 
+import json
 from enum import Enum
 from typing import List, Optional
 
@@ -23,6 +24,8 @@ import click
 import typer
 
 from gimie import __version__
+from gimie.extractors import get_extractor, infer_git_provider
+from gimie.extractors.github import GithubExtractor
 from gimie.parsers import get_parser, list_default_parsers, list_parsers
 from gimie.project import Project
 
@@ -97,13 +100,36 @@ def data(
 
 
 @app.command()
-def advice(url: str):
-    """Show a metadata completion report for a Git repository
-    at the target URL.
+def advice(
+    url: str,
+    max_pr_pages: int = typer.Option(
+        10,
+        "--max-pr-pages",
+        min=1,
+        help="Maximum PR pages to fetch (100 PRs per page).",
+    ),
+):
+    """Show community readiness signals for a Git repository.
 
-    NOTE: Not implemented yet"""
-    ...
-    raise typer.Exit()
+    Currently GitHub-only: distinct PR author counts from GraphQL.
+    """
+    provider = infer_git_provider(url)
+    if provider != "github":
+        typer.echo(
+            "Community signals are only available for GitHub repositories.",
+            err=True,
+        )
+        raise typer.Exit(code=1)
+
+    extractor = get_extractor(url, provider)
+    assert isinstance(extractor, GithubExtractor)
+    extractor.max_pr_pages = max_pr_pages
+    repo = extractor.extract()
+    report = {
+        "distinct_pr_authors": repo.distinct_pr_authors,
+        "distinct_non_maintainer_pr_authors": repo.distinct_non_maintainer_pr_authors,
+    }
+    print(json.dumps(report, indent=2))
 
 
 @app.command()
