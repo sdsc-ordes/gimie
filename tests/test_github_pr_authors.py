@@ -85,8 +85,8 @@ def test_extract_includes_pr_author_counts(mock_contributors, mock_fetch):
     assert repo.distinct_pr_authors == 3
     assert repo.distinct_non_maintainer_pr_authors == 2
     ttl = repo.serialize(format="ttl")
-    assert "distinctPullRequestAuthors" in ttl
-    assert "distinctNonMaintainerPullRequestAuthors" in ttl
+    assert "distinctPRAuthors" in ttl
+    assert "distinctNonMaintainerPRAuthors" in ttl
 
 
 @patch("gimie.extractors.github.send_graphql_query")
