@@ -4,7 +4,7 @@
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix md4i:    <http://w3id.org/nfdi4ing/metadata4ing#> .
-@prefix gimie:   <https://sdsc-ordes.github.io/gimie/shacl/> .
+@prefix gimie:   <https://sdsc-ordes.github.io/gimie/> .
 
 # ─────────────────────────────────────────────
 # SoftwareSourceCode shape
@@ -101,6 +101,22 @@ gimie:SoftwareSourceCodeShape
         sh:name "is based on"@en ;
         sh:description "URL of the parent / upstream repository this software was forked from."@en ;
         sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+    ] ;
+
+    sh:property [
+        sh:path gimie:distinctPullRequestAuthors ;
+        sh:name "distinct pull request authors"@en ;
+        sh:description "Number of distinct authors who opened pull requests."@en ;
+        sh:datatype xsd:integer ;
+        sh:maxCount 1 ;
+    ] ;
+
+    sh:property [
+        sh:path gimie:distinctNonMaintainerPullRequestAuthors ;
+        sh:name "distinct non-maintainer pull request authors"@en ;
+        sh:description "Number of distinct non-maintainer authors who opened pull requests."@en ;
+        sh:datatype xsd:integer ;
         sh:maxCount 1 ;
     ] ;
 
