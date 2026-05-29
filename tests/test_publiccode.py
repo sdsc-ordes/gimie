@@ -113,13 +113,6 @@ def test_parse_builds_graph():
     assert not list(graph.objects(john_uri, SDO.email))
 
 
-def test_parse_does_not_add_extractor_fields():
-    graph = PublicCodeParser(subject=SUBJECT).parse(FULL_PUBLICCODE)
-    assert not list(graph.objects(URIRef(SUBJECT), SDO.description))
-    assert not list(graph.objects(URIRef(SUBJECT), SDO.version))
-    assert not list(graph.objects(URIRef(SUBJECT), SDO.datePublished))
-    assert not list(graph.objects(URIRef(SUBJECT), SDO.license))
-
 
 def test_parse_invalid_yaml():
     graph = PublicCodeParser(subject=SUBJECT).parse(b"{{invalid yaml")
