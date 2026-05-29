@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+
+<html :class="{ 'dark' : darkMode === true }" data-content_root="../" lang="en" x-data="{ darkMode: $persist(window.matchMedia('(prefers-color-scheme: dark)').matches), activeSection: ''}">
+<head>
+<script>
+    (function () {
+      // Set initial color scheme
+      if ((localStorage.getItem("_x_darkMode") === "true") || (window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+        document.documentElement.classList.add("dark");
+      }
+
+      // Watch for media preference changes
+      window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (event) => {
+        localStorage.setItem("_x_darkMode", event.matches);
+        document.documentElement.classList.toggle("dark", event.matches);
+      });
+    })();
+  </script>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="utf-8"/>
+<meta content="#ffffff" media="(prefers-color-scheme: light)" name="theme-color"/>
+<meta content="#030711" media="(prefers-color-scheme: dark)" name="theme-color"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>gimie package | gimie 0.7.2 documentation</title>
+<meta content="gimie package | gimie 0.7.2 documentation" property="og:title"/>
+<meta content="gimie package | gimie 0.7.2 documentation" name="twitter:title"/>
+<link href="../_static/pygments.css?v=e72c8e07" rel="stylesheet" type="text/css"/>
+<link href="../_static/theme.css?v=979577e3" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<link href="../_static/awesome-sphinx-design.css?v=b1d4564d" rel="stylesheet" type="text/css"/>
+<link href="../_static/favicon.ico" rel="icon"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="gimie.extractors.html" rel="next" title="gimie.extractors package"/>
+<link href="modules.html" rel="prev" title="gimie"/>
+</head>
+<body :class="{ 'overflow-hidden': showSidebar }" class="min-h-screen font-sans antialiased bg-background text-foreground" x-data="{ showSidebar: false, showScrollTop: false }">
+<div @click.self="showSidebar = false" class="fixed inset-0 z-50 overflow-hidden bg-background/80 backdrop-blur-sm md:hidden" x-cloak="" x-show="showSidebar"></div><div class="relative flex flex-col min-h-screen" id="page"><a class="absolute top-0 left-0 z-[100] block bg-background p-4 text-xl transition -translate-x-full opacity-0 focus:translate-x-0 focus:opacity-100" href="#content">
+      Skip to content
+    </a><header class="sticky top-0 z-40 w-full border-b shadow-xs border-border bg-background/90 backdrop-blur"><div class="container flex items-center h-14">
+<div class="hidden mr-4 md:flex">
+<a class="flex items-center mr-6" href="../index.html">
+<img alt="Logo" class="mr-2 dark:invert" height="24" src="../_static/logo_notext.svg" width="24"/><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">gimie 0.7.2 documentation</span>
+</a></div><button @click="showSidebar = true" class="inline-flex items-center justify-center h-10 px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md hover:text-accent-foreground hover:bg-transparent md:hidden" type="button">
+<svg aria-hidden="true" fill="currentColor" height="24" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M152.587 825.087q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440Zm0-203.587q-19.152 0-32.326-13.174T107.087 576q0-19.152 13.174-32.326t32.326-13.174h320q19.152 0 32.326 13.174T518.087 576q0 19.152-13.174 32.326T472.587 621.5h-320Zm0-203.587q-19.152 0-32.326-13.174t-13.174-32.326q0-19.152 13.174-32.326t32.326-13.174h440q19.152 0 32.326 13.174t13.174 32.326q0 19.152-13.174 32.326t-32.326 13.174h-440ZM708.913 576l112.174 112.174q12.674 12.674 12.674 31.826t-12.674 31.826Q808.413 764.5 789.261 764.5t-31.826-12.674l-144-144Q600 594.391 600 576t13.435-31.826l144-144q12.674-12.674 31.826-12.674t31.826 12.674q12.674 12.674 12.674 31.826t-12.674 31.826L708.913 576Z"></path>
+</svg>
+<span class="sr-only">Toggle navigation menu</span>
+</button>
+<div class="flex items-center justify-between flex-1 gap-2 sm:gap-4 md:justify-end">
+<div class="flex-1 w-full md:w-auto md:flex-none"><form @keydown.k.window.meta="$refs.search.focus()" action="../search.html" class="relative flex items-center group" id="searchbox" method="get">
+<input aria-label="Search the docs" class="inline-flex items-center font-medium transition-colors bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background border border-input hover:bg-accent focus:bg-accent hover:text-accent-foreground focus:text-accent-foreground hover:placeholder-accent-foreground py-2 px-4 relative h-9 w-full justify-start rounded-[0.5rem] text-sm text-muted-foreground sm:pr-12 md:w-40 lg:w-64" id="search-input" name="q" placeholder="Search ..." type="search" x-ref="search"/>
+<kbd class="pointer-events-none absolute right-1.5 top-2 hidden h-5 select-none text-muted-foreground items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex group-hover:bg-accent group-hover:text-accent-foreground">
+<span class="text-xs">⌘</span>
+    K
+  </kbd>
+</form>
+</div>
+<nav class="flex items-center gap-1">
+<button @click="darkMode = !darkMode" class="relative inline-flex items-center justify-center px-0 text-sm font-medium transition-colors rounded-md hover:bg-accent hover:text-accent-foreground h-9 w-9" title="Toggle color scheme" type="button">
+<svg class="absolute transition-all scale-100 rotate-0 dark:-rotate-90 dark:scale-0" fill="currentColor" height="16" viewbox="0 96 960 960" width="16" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 685q45.456 0 77.228-31.772Q589 621.456 589 576q0-45.456-31.772-77.228Q525.456 467 480 467q-45.456 0-77.228 31.772Q371 530.544 371 576q0 45.456 31.772 77.228Q434.544 685 480 685Zm0 91q-83 0-141.5-58.5T280 576q0-83 58.5-141.5T480 376q83 0 141.5 58.5T680 576q0 83-58.5 141.5T480 776ZM80 621.5q-19.152 0-32.326-13.174T34.5 576q0-19.152 13.174-32.326T80 530.5h80q19.152 0 32.326 13.174T205.5 576q0 19.152-13.174 32.326T160 621.5H80Zm720 0q-19.152 0-32.326-13.174T754.5 576q0-19.152 13.174-32.326T800 530.5h80q19.152 0 32.326 13.174T925.5 576q0 19.152-13.174 32.326T880 621.5h-80Zm-320-320q-19.152 0-32.326-13.174T434.5 256v-80q0-19.152 13.174-32.326T480 130.5q19.152 0 32.326 13.174T525.5 176v80q0 19.152-13.174 32.326T480 301.5Zm0 720q-19.152 0-32.326-13.17Q434.5 995.152 434.5 976v-80q0-19.152 13.174-32.326T480 850.5q19.152 0 32.326 13.174T525.5 896v80q0 19.152-13.174 32.33-13.174 13.17-32.326 13.17ZM222.174 382.065l-43-42Q165.5 327.391 166 308.239t13.174-33.065q13.435-13.674 32.587-13.674t32.065 13.674l42.239 43q12.674 13.435 12.555 31.706-.12 18.272-12.555 31.946-12.674 13.674-31.445 13.413-18.772-.261-32.446-13.174Zm494 494.761-42.239-43q-12.674-13.435-12.674-32.087t12.674-31.565Q686.609 756.5 705.38 757q18.772.5 32.446 13.174l43 41.761Q794.5 824.609 794 843.761t-13.174 33.065Q767.391 890.5 748.239 890.5t-32.065-13.674Zm-42-494.761Q660.5 369.391 661 350.62q.5-18.772 13.174-32.446l41.761-43Q728.609 261.5 747.761 262t33.065 13.174q13.674 13.435 13.674 32.587t-13.674 32.065l-43 42.239q-13.435 12.674-31.706 12.555-18.272-.12-31.946-12.555Zm-495 494.761Q165.5 863.391 165.5 844.239t13.674-32.065l43-42.239q13.435-12.674 32.087-12.674t31.565 12.674Q299.5 782.609 299 801.38q-.5 18.772-13.174 32.446l-41.761 43Q231.391 890.5 212.239 890t-33.065-13.174ZM480 576Z"></path>
+</svg>
+<svg class="absolute transition-all scale-0 rotate-90 dark:rotate-0 dark:scale-100" fill="currentColor" height="16" viewbox="0 96 960 960" width="16" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 936q-151 0-255.5-104.5T120 576q0-138 90-239.5T440 218q25-3 39 18t-1 44q-17 26-25.5 55t-8.5 61q0 90 63 153t153 63q31 0 61.5-9t54.5-25q21-14 43-1.5t19 39.5q-14 138-117.5 229T480 936Zm0-80q88 0 158-48.5T740 681q-20 5-40 8t-40 3q-123 0-209.5-86.5T364 396q0-20 3-40t8-40q-78 32-126.5 102T200 576q0 116 82 198t198 82Zm-10-270Z"></path>
+</svg>
+</button>
+</nav>
+</div>
+</div>
+</header>
+<div class="flex-1"><div class="container md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-10"><aside :aria-hidden="!showSidebar" :class="{ 'translate-x-0': showSidebar }" class="fixed inset-y-0 left-0 md:top-14 z-50 md:z-30 bg-background md:bg-transparent transition-all duration-100 -translate-x-full md:translate-x-0 ml-0 p-6 md:p-0 md:-ml-2 md:h-[calc(100vh-3.5rem)] w-5/6 md:w-full overflow-y-auto border-r border-border md:sticky" id="left-sidebar">
+<a class="justify-start text-sm md:!hidden bg-background" href="../index.html">
+<img alt="Logo" class="mr-2 dark:invert" height="16" src="../_static/logo_notext.svg" width="16"/><span class="font-bold text-clip whitespace-nowrap">gimie 0.7.2 documentation</span>
+</a>
+<div class="relative overflow-hidden md:overflow-auto my-4 md:my-0">
+<div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
+<p class="caption" role="heading"><span class="caption-text">Background</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../intro/linked_data.html">Linked data - What is it and why do we use it?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/git.html">Git repositories  - Where code lives</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/tokens.html">Access tokens - Authenticate gimie on your behalf</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../intro/quickstart.html">Quick start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro/usage_python.html">Python Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cli.html">CLI Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Changelog</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html">[0.7.2] - 2024-12-18</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id2">[0.7.1] - 2024-12-09</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id4">[0.7.0] - 2024-11-28</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id6">[0.6.0] - 2023-10-19</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id9">[0.5.1] - 2023-07-10</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id11">[0.5.0] - 2023-07-04</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id15">[0.4.0] - 2023-06-09</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog_link.html#id19">[0.3.0] - 2023-02-24</a></li>
+</ul>
+</nav>
+</div>
+</div>
+<button @click="showSidebar = false" class="absolute md:hidden right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100" type="button">
+<svg class="h-4 w-4" fill="currentColor" height="24" stroke="none" viewbox="0 96 960 960" width="24" xmlns="http://www.w3.org/2000/svg">
+<path d="M480 632 284 828q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536 576l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480 632Z"></path>
+</svg>
+</button>
+</aside>
+<main class="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
+<div class="w-full min-w-0 mx-auto">
+<nav aria-label="breadcrumbs" class="flex items-center mb-4 space-x-1 text-sm text-muted-foreground">
+<a class="overflow-hidden text-ellipsis whitespace-nowrap hover:text-foreground" href="../index.html">
+<span class="hidden md:inline">gimie 0.7.2 documentation</span>
+<svg aria-label="Home" class="md:hidden" fill="currentColor" height="18" stroke="none" viewbox="0 96 960 960" width="18" xmlns="http://www.w3.org/2000/svg">
+<path d="M240 856h120V616h240v240h120V496L480 316 240 496v360Zm-80 80V456l320-240 320 240v480H520V696h-80v240H160Zm320-350Z"></path>
+</svg>
+</a>
+<div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap" href="modules.html">gimie</a>
+<div class="mr-1">/</div><span aria-current="page" class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">gimie package</span>
+</nav>
+<div id="content" role="main">
+<section id="gimie-package">
+<h1>gimie package<a class="headerlink" href="#gimie-package" title="Link to this heading">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#subpackages'">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gimie.extractors.html">gimie.extractors package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gimie.extractors.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gimie.extractors.html#module-gimie.extractors.abstract">gimie.extractors.abstract module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gimie.extractors.html#gimie.extractors.abstract.Extractor"><code class="docutils literal notranslate"><span class="pre">Extractor</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gimie.extractors.html#module-gimie.extractors.git">gimie.extractors.git module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gimie.extractors.html#gimie.extractors.git.GitExtractor"><code class="docutils literal notranslate"><span class="pre">GitExtractor</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gimie.extractors.html#module-gimie.extractors.github">gimie.extractors.github module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gimie.extractors.html#gimie.extractors.github.GithubExtractor"><code class="docutils literal notranslate"><span class="pre">GithubExtractor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.extractors.html#gimie.extractors.github.query_contributors"><code class="docutils literal notranslate"><span class="pre">query_contributors()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gimie.extractors.html#module-gimie.extractors.gitlab">gimie.extractors.gitlab module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gimie.extractors.html#gimie.extractors.gitlab.GitlabExtractor"><code class="docutils literal notranslate"><span class="pre">GitlabExtractor</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gimie.extractors.html#module-gimie.extractors">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gimie.extractors.html#gimie.extractors.get_extractor"><code class="docutils literal notranslate"><span class="pre">get_extractor()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.extractors.html#gimie.extractors.infer_git_provider"><code class="docutils literal notranslate"><span class="pre">infer_git_provider()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gimie.graph.html">gimie.graph package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gimie.graph.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gimie.graph.html#module-gimie.graph.namespaces">gimie.graph.namespaces module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gimie.graph.html#module-gimie.graph.operations">gimie.graph.operations module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gimie.graph.html#gimie.graph.operations.combine_graphs"><code class="docutils literal notranslate"><span class="pre">combine_graphs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.graph.html#gimie.graph.operations.properties_to_graph"><code class="docutils literal notranslate"><span class="pre">properties_to_graph()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gimie.graph.html#module-gimie.graph">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gimie.parsers.html">gimie.parsers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gimie.parsers.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.license.html">gimie.parsers.license package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gimie.parsers.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gimie.parsers.html#module-gimie.parsers.abstract">gimie.parsers.abstract module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.html#gimie.parsers.abstract.Parser"><code class="docutils literal notranslate"><span class="pre">Parser</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gimie.parsers.html#module-gimie.parsers.cff">gimie.parsers.cff module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.html#gimie.parsers.cff.CffParser"><code class="docutils literal notranslate"><span class="pre">CffParser</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.html#gimie.parsers.cff.doi_to_url"><code class="docutils literal notranslate"><span class="pre">doi_to_url()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.html#gimie.parsers.cff.get_cff_authors"><code class="docutils literal notranslate"><span class="pre">get_cff_authors()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.html#gimie.parsers.cff.get_cff_doi"><code class="docutils literal notranslate"><span class="pre">get_cff_doi()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gimie.parsers.html#module-gimie.parsers.publiccode">gimie.parsers.publiccode module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.html#gimie.parsers.publiccode.PublicCodeParser"><code class="docutils literal notranslate"><span class="pre">PublicCodeParser</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.html#gimie.parsers.publiccode.get_publiccode_contacts"><code class="docutils literal notranslate"><span class="pre">get_publiccode_contacts()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.html#gimie.parsers.publiccode.get_publiccode_is_based_on"><code class="docutils literal notranslate"><span class="pre">get_publiccode_is_based_on()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gimie.parsers.html#module-gimie.parsers">Module contents</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.html#gimie.parsers.ParserInfo"><code class="docutils literal notranslate"><span class="pre">ParserInfo</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.html#gimie.parsers.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.html#gimie.parsers.list_default_parsers"><code class="docutils literal notranslate"><span class="pre">list_default_parsers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.html#gimie.parsers.list_parsers"><code class="docutils literal notranslate"><span class="pre">list_parsers()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.html#gimie.parsers.parse_files"><code class="docutils literal notranslate"><span class="pre">parse_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="gimie.parsers.html#gimie.parsers.select_parser"><code class="docutils literal notranslate"><span class="pre">select_parser()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#submodules'">¶</a></h2>
+</section>
+<section id="module-gimie.cli">
+<span id="gimie-cli-module"></span><h2>gimie.cli module<a class="headerlink" href="#module-gimie.cli" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#module-gimie.cli'">¶</a></h2>
+<p>Command line interface to the gimie package.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gimie.cli.RDFFormatChoice">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gimie.cli.</span></span><span class="sig-name descname"><span class="pre">RDFFormatChoice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/cli.html#RDFFormatChoice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.cli.RDFFormatChoice" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.cli.RDFFormatChoice'">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.cli.RDFFormatChoice.jsonld">
+<span class="sig-name descname"><span class="pre">jsonld</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'json-ld'</span></em><a class="headerlink" href="#gimie.cli.RDFFormatChoice.jsonld" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.cli.RDFFormatChoice.jsonld'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.cli.RDFFormatChoice.nt">
+<span class="sig-name descname"><span class="pre">nt</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'nt'</span></em><a class="headerlink" href="#gimie.cli.RDFFormatChoice.nt" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.cli.RDFFormatChoice.nt'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.cli.RDFFormatChoice.ttl">
+<span class="sig-name descname"><span class="pre">ttl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ttl'</span></em><a class="headerlink" href="#gimie.cli.RDFFormatChoice.ttl" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.cli.RDFFormatChoice.ttl'">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="gimie.cli.advice">
+<span class="sig-prename descclassname"><span class="pre">gimie.cli.</span></span><span class="sig-name descname"><span class="pre">advice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/cli.html#advice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.cli.advice" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.cli.advice'">¶</a></dt>
+<dd><p>Show a metadata completion report for a Git repository
+at the target URL.</p>
+<p>NOTE: Not implemented yet</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="gimie.cli.callback">
+<span class="sig-prename descclassname"><span class="pre">gimie.cli.</span></span><span class="sig-name descname"><span class="pre">callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">version:</span> <span class="pre">bool</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/cli.html#callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.cli.callback" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.cli.callback'">¶</a></dt>
+<dd><p>gimie digs Git repositories for metadata.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="gimie.cli.data">
+<span class="sig-prename descclassname"><span class="pre">gimie.cli.</span></span><span class="sig-name descname"><span class="pre">data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format:</span> <span class="pre">~gimie.cli.RDFFormatChoice</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_url:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_parser:</span> <span class="pre">~typing.List[str]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_parser:</span> <span class="pre">~typing.List[str]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version:</span> <span class="pre">bool</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/cli.html#data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.cli.data" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.cli.data'">¶</a></dt>
+<dd><p>Extract linked metadata from a Git repository at the target URL.</p>
+<p>The output is sent to stdout, and turtle is used as the default serialization format.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="gimie.cli.parsers">
+<span class="sig-prename descclassname"><span class="pre">gimie.cli.</span></span><span class="sig-name descname"><span class="pre">parsers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/cli.html#parsers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.cli.parsers" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.cli.parsers'">¶</a></dt>
+<dd><p>List available parsers, specifying which are default.
+If –verbose is used, show parser description.</p>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="gimie.cli.version_callback">
+<span class="sig-prename descclassname"><span class="pre">gimie.cli.</span></span><span class="sig-name descname"><span class="pre">version_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/cli.html#version_callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.cli.version_callback" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.cli.version_callback'">¶</a></dt>
+<dd></dd></dl>
+</section>
+<section id="module-gimie.io">
+<span id="gimie-io-module"></span><h2>gimie.io module<a class="headerlink" href="#module-gimie.io" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#module-gimie.io'">¶</a></h2>
+<p>Standard input interfaces to local or remote resources for gimie.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gimie.io.IterStream">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gimie.io.</span></span><span class="sig-name descname"><span class="pre">IterStream</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterator" title="(in Python v3.14)"><span class="pre">Iterator</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.14)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/io.html#IterStream"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.io.IterStream" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.io.IterStream'">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/io.html#io.RawIOBase" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">RawIOBase</span></code></a></p>
+<p>Wraps an iterator under a like a file-like interface.
+Empty elements in the iterator are ignored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>iterator</strong> – An iterator yielding bytes.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="n">stream</span> <span class="o">=</span> <span class="n">IterStream</span><span class="p">(</span><span class="nb">iter</span><span class="p">([</span><span class="sa">b</span><span class="s2">"Hello "</span><span class="p">,</span> <span class="sa">b</span><span class="s2">""</span><span class="p">,</span> <span class="sa">b</span><span class="s2">"World"</span><span class="p">]))</span>
+</span><span id="line-2"><span class="gp">&gt;&gt;&gt; </span><span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span><span id="line-3"><span class="go">b'Hello World'</span>
+</span></code></pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="gimie.io.IterStream.readable">
+<span class="sig-name descname"><span class="pre">readable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/io.html#IterStream.readable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.io.IterStream.readable" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.io.IterStream.readable'">¶</a></dt>
+<dd><p>Return whether object was opened for reading.</p>
+<p>If False, read() will raise OSError.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gimie.io.IterStream.readinto">
+<span class="sig-name descname"><span class="pre">readinto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/io.html#IterStream.readinto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.io.IterStream.readinto" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.io.IterStream.readinto'">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="gimie.io.LocalResource">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gimie.io.</span></span><span class="sig-name descname"><span class="pre">LocalResource</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/os.html#os.PathLike" title="(in Python v3.14)"><span class="pre">PathLike</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/io.html#LocalResource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.io.LocalResource" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.io.LocalResource'">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gimie.io.Resource" title="gimie.io.Resource"><code class="xref py py-class docutils literal notranslate"><span class="pre">Resource</span></code></a></p>
+<p>Providing read-only access to local data via a file-like interface.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="n">resource</span> <span class="o">=</span> <span class="n">LocalResource</span><span class="p">(</span><span class="s2">"README.md"</span><span class="p">)</span>
+</span></code></pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="gimie.io.LocalResource.open">
+<span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/io.html#io.RawIOBase" title="(in Python v3.14)"><span class="pre">RawIOBase</span></a></span></span><a class="reference internal" href="../_modules/gimie/io.html#LocalResource.open"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.io.LocalResource.open" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.io.LocalResource.open'">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="gimie.io.RemoteResource">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gimie.io.</span></span><span class="sig-name descname"><span class="pre">RemoteResource</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">headers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/io.html#RemoteResource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.io.RemoteResource" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.io.RemoteResource'">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gimie.io.Resource" title="gimie.io.Resource"><code class="xref py py-class docutils literal notranslate"><span class="pre">Resource</span></code></a></p>
+<p>Provides read-only access to remote data via a file-like interface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> – The URL where the resource. can be downladed from.</p></li>
+<li><p><strong>headers</strong> – Optional headers to pass to the request.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="n">url</span> <span class="o">=</span> <span class="s2">"https://raw.githubusercontent.com/sdsc-ordes/gimie/main/README.md"</span>
+</span><span id="line-2"><span class="gp">&gt;&gt;&gt; </span><span class="n">content</span> <span class="o">=</span> <span class="n">RemoteResource</span><span class="p">(</span><span class="s2">"README.md"</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">open</span><span class="p">()</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span><span id="line-3"><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">)</span>
+</span></code></pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="gimie.io.RemoteResource.open">
+<span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/io.html#io.RawIOBase" title="(in Python v3.14)"><span class="pre">RawIOBase</span></a></span></span><a class="reference internal" href="../_modules/gimie/io.html#RemoteResource.open"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.io.RemoteResource.open" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.io.RemoteResource.open'">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="gimie.io.Resource">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gimie.io.</span></span><span class="sig-name descname"><span class="pre">Resource</span></span><a class="reference internal" href="../_modules/gimie/io.html#Resource"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.io.Resource" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.io.Resource'">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Abstract class for read-only access to local or remote resources via
+a file-like interface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><em>pathlib.Path</em></a>) – The local relative path to the resource.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gimie.io.Resource.open">
+<span class="sig-name descname"><span class="pre">open</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/io.html#io.RawIOBase" title="(in Python v3.14)"><span class="pre">RawIOBase</span></a></span></span><a class="reference internal" href="../_modules/gimie/io.html#Resource.open"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.io.Resource.open" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.io.Resource.open'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.io.Resource.path">
+<span class="sig-name descname"><span class="pre">path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></em><a class="headerlink" href="#gimie.io.Resource.path" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.io.Resource.path'">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+</section>
+<section id="module-gimie.models">
+<span id="gimie-models-module"></span><h2>gimie.models module<a class="headerlink" href="#module-gimie.models" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#module-gimie.models'">¶</a></h2>
+<p>Data models to represent nodes in the graph generated by gimie.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gimie.models.Organization">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gimie.models.</span></span><span class="sig-name descname"><span class="pre">Organization</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">legal_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logo</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/models.html#Organization"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.models.Organization" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Organization'">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>See http//schema.org/Organization</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Organization.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Organization.description" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Organization.description'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Organization.email">
+<span class="sig-name descname"><span class="pre">email</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Organization.email" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Organization.email'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Organization.legal_name">
+<span class="sig-name descname"><span class="pre">legal_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Organization.legal_name" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Organization.legal_name'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Organization.logo">
+<span class="sig-name descname"><span class="pre">logo</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Organization.logo" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Organization.logo'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Organization.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#gimie.models.Organization.name" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Organization.name'">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="gimie.models.OrganizationSchema">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gimie.models.</span></span><span class="sig-name descname"><span class="pre">OrganizationSchema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">many</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dump_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flattened</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_all_objects</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_visited</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_top_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/models.html#OrganizationSchema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.models.OrganizationSchema" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.OrganizationSchema'">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://calamus.readthedocs.io/en/latest/api.html#calamus.schema.JsonLDSchema" title="(in calamus)"><code class="xref py py-class docutils literal notranslate"><span class="pre">JsonLDSchema</span></code></a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gimie.models.OrganizationSchema.Meta">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="reference internal" href="../_modules/gimie/models.html#OrganizationSchema.Meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.models.OrganizationSchema.Meta" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.OrganizationSchema.Meta'">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.OrganizationSchema.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#gimie.models.OrganizationSchema.Meta.model" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.OrganizationSchema.Meta.model'">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#gimie.models.Organization" title="gimie.models.Organization"><code class="xref py py-class docutils literal notranslate"><span class="pre">Organization</span></code></a></p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.OrganizationSchema.Meta.rdf_type">
+<span class="sig-name descname"><span class="pre">rdf_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">rdflib.term.URIRef('http://schema.org/Organization')</span></em><a class="headerlink" href="#gimie.models.OrganizationSchema.Meta.rdf_type" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.OrganizationSchema.Meta.rdf_type'">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.OrganizationSchema.opts">
+<span class="sig-name descname"><span class="pre">opts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">SchemaOpts</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;calamus.schema.JsonLDSchemaOpts</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#gimie.models.OrganizationSchema.opts" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.OrganizationSchema.opts'">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="gimie.models.Person">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gimie.models.</span></span><span class="sig-name descname"><span class="pre">Person</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">affiliations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gimie.models.Organization" title="gimie.models.Organization"><span class="pre">Organization</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/models.html#Person"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.models.Person" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Person'">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>See http//schema.org/Person</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Person.affiliations">
+<span class="sig-name descname"><span class="pre">affiliations</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gimie.models.Organization" title="gimie.models.Organization"><span class="pre">Organization</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Person.affiliations" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Person.affiliations'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Person.email">
+<span class="sig-name descname"><span class="pre">email</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Person.email" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Person.email'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Person.identifier">
+<span class="sig-name descname"><span class="pre">identifier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#gimie.models.Person.identifier" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Person.identifier'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Person.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Person.name" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Person.name'">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="gimie.models.PersonSchema">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gimie.models.</span></span><span class="sig-name descname"><span class="pre">PersonSchema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">many</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dump_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flattened</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_all_objects</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_visited</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_top_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/models.html#PersonSchema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.models.PersonSchema" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.PersonSchema'">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://calamus.readthedocs.io/en/latest/api.html#calamus.schema.JsonLDSchema" title="(in calamus)"><code class="xref py py-class docutils literal notranslate"><span class="pre">JsonLDSchema</span></code></a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gimie.models.PersonSchema.Meta">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="reference internal" href="../_modules/gimie/models.html#PersonSchema.Meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.models.PersonSchema.Meta" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.PersonSchema.Meta'">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.PersonSchema.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#gimie.models.PersonSchema.Meta.model" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.PersonSchema.Meta.model'">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#gimie.models.Person" title="gimie.models.Person"><code class="xref py py-class docutils literal notranslate"><span class="pre">Person</span></code></a></p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.PersonSchema.Meta.rdf_type">
+<span class="sig-name descname"><span class="pre">rdf_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">rdflib.term.URIRef('http://schema.org/Person')</span></em><a class="headerlink" href="#gimie.models.PersonSchema.Meta.rdf_type" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.PersonSchema.Meta.rdf_type'">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.PersonSchema.opts">
+<span class="sig-name descname"><span class="pre">opts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">SchemaOpts</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;calamus.schema.JsonLDSchemaOpts</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#gimie.models.PersonSchema.opts" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.PersonSchema.opts'">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="gimie.models.Release">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gimie.models.</span></span><span class="sig-name descname"><span class="pre">Release</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><span class="pre">datetime</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">commit_hash</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/models.html#Release"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.models.Release" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Release'">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>This class represents a release of a repository.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The tag of the release.</p></li>
+<li><p><strong>date</strong> (<a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><em>datetime.datetime</em></a>) – The date of the release.</p></li>
+<li><p><strong>commit_hash</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The commit hash of the release.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Release.commit_hash">
+<span class="sig-name descname"><span class="pre">commit_hash</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#gimie.models.Release.commit_hash" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Release.commit_hash'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Release.date">
+<span class="sig-name descname"><span class="pre">date</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><span class="pre">datetime</span></a></em><a class="headerlink" href="#gimie.models.Release.date" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Release.date'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Release.tag">
+<span class="sig-name descname"><span class="pre">tag</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#gimie.models.Release.tag" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Release.tag'">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="gimie.models.Repository">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gimie.models.</span></span><span class="sig-name descname"><span class="pre">Repository</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">authors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gimie.models.Organization" title="gimie.models.Organization"><span class="pre">Organization</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#gimie.models.Person" title="gimie.models.Person"><span class="pre">Person</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contributors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gimie.models.Person" title="gimie.models.Person"><span class="pre">Person</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_created</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><span class="pre">datetime</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_modified</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><span class="pre">datetime</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_published</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><span class="pre">datetime</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">licenses</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_repository</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prog_langs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/models.html#Repository"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.models.Repository" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Repository'">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>This class represents a git repository.
+It does not contain any information about the content of the repository.
+See <a class="reference external" href="https://schema.org/SoftwareSourceCode">https://schema.org/SoftwareSourceCode</a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Repository.authors">
+<span class="sig-name descname"><span class="pre">authors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gimie.models.Organization" title="gimie.models.Organization"><span class="pre">Organization</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#gimie.models.Person" title="gimie.models.Person"><span class="pre">Person</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Repository.authors" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Repository.authors'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Repository.contributors">
+<span class="sig-name descname"><span class="pre">contributors</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gimie.models.Person" title="gimie.models.Person"><span class="pre">Person</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Repository.contributors" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Repository.contributors'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Repository.date_created">
+<span class="sig-name descname"><span class="pre">date_created</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><span class="pre">datetime</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Repository.date_created" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Repository.date_created'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Repository.date_modified">
+<span class="sig-name descname"><span class="pre">date_modified</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><span class="pre">datetime</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Repository.date_modified" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Repository.date_modified'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Repository.date_published">
+<span class="sig-name descname"><span class="pre">date_published</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><span class="pre">datetime</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Repository.date_published" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Repository.date_published'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Repository.description">
+<span class="sig-name descname"><span class="pre">description</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Repository.description" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Repository.description'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Repository.download_url">
+<span class="sig-name descname"><span class="pre">download_url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Repository.download_url" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Repository.download_url'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Repository.identifier">
+<span class="sig-name descname"><span class="pre">identifier</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Repository.identifier" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Repository.identifier'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gimie.models.Repository.jsonld">
+<span class="sig-name descname"><span class="pre">jsonld</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../_modules/gimie/models.html#Repository.jsonld"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.models.Repository.jsonld" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Repository.jsonld'">¶</a></dt>
+<dd><p>Alias for jsonld serialization.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Repository.keywords">
+<span class="sig-name descname"><span class="pre">keywords</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Repository.keywords" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Repository.keywords'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Repository.licenses">
+<span class="sig-name descname"><span class="pre">licenses</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Repository.licenses" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Repository.licenses'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Repository.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#gimie.models.Repository.name" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Repository.name'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Repository.parent_repository">
+<span class="sig-name descname"><span class="pre">parent_repository</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Repository.parent_repository" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Repository.parent_repository'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Repository.prog_langs">
+<span class="sig-name descname"><span class="pre">prog_langs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.14)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Repository.prog_langs" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Repository.prog_langs'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gimie.models.Repository.serialize">
+<span class="sig-name descname"><span class="pre">serialize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ttl'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../_modules/gimie/models.html#Repository.serialize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.models.Repository.serialize" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Repository.serialize'">¶</a></dt>
+<dd><p>Serialize the RDF graph representing the instance.</p>
+</dd></dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="gimie.models.Repository.to_graph">
+<span class="sig-name descname"><span class="pre">to_graph</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.graph/#rdflib.graph.Graph" title="(in RDFLib v0.0.0)"><span class="pre">Graph</span></a></span></span><a class="reference internal" href="../_modules/gimie/models.html#Repository.to_graph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.models.Repository.to_graph" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Repository.to_graph'">¶</a></dt>
+<dd><p>Convert repository to RDF graph.</p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Repository.url">
+<span class="sig-name descname"><span class="pre">url</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></em><a class="headerlink" href="#gimie.models.Repository.url" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Repository.url'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.Repository.version">
+<span class="sig-name descname"><span class="pre">version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#gimie.models.Repository.version" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.Repository.version'">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="gimie.models.RepositorySchema">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gimie.models.</span></span><span class="sig-name descname"><span class="pre">RepositorySchema</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">many</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dump_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unknown</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flattened</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lazy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_all_objects</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_visited</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_top_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/models.html#RepositorySchema"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.models.RepositorySchema" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.RepositorySchema'">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://calamus.readthedocs.io/en/latest/api.html#calamus.schema.JsonLDSchema" title="(in calamus)"><code class="xref py py-class docutils literal notranslate"><span class="pre">JsonLDSchema</span></code></a></p>
+<p>This defines the schema used for json-ld serialization.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gimie.models.RepositorySchema.Meta">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Meta</span></span><a class="reference internal" href="../_modules/gimie/models.html#RepositorySchema.Meta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.models.RepositorySchema.Meta" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.RepositorySchema.Meta'">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.RepositorySchema.Meta.add_value_types">
+<span class="sig-name descname"><span class="pre">add_value_types</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#gimie.models.RepositorySchema.Meta.add_value_types" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.RepositorySchema.Meta.add_value_types'">¶</a></dt>
+<dd></dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.RepositorySchema.Meta.model">
+<span class="sig-name descname"><span class="pre">model</span></span><a class="headerlink" href="#gimie.models.RepositorySchema.Meta.model" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.RepositorySchema.Meta.model'">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#gimie.models.Repository" title="gimie.models.Repository"><code class="xref py py-class docutils literal notranslate"><span class="pre">Repository</span></code></a></p>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.RepositorySchema.Meta.rdf_type">
+<span class="sig-name descname"><span class="pre">rdf_type</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">rdflib.term.URIRef('http://schema.org/SoftwareSourceCode')</span></em><a class="headerlink" href="#gimie.models.RepositorySchema.Meta.rdf_type" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.RepositorySchema.Meta.rdf_type'">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gimie.models.RepositorySchema.opts">
+<span class="sig-name descname"><span class="pre">opts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">SchemaOpts</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;calamus.schema.JsonLDSchemaOpts</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#gimie.models.RepositorySchema.opts" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.models.RepositorySchema.opts'">¶</a></dt>
+<dd></dd></dl>
+</dd></dl>
+</section>
+<section id="module-gimie.project">
+<span id="gimie-project-module"></span><h2>gimie.project module<a class="headerlink" href="#module-gimie.project" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#module-gimie.project'">¶</a></h2>
+<p>Orchestration of multiple extractors for a given project.
+This is the main entry point for end-to-end analysis.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="gimie.project.Project">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">gimie.project.</span></span><span class="sig-name descname"><span class="pre">Project</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">git_provider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parser_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Iterable" title="(in Python v3.14)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/gimie/project.html#Project"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.project.Project" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.project.Project'">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A class to represent a project’s git repository.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> – The full path (URL) of the repository.</p></li>
+<li><p><strong>base_url</strong> – The base URL of the git remote. Can be used to
+specify delimitation between base URL and project name.</p></li>
+<li><p><strong>git_provider</strong> – The name of the git provider to extract metadata from.
+(‘git’, ‘github’, ‘gitlab’)</p></li>
+<li><p><strong>parser_names</strong> – Names of file parsers to use. (‘license’).
+If None, default parsers are used (see gimie.parsers.PARSERS).</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="n">proj</span> <span class="o">=</span> <span class="n">Project</span><span class="p">(</span><span class="s2">"https://github.com/sdsc-ordes/gimie"</span><span class="p">)</span>
+</span><span id="line-2"><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">proj</span><span class="o">.</span><span class="n">extract</span><span class="p">(),</span> <span class="n">Graph</span><span class="p">)</span>
+</span></code></pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="gimie.project.Project.extract">
+<span class="sig-name descname"><span class="pre">extract</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://rdflib.readthedocs.io/en/stable/apidocs/rdflib.graph/#rdflib.graph.Graph" title="(in RDFLib v0.0.0)"><span class="pre">Graph</span></a></span></span><a class="reference internal" href="../_modules/gimie/project.html#Project.extract"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.project.Project.extract" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.project.Project.extract'">¶</a></dt>
+<dd><p>Extract repository metadata from git provider to RDF graph and enrich with
+metadata parsed from file contents.</p>
+</dd></dl>
+</dd></dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="gimie.project.split_git_url">
+<span class="sig-prename descclassname"><span class="pre">gimie.project.</span></span><span class="sig-name descname"><span class="pre">split_git_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.14)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/gimie/project.html#split_git_url"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#gimie.project.split_git_url" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#gimie.project.split_git_url'">¶</a></dt>
+<dd><p>Split a git URL into base URL and project path.</p>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="gp">&gt;&gt;&gt; </span><span class="n">split_git_url</span><span class="p">(</span><span class="s2">"https://gitlab.com/foo/bar"</span><span class="p">)</span>
+</span><span id="line-2"><span class="go">('https://gitlab.com', 'foo/bar')</span>
+</span></code></pre></div>
+</div>
+</dd></dl>
+</section>
+<section id="module-gimie">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gimie" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#module-gimie'">¶</a></h2>
+</section>
+</section>
+</div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
+<div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] h-full overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
+<ul>
+<li><a :data-current="activeSection === '#subpackages'" class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a :data-current="activeSection === '#submodules'" class="reference internal" href="#submodules">Submodules</a></li>
+<li><a :data-current="activeSection === '#module-gimie.cli'" class="reference internal" href="#module-gimie.cli">gimie.cli module</a><ul>
+<li><a :data-current="activeSection === '#gimie.cli.RDFFormatChoice'" class="reference internal" href="#gimie.cli.RDFFormatChoice"><code class="docutils literal notranslate"><span class="pre">RDFFormatChoice</span></code></a><ul>
+<li><a :data-current="activeSection === '#gimie.cli.RDFFormatChoice.jsonld'" class="reference internal" href="#gimie.cli.RDFFormatChoice.jsonld"><code class="docutils literal notranslate"><span class="pre">RDFFormatChoice.jsonld</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.cli.RDFFormatChoice.nt'" class="reference internal" href="#gimie.cli.RDFFormatChoice.nt"><code class="docutils literal notranslate"><span class="pre">RDFFormatChoice.nt</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.cli.RDFFormatChoice.ttl'" class="reference internal" href="#gimie.cli.RDFFormatChoice.ttl"><code class="docutils literal notranslate"><span class="pre">RDFFormatChoice.ttl</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#gimie.cli.advice'" class="reference internal" href="#gimie.cli.advice"><code class="docutils literal notranslate"><span class="pre">advice()</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.cli.callback'" class="reference internal" href="#gimie.cli.callback"><code class="docutils literal notranslate"><span class="pre">callback()</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.cli.data'" class="reference internal" href="#gimie.cli.data"><code class="docutils literal notranslate"><span class="pre">data()</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.cli.parsers'" class="reference internal" href="#gimie.cli.parsers"><code class="docutils literal notranslate"><span class="pre">parsers()</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.cli.version_callback'" class="reference internal" href="#gimie.cli.version_callback"><code class="docutils literal notranslate"><span class="pre">version_callback()</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#module-gimie.io'" class="reference internal" href="#module-gimie.io">gimie.io module</a><ul>
+<li><a :data-current="activeSection === '#gimie.io.IterStream'" class="reference internal" href="#gimie.io.IterStream"><code class="docutils literal notranslate"><span class="pre">IterStream</span></code></a><ul>
+<li><a :data-current="activeSection === '#gimie.io.IterStream.readable'" class="reference internal" href="#gimie.io.IterStream.readable"><code class="docutils literal notranslate"><span class="pre">IterStream.readable()</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.io.IterStream.readinto'" class="reference internal" href="#gimie.io.IterStream.readinto"><code class="docutils literal notranslate"><span class="pre">IterStream.readinto()</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#gimie.io.LocalResource'" class="reference internal" href="#gimie.io.LocalResource"><code class="docutils literal notranslate"><span class="pre">LocalResource</span></code></a><ul>
+<li><a :data-current="activeSection === '#gimie.io.LocalResource.open'" class="reference internal" href="#gimie.io.LocalResource.open"><code class="docutils literal notranslate"><span class="pre">LocalResource.open()</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#gimie.io.RemoteResource'" class="reference internal" href="#gimie.io.RemoteResource"><code class="docutils literal notranslate"><span class="pre">RemoteResource</span></code></a><ul>
+<li><a :data-current="activeSection === '#gimie.io.RemoteResource.open'" class="reference internal" href="#gimie.io.RemoteResource.open"><code class="docutils literal notranslate"><span class="pre">RemoteResource.open()</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#gimie.io.Resource'" class="reference internal" href="#gimie.io.Resource"><code class="docutils literal notranslate"><span class="pre">Resource</span></code></a><ul>
+<li><a :data-current="activeSection === '#gimie.io.Resource.open'" class="reference internal" href="#gimie.io.Resource.open"><code class="docutils literal notranslate"><span class="pre">Resource.open()</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.io.Resource.path'" class="reference internal" href="#gimie.io.Resource.path"><code class="docutils literal notranslate"><span class="pre">Resource.path</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#module-gimie.models'" class="reference internal" href="#module-gimie.models">gimie.models module</a><ul>
+<li><a :data-current="activeSection === '#gimie.models.Organization'" class="reference internal" href="#gimie.models.Organization"><code class="docutils literal notranslate"><span class="pre">Organization</span></code></a><ul>
+<li><a :data-current="activeSection === '#gimie.models.Organization.description'" class="reference internal" href="#gimie.models.Organization.description"><code class="docutils literal notranslate"><span class="pre">Organization.description</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Organization.email'" class="reference internal" href="#gimie.models.Organization.email"><code class="docutils literal notranslate"><span class="pre">Organization.email</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Organization.legal_name'" class="reference internal" href="#gimie.models.Organization.legal_name"><code class="docutils literal notranslate"><span class="pre">Organization.legal_name</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Organization.logo'" class="reference internal" href="#gimie.models.Organization.logo"><code class="docutils literal notranslate"><span class="pre">Organization.logo</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Organization.name'" class="reference internal" href="#gimie.models.Organization.name"><code class="docutils literal notranslate"><span class="pre">Organization.name</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#gimie.models.OrganizationSchema'" class="reference internal" href="#gimie.models.OrganizationSchema"><code class="docutils literal notranslate"><span class="pre">OrganizationSchema</span></code></a><ul>
+<li><a :data-current="activeSection === '#gimie.models.OrganizationSchema.Meta'" class="reference internal" href="#gimie.models.OrganizationSchema.Meta"><code class="docutils literal notranslate"><span class="pre">OrganizationSchema.Meta</span></code></a><ul>
+<li><a :data-current="activeSection === '#gimie.models.OrganizationSchema.Meta.model'" class="reference internal" href="#gimie.models.OrganizationSchema.Meta.model"><code class="docutils literal notranslate"><span class="pre">OrganizationSchema.Meta.model</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.OrganizationSchema.Meta.rdf_type'" class="reference internal" href="#gimie.models.OrganizationSchema.Meta.rdf_type"><code class="docutils literal notranslate"><span class="pre">OrganizationSchema.Meta.rdf_type</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#gimie.models.OrganizationSchema.opts'" class="reference internal" href="#gimie.models.OrganizationSchema.opts"><code class="docutils literal notranslate"><span class="pre">OrganizationSchema.opts</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#gimie.models.Person'" class="reference internal" href="#gimie.models.Person"><code class="docutils literal notranslate"><span class="pre">Person</span></code></a><ul>
+<li><a :data-current="activeSection === '#gimie.models.Person.affiliations'" class="reference internal" href="#gimie.models.Person.affiliations"><code class="docutils literal notranslate"><span class="pre">Person.affiliations</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Person.email'" class="reference internal" href="#gimie.models.Person.email"><code class="docutils literal notranslate"><span class="pre">Person.email</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Person.identifier'" class="reference internal" href="#gimie.models.Person.identifier"><code class="docutils literal notranslate"><span class="pre">Person.identifier</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Person.name'" class="reference internal" href="#gimie.models.Person.name"><code class="docutils literal notranslate"><span class="pre">Person.name</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#gimie.models.PersonSchema'" class="reference internal" href="#gimie.models.PersonSchema"><code class="docutils literal notranslate"><span class="pre">PersonSchema</span></code></a><ul>
+<li><a :data-current="activeSection === '#gimie.models.PersonSchema.Meta'" class="reference internal" href="#gimie.models.PersonSchema.Meta"><code class="docutils literal notranslate"><span class="pre">PersonSchema.Meta</span></code></a><ul>
+<li><a :data-current="activeSection === '#gimie.models.PersonSchema.Meta.model'" class="reference internal" href="#gimie.models.PersonSchema.Meta.model"><code class="docutils literal notranslate"><span class="pre">PersonSchema.Meta.model</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.PersonSchema.Meta.rdf_type'" class="reference internal" href="#gimie.models.PersonSchema.Meta.rdf_type"><code class="docutils literal notranslate"><span class="pre">PersonSchema.Meta.rdf_type</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#gimie.models.PersonSchema.opts'" class="reference internal" href="#gimie.models.PersonSchema.opts"><code class="docutils literal notranslate"><span class="pre">PersonSchema.opts</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#gimie.models.Release'" class="reference internal" href="#gimie.models.Release"><code class="docutils literal notranslate"><span class="pre">Release</span></code></a><ul>
+<li><a :data-current="activeSection === '#gimie.models.Release.commit_hash'" class="reference internal" href="#gimie.models.Release.commit_hash"><code class="docutils literal notranslate"><span class="pre">Release.commit_hash</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Release.date'" class="reference internal" href="#gimie.models.Release.date"><code class="docutils literal notranslate"><span class="pre">Release.date</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Release.tag'" class="reference internal" href="#gimie.models.Release.tag"><code class="docutils literal notranslate"><span class="pre">Release.tag</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#gimie.models.Repository'" class="reference internal" href="#gimie.models.Repository"><code class="docutils literal notranslate"><span class="pre">Repository</span></code></a><ul>
+<li><a :data-current="activeSection === '#gimie.models.Repository.authors'" class="reference internal" href="#gimie.models.Repository.authors"><code class="docutils literal notranslate"><span class="pre">Repository.authors</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Repository.contributors'" class="reference internal" href="#gimie.models.Repository.contributors"><code class="docutils literal notranslate"><span class="pre">Repository.contributors</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Repository.date_created'" class="reference internal" href="#gimie.models.Repository.date_created"><code class="docutils literal notranslate"><span class="pre">Repository.date_created</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Repository.date_modified'" class="reference internal" href="#gimie.models.Repository.date_modified"><code class="docutils literal notranslate"><span class="pre">Repository.date_modified</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Repository.date_published'" class="reference internal" href="#gimie.models.Repository.date_published"><code class="docutils literal notranslate"><span class="pre">Repository.date_published</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Repository.description'" class="reference internal" href="#gimie.models.Repository.description"><code class="docutils literal notranslate"><span class="pre">Repository.description</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Repository.download_url'" class="reference internal" href="#gimie.models.Repository.download_url"><code class="docutils literal notranslate"><span class="pre">Repository.download_url</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Repository.identifier'" class="reference internal" href="#gimie.models.Repository.identifier"><code class="docutils literal notranslate"><span class="pre">Repository.identifier</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Repository.jsonld'" class="reference internal" href="#gimie.models.Repository.jsonld"><code class="docutils literal notranslate"><span class="pre">Repository.jsonld()</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Repository.keywords'" class="reference internal" href="#gimie.models.Repository.keywords"><code class="docutils literal notranslate"><span class="pre">Repository.keywords</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Repository.licenses'" class="reference internal" href="#gimie.models.Repository.licenses"><code class="docutils literal notranslate"><span class="pre">Repository.licenses</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Repository.name'" class="reference internal" href="#gimie.models.Repository.name"><code class="docutils literal notranslate"><span class="pre">Repository.name</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Repository.parent_repository'" class="reference internal" href="#gimie.models.Repository.parent_repository"><code class="docutils literal notranslate"><span class="pre">Repository.parent_repository</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Repository.prog_langs'" class="reference internal" href="#gimie.models.Repository.prog_langs"><code class="docutils literal notranslate"><span class="pre">Repository.prog_langs</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Repository.serialize'" class="reference internal" href="#gimie.models.Repository.serialize"><code class="docutils literal notranslate"><span class="pre">Repository.serialize()</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Repository.to_graph'" class="reference internal" href="#gimie.models.Repository.to_graph"><code class="docutils literal notranslate"><span class="pre">Repository.to_graph()</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Repository.url'" class="reference internal" href="#gimie.models.Repository.url"><code class="docutils literal notranslate"><span class="pre">Repository.url</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.Repository.version'" class="reference internal" href="#gimie.models.Repository.version"><code class="docutils literal notranslate"><span class="pre">Repository.version</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#gimie.models.RepositorySchema'" class="reference internal" href="#gimie.models.RepositorySchema"><code class="docutils literal notranslate"><span class="pre">RepositorySchema</span></code></a><ul>
+<li><a :data-current="activeSection === '#gimie.models.RepositorySchema.Meta'" class="reference internal" href="#gimie.models.RepositorySchema.Meta"><code class="docutils literal notranslate"><span class="pre">RepositorySchema.Meta</span></code></a><ul>
+<li><a :data-current="activeSection === '#gimie.models.RepositorySchema.Meta.add_value_types'" class="reference internal" href="#gimie.models.RepositorySchema.Meta.add_value_types"><code class="docutils literal notranslate"><span class="pre">RepositorySchema.Meta.add_value_types</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.RepositorySchema.Meta.model'" class="reference internal" href="#gimie.models.RepositorySchema.Meta.model"><code class="docutils literal notranslate"><span class="pre">RepositorySchema.Meta.model</span></code></a></li>
+<li><a :data-current="activeSection === '#gimie.models.RepositorySchema.Meta.rdf_type'" class="reference internal" href="#gimie.models.RepositorySchema.Meta.rdf_type"><code class="docutils literal notranslate"><span class="pre">RepositorySchema.Meta.rdf_type</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#gimie.models.RepositorySchema.opts'" class="reference internal" href="#gimie.models.RepositorySchema.opts"><code class="docutils literal notranslate"><span class="pre">RepositorySchema.opts</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#module-gimie.project'" class="reference internal" href="#module-gimie.project">gimie.project module</a><ul>
+<li><a :data-current="activeSection === '#gimie.project.Project'" class="reference internal" href="#gimie.project.Project"><code class="docutils literal notranslate"><span class="pre">Project</span></code></a><ul>
+<li><a :data-current="activeSection === '#gimie.project.Project.extract'" class="reference internal" href="#gimie.project.Project.extract"><code class="docutils literal notranslate"><span class="pre">Project.extract()</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#gimie.project.split_git_url'" class="reference internal" href="#gimie.project.split_git_url"><code class="docutils literal notranslate"><span class="pre">split_git_url()</span></code></a></li>
+</ul>
+</li>
+<li><a :data-current="activeSection === '#module-gimie'" class="reference internal" href="#module-gimie">Module contents</a></li>
+</ul>
+</div>
+</aside>
+</main>
+</div>
+</div><footer class="py-6 border-t border-border md:py-0">
+<div class="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
+<div class="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+<p class="text-sm leading-loose text-center text-muted-foreground md:text-left">© 2023, sdsc-ordes Built with <a class="font-medium underline underline-offset-4" href="https://www.sphinx-doc.org" rel="noreferrer">Sphinx 8.2.3</a></p>
+</div>
+</div>
+</footer>
+</div>
+<script src="../_static/documentation_options.js?v=6dfdf7c3"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=f281be69"></script>
+<script defer="defer" src="../_static/theme.js?v=d6a9845b"></script>
+<script src="../_static/design-tabs.js?v=f930bc37"></script>
+</body>
+</html>

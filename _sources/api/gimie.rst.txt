@@ -1,0 +1,55 @@
+gimie package
+=============
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 3
+
+   gimie.extractors
+   gimie.graph
+   gimie.parsers
+
+Submodules
+----------
+
+gimie.cli module
+----------------
+
+.. automodule:: gimie.cli
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gimie.io module
+---------------
+
+.. automodule:: gimie.io
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gimie.models module
+-------------------
+
+.. automodule:: gimie.models
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gimie.project module
+--------------------
+
+.. automodule:: gimie.project
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: gimie
+   :members:
+   :show-inheritance:
+   :undoc-members:

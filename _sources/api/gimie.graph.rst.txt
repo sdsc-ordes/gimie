@@ -1,0 +1,29 @@
+gimie.graph package
+===================
+
+Submodules
+----------
+
+gimie.graph.namespaces module
+-----------------------------
+
+.. automodule:: gimie.graph.namespaces
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gimie.graph.operations module
+-----------------------------
+
+.. automodule:: gimie.graph.operations
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: gimie.graph
+   :members:
+   :show-inheritance:
+   :undoc-members:

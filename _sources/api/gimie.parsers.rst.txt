@@ -1,0 +1,45 @@
+gimie.parsers package
+=====================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 3
+
+   gimie.parsers.license
+
+Submodules
+----------
+
+gimie.parsers.abstract module
+-----------------------------
+
+.. automodule:: gimie.parsers.abstract
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gimie.parsers.cff module
+------------------------
+
+.. automodule:: gimie.parsers.cff
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gimie.parsers.publiccode module
+-------------------------------
+
+.. automodule:: gimie.parsers.publiccode
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: gimie.parsers
+   :members:
+   :show-inheritance:
+   :undoc-members:
