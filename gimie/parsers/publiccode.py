@@ -57,11 +57,11 @@ class PublicCodeParser(Parser):
                 graph.add((person_uri, SDO.name, Literal(contact["name"])))
                 graph.add((person_uri, SDO.identifier, Literal(uid)))
 
-                if "email" in contact:
+                if contact.get("email") is not None:
                     graph.add(
                         (person_uri, SDO.email, Literal(contact["email"]))
                     )
-                if "affiliation" in contact:
+                if contact.get("affiliation") is not None:
                     graph.add(
                         (
                             person_uri,
@@ -153,10 +153,8 @@ def get_publiccode_contacts(pc: dict) -> Optional[List[Dict[str, str]]]:
         if not name:
             continue
         entry: Dict[str, str] = {"name": name}
-        if contact.get("email"):
-            entry["email"] = contact["email"]
-        if contact.get("affiliation"):
-            entry["affiliation"] = contact["affiliation"]
+        entry["email"] = contact.get("email")
+        entry["affiliation"] = contact.get("affiliation")
         result.append(entry)
 
     return result if result else None
