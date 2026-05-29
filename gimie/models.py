@@ -177,9 +177,9 @@ class RepositorySchema(JsonLDSchema):
     prog_langs = fields.List(SDO.programmingLanguage, fields.String)
     url = fields.IRI(SDO.codeRepository)
     version = fields.String(SDO.version)
-    distinct_pr_authors = fields.Integer(GIMIE.distinctPullRequestAuthors)
+    distinct_pr_authors = fields.Integer(GIMIE.distinctPRAuthors)
     distinct_non_maintainer_pr_authors = fields.Integer(
-        GIMIE.distinctNonMaintainerPullRequestAuthors
+        GIMIE.distinctNonMaintainerPRAuthors
     )
 
     class Meta:
