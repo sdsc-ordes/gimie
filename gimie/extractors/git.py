@@ -31,6 +31,7 @@ import pydriller
 from gimie.io import LocalResource
 from gimie.models import Person, Repository
 from gimie.extractors.abstract import Extractor
+from gimie.utils.uri import sanitize_identifier
 from pathlib import Path
 
 
@@ -152,7 +153,7 @@ class GitExtractor(Extractor):
         if name is None:
             uid = str(uuid.uuid4())
         else:
-            uid = name.replace(" ", "_").lower()
+            uid = sanitize_identifier(name)
         dev_id = f"{self.url}/{uid}"
         return Person(
             _id=dev_id,
