@@ -25,7 +25,7 @@ from calamus.schema import JsonLDSchema
 from calamus import fields
 from rdflib import Graph
 
-from gimie.graph.namespaces import SDO
+from gimie.graph.namespaces import GIMIE, SDO
 
 
 @dataclass(order=True)
@@ -131,6 +131,8 @@ class Repository:
     parent_repository: Optional[str] = None
     prog_langs: Optional[List[str]] = None
     version: Optional[str] = None
+    distinct_pr_authors: Optional[int] = None
+    distinct_non_maintainer_pr_authors: Optional[int] = None
 
     @property
     def _id(self) -> str:
@@ -142,6 +144,7 @@ class Repository:
         jd = RepositorySchema().dumps(self)
         g: Graph = Graph().parse(format="json-ld", data=str(jd))
         g.bind("schema", SDO)
+        g.bind("gimie", GIMIE)
         return g
 
     def serialize(self, format: str = "ttl", **kwargs) -> str:
@@ -174,6 +177,10 @@ class RepositorySchema(JsonLDSchema):
     prog_langs = fields.List(SDO.programmingLanguage, fields.String)
     url = fields.IRI(SDO.codeRepository)
     version = fields.String(SDO.version)
+    distinct_pr_authors = fields.Integer(GIMIE.distinctPRAuthors)
+    distinct_non_maintainer_pr_authors = fields.Integer(
+        GIMIE.distinctNonMaintainerPRAuthors
+    )
 
     class Meta:
         rdf_type = SDO.SoftwareSourceCode

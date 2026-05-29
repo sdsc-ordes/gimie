@@ -23,6 +23,7 @@ import click
 import typer
 
 from gimie import __version__
+from gimie.extractors import get_extractor
 from gimie.parsers import get_parser, list_default_parsers, list_parsers
 from gimie.project import Project
 
@@ -94,16 +95,6 @@ def data(
     proj = Project(url, base_url=base_url, parser_names=parser_names)
     repo_meta = proj.extract()
     print(repo_meta.serialize(format=format.value))
-
-
-@app.command()
-def advice(url: str):
-    """Show a metadata completion report for a Git repository
-    at the target URL.
-
-    NOTE: Not implemented yet"""
-    ...
-    raise typer.Exit()
 
 
 @app.command()
