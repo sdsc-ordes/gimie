@@ -85,7 +85,7 @@ def test_get_contacts():
         "email": "jane@example.org",
         "affiliation": "Example Corp",
     }
-    assert contacts[1] == {"name": "John Smith"}
+    assert contacts[1] == {"name": "John Smith", "email": None, "affiliation": None}
 
 
 def test_get_contacts_missing():

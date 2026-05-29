@@ -134,7 +134,7 @@ def get_publiccode_contacts(pc: dict) -> Optional[List[Dict[str, str]]]:
     Examples
     --------
     >>> get_publiccode_contacts({"maintenance": {"contacts": [{"name": "Jane Doe", "email": "jane@example.org"}]}})
-    [{'name': 'Jane Doe', 'email': 'jane@example.org'}]
+    [{'name': 'Jane Doe', 'email': 'jane@example.org', 'affiliation': None}]
     >>> get_publiccode_contacts({"name": "test"})
     """
     maintenance = pc.get("maintenance")
