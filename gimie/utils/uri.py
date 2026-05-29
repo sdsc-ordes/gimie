@@ -23,6 +23,17 @@ import re
 from gimie.graph.namespaces import GIMIE
 
 
+def sanitize_identifier(name: str) -> str:
+    """Create a URL-safe identifier from a name.
+
+    >>> sanitize_identifier("John Doe")
+    'john_doe'
+    >>> sanitize_identifier("Alice")
+    'alice'
+    """
+    return name.strip().replace(" ", "_").lower()
+
+
 def validate_url(url: str):
     """Checks if input is a valid URL.
     credits: https://stackoverflow.com/a/38020041
