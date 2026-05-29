@@ -1,0 +1,22 @@
+@prefix codemeta: <https://codemeta.github.io/terms/> .
+@prefix schema: <http://schema.org/> .
+
+<file:///renku> a schema:SoftwareSourceCode ;
+    schema:codeRepository "https://github.com/SwissDataScienceCenter/renku" ;
+    schema:dateCreated "2017-08-21T15:02:23Z" ;
+    schema:dateModified "2023-01-13T17:12:31Z" ;
+    schema:description "Renku provides a platform and tools for reproducible and collaborative data analysis." ;
+    schema:keywords "collaboration",
+        "datascience",
+        "knowledge-graph",
+        "renku",
+        "reproducibility" ;
+    schema:license "http://spdx.org/licenses/Apache-2.0" ;
+    schema:name "renku" ;
+    schema:producer <file:///org/swiss-data-science-center> ;
+    schema:url "https://renkulab.io" ;
+    codemeta:issueTracker "https://github.com/SwissDataScienceCenter/renku/issues" .
+
+<file:///org/swiss-data-science-center> a schema:Organization ;
+    schema:name "Swiss Data Science Center" ;
+    schema:url "https://www.datascience.ch/" .

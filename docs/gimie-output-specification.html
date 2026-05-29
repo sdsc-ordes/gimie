@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Gimie Output Specfication</title>
+    <script
+      src="https://www.w3.org/Tools/respec/respec-w3c"
+      class="remove"
+      defer
+    ></script>
+    <script class="remove">
+      // All config options at https://respec.org/docs/
+      var respecConfig = {
+        specStatus: "unofficial",
+        editors: [{ name: "Codemeta", url: "https://codemeta.github.io/" }],
+        github: "codemeta/codemeta",
+        shortName: "codemeta",
+        localBiblio: {
+          "SOFTWARE-DESCR":{
+            "href": "https://w3id.org/okn/o/sd/1.9.0",
+            "title": "Software Description Ontology",
+            "publisher": "Daniel Garijo,Varun Ratnakar,Yolanda Gil,Deborah Khider. The Software Description Ontology."
+          },
+          "RENKU-ONT":{
+            "href": "http://swissdatasciencecenter.github.io/renku-ontology",
+            "title": "Renku Ontology",
+            "publisher": "Swiss Data Science Center"
+          },
+          "RENKU-DATASETS":{
+            "href": "https://renkulab.io/datasets",
+            "title": "Renku Datasets",
+            "publisher": "Swiss Data Science Center"
+          },
+          "CODEMETA":{
+            "href": "https://renkulab.io/datasets",
+            "title": "The CodeMetaProject",
+            "publisher": "The CodeMetaProject"
+          },
+        }
+      };
+    </script>
+  </head>
+  <body>
+    <section id="abstract">
+      <p>Metadata Extraction from Code Repository</p>
+      <p>Compare Image Plaza Requirements to [[CODEMETA]]</p>
+    </section>
+    <section id="sotd">
+      <p>Draft in the phase of development.</p>
+    </section>
+    <section class="informative">
+      <h2>Introduction</h2>
+      <p>Metadata Extraction for Code Repositories</p>
+    </section>
+    <section id="Class:SoftwareSourceCode">
+      <h3>Output from Codemetapy
+      </h3>
+      <p>
+        <a data-cite="SCHEMA-ORG/SoftwareSourceCode" data-no-xref="">
+          <code>schema:SoftwareSourceCode</code>
+        </a>
+      </p>
+      <table class="simple">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>URI</th>
+            <th>Range</th>
+            <th>ReqLevel</th>
+            <th>Card</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="#codemeta-codeRepository">codeRepository</a></td>
+            <td><a data-cite="SCHEMA-ORG/codeRepository" data-no-xref="">
+              <code>schema:codeRepository</code></a>
+            </td>
+            <td><a data-cite="SCHEMA-ORG/URL" data-no-xref="">
+              <code>schema:URL</code></a>
+            </td>
+            <td>Optional</td>
+            <td>0..n</td>
+          </tr>
+          <tr>
+            <td><a href="#codemeta-dateCreated">dateCreated</a></td>
+            <td><a data-cite="SCHEMA-ORG/dateCreated" data-no-xref="">
+              <code>schema:dateCreated</code></a>
+            </td>
+            <td><a data-cite="SCHEMA-ORG/DateTime" data-no-xref="">
+              <code>schema:DateTime</code></a>
+            </td>
+            <td>Optional</td>
+            <td>0..n</td>
+          </tr>
+          <tr>
+            <td><a href="">dateModified</a></td>
+            <td><a data-cite="SCHEMA-ORG/dateModified" data-no-xref="">
+              <code>schema:dateModified</code></a>
+            </td>
+            <td><a data-cite="SCHEMA-ORG/DateTime" data-no-xref="">
+              <code>schema:DateTime</code></a>
+            </td>
+            <td>Optional</td>
+            <td>0..n</td>
+          </tr>
+          <tr>
+            <td><a href="">description</a></td>
+            <td><a data-cite="SCHEMA-ORG/description" data-no-xref="">
+              <code>schema:description</code></a>
+            </td>
+            <td><a data-cite="SCHEMA-ORG/Text" data-no-xref="">
+              <code>schema:Text</code></a>
+            </td>
+            <td>Optional</td>
+            <td>0..n</td>
+          </tr>
+          <tr>
+            <td><a href="">keywords</a></td>
+            <td><a data-cite="SCHEMA-ORG/keywords" data-no-xref="">
+              <code>schema:keywords</code></a>
+            </td>
+            <td><a data-cite="SCHEMA-ORG/Text" data-no-xref="">
+              <code>schema:Text</code></a>
+            </td>
+            <td>Optional</td>
+            <td>0..n</td>
+          </tr>
+          <tr>
+            <td><a href="">license</a></td>
+            <td><a data-cite="SCHEMA-ORG/license" data-no-xref="">
+              <code>schema:license</code></a>
+            </td>
+            <td><a data-cite="SCHEMA-ORG/URL" data-no-xref="">
+              <code>schema:URL</code></a>
+            </td>
+            <td>Optional</td>
+            <td>0..n</td>
+          </tr>
+          <tr>
+            <td><a href="">name</a></td>
+            <td><a data-cite="SCHEMA-ORG/name" data-no-xref="">
+              <code>schema:keywords</code></a>
+            </td>
+            <td><a data-cite="SCHEMA-ORG/Text" data-no-xref="">
+              <code>schema:name</code></a>
+            </td>
+            <td>Optional</td>
+            <td>0..n</td>
+          </tr>
+          <tr>
+            <td><a href="">producer</a></td>
+            <td><a data-cite="SCHEMA-ORG/producer" data-no-xref="">
+              <code>schema:producer</code></a>
+            </td>
+            <td><a data-cite="SCHEMA-ORG/Organization" data-no-xref="">
+              <code>schema:Organization</code></a>
+            </td>
+            <td>Optional</td>
+            <td>0..n</td>
+          </tr>
+          <tr>
+            <td><a href="">url</a></td>
+            <td><a data-cite="SCHEMA-ORG/url" data-no-xref="">
+              <code>schema:url</code></a>
+            </td>
+            <td><a data-cite="SCHEMA-ORG/URL" data-no-xref="">
+              <code>schema:URL</code></a>
+            </td>
+            <td>Optional</td>
+            <td>0..n</td>
+          </tr>
+          <tr>
+            <td><a href="">issueTracker</a></td>
+            <td><a data-cite="CODEMETA/issueTracker" data-no-xref="">
+              <code>codemeta:issueTracker</code></a>
+            </td>
+            <td><a data-cite="SCHEMA-ORG/URL" data-no-xref="">
+              <code>schema:URL</code></a>
+            </td>
+            <td>Optional</td>
+            <td>0..n</td>
+          </tr>
+        </tbody>
+      </table>
+      <aside class="example" title="Output of Codemetap for renku">
+        <pre data-include-format="text" data-include="examples/renku.ttl"></pre>
+      </aside>
+      <section id="codemeta-codeRepository">
+        <h4>Property: codeRepository</h4>
+        <table class="def">
+        <tbody>
+        <tr>
+          <th>Property</th>
+          <td><a data-cite="SCHEMA-ORG/codeRepository" data-no-xref="">
+            <code>schema:codeRepository</code></a>
+          </td>
+        </tr>
+        <tr>
+          <th>Range</th>
+          <td><a data-cite="SCHEMA-ORG/URL" data-no-xref="">
+            <code>schema:URL</code></a>
+          </td>
+        </tr>
+        <tr>
+          <th>Get</th>
+          <td>
+            <p>
+              Get from input url if repo url is provided as parameter
+            </p>
+          </td>
+        </tr>
+        </tbody>
+        </table>
+      </section>
+      <section id="codemeta-dateCreated">
+        <h4>Property: dateCreated</h4>
+        <table class="def">
+        <tbody>
+        <tr>
+          <th>Property</th>
+          <td><a data-cite="SCHEMA-ORG/dateCreated" data-no-xref="">
+            <code>schema:dateCreated</code></a>
+          </td>
+        </tr>
+        <tr>
+          <th>Range</th>
+          <td><a data-cite="SCHEMA-ORG/DateTime" data-no-xref="">
+            <code>schema:DateTime</code></a>
+          </td>
+        </tr>
+        <tr>
+          <th>Get</th>
+          <td>
+            <p>
+              Get from github api or gitlab api.
+            </p>
+          </td>
+        </tr>
+        </tbody>
+        </table>
+      </section>
+    </section>
+    <section id="Class:ImagePlazaRepo">
+      <h3>Output from Image Plaza
+      </h3>
+      <p>
+        <a data-cite="SCHEMA-ORG/SoftwareSourceCode" data-no-xref="">
+          <code>schema:SoftwareSourceCode</code>
+        </a>
+      </p>
+      <table class="simple">
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>URI</th>
+            <th>Range</th>
+            <th>ReqLevel</th>
+            <th>Card</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="">CommandInput</a></td>
+            <td><a data-cite="RENKU-ONT#CommandInput" data-no-xref="">
+              <code>renku:command_input</code></a>
+            </td>
+            <td><a data-cite="RENKU-ONT#hasInputs" data-no-xref="">
+              <code>renku:has_inputs</code></a>
+            </td>
+            <td>Optional</td>
+            <td>0..n</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="conformance">
+      <p>
+        This is required for specifications that contain normative material.
+      </p>
+    </section>
+  </body>
+</html>
