@@ -21,7 +21,7 @@ from typing import List, Optional
 
 import click
 import typer
-import yaml
+enimport yaml
 
 from gimie import __version__
 from gimie.converters.publiccode_converter import convert_to_publiccode

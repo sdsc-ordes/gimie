@@ -17,10 +17,6 @@ class _PublicCodeConverter:
         val = self._g.value(self._subject, predicate)
         return str(val) if val else ""
 
-    def _get_for(self, node, predicate: URIRef) -> str:
-        val = self._g.value(node, predicate)
-        return str(val) if val else ""
-
     def _licenses(self) -> str | None:
         """Comma-separated SPDX identifiers, or None if no licenses found.
         Converts SPDX URLs (e.g. https://spdx.org/licenses/MIT.html) to bare ids (e.g. MIT).
@@ -35,12 +31,12 @@ class _PublicCodeConverter:
         contacts = []
         for person in self._g.objects(self._subject, predicate):
             contact: dict = {}
-            name = self._get_for(person, SDO.name)
+            name = self._g.value(person, SDO.name)
             if name:
-                contact["name"] = name
-            email = self._get_for(person, SDO.email)
+                contact["name"] = str(name)
+            email = self._g.value(person, SDO.email)
             if email:
-                contact["email"] = email
+                contact["email"] = str(email)
             if contact:
                 contacts.append(contact)
         return contacts
