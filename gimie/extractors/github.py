@@ -194,7 +194,7 @@ class GithubExtractor(Extractor):
             repo_meta["download_url"] = download_url
             repo_meta["version"] = version
 
-        pr_authors = self.fetch_pr_authors(max_pages=self.max_pr_pages)
+        pr_authors = self._fetch_pr_authors(max_pages=self.max_pr_pages)
         repo_meta["distinct_pr_authors"] = len(
             {login for login, _ in pr_authors}
         )
@@ -295,7 +295,7 @@ class GithubExtractor(Extractor):
 
         return response["data"]["repository"]
 
-    def fetch_pr_authors(self, max_pages: int = 10) -> List[tuple[str, str]]:
+    def _fetch_pr_authors(self, max_pages: int = 10) -> List[tuple[str, str]]:
         """Fetch PR authors as (login, authorAssociation) pairs.
 
         Paginates up to ``max_pages`` (100 PRs each). Bots and PRs without

@@ -52,7 +52,7 @@ def test_distinct_non_maintainer_pr_author_count():
     assert distinct_non_maintainer_pr_author_count(authors) == 2
 
 
-@patch.object(GithubExtractor, "fetch_pr_authors")
+@patch.object(GithubExtractor, "_fetch_pr_authors")
 @patch.object(GithubExtractor, "_fetch_contributors")
 def test_extract_includes_pr_author_counts(mock_contributors, mock_fetch):
     mock_contributors.return_value = []
@@ -90,7 +90,7 @@ def test_extract_includes_pr_author_counts(mock_contributors, mock_fetch):
 
 
 @patch("gimie.extractors.github.send_graphql_query")
-def test_fetch_pr_authors_paginates_and_skips_bots(mock_query):
+def test__fetch_pr_authors_paginates_and_skips_bots(mock_query):
     mock_query.side_effect = [
         _pr_page(
             [
@@ -106,7 +106,7 @@ def test_fetch_pr_authors_paginates_and_skips_bots(mock_query):
     extractor = GithubExtractor(REPO_URL, token="fake")
     extractor.__dict__["_headers"] = {"Authorization": "token fake"}
 
-    authors = extractor.fetch_pr_authors()
+    authors = extractor._fetch_pr_authors()
 
     assert authors == [
         ("alice", "NONE"),
@@ -119,11 +119,11 @@ def test_fetch_pr_authors_paginates_and_skips_bots(mock_query):
 
 
 @patch("gimie.extractors.github.send_graphql_query")
-def test_fetch_pr_authors_raises_on_graphql_errors(mock_query):
+def test__fetch_pr_authors_raises_on_graphql_errors(mock_query):
     mock_query.return_value = {"errors": [{"message": "nope"}]}
 
     extractor = GithubExtractor(REPO_URL, token="fake")
     extractor.__dict__["_headers"] = {"Authorization": "token fake"}
 
     with pytest.raises(ValueError, match="nope"):
-        extractor.fetch_pr_authors()
+        extractor._fetch_pr_authors()
