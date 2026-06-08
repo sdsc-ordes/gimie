@@ -30,7 +30,9 @@ class TestMinimal:
         assert "releaseDate" not in result
 
     def test_no_software_source_code_raises(self):
-        with pytest.raises(ValueError, match="No SoftwareSourceCode node found"):
+        with pytest.raises(
+            ValueError, match="No SoftwareSourceCode node found"
+        ):
             convert_to_publiccode(Graph())
 
 
@@ -39,7 +41,10 @@ class TestDescription:
         g = _base_graph()
         g.add((REPO, SDO.description, Literal("A short description")))
         result = convert_to_publiccode(g)
-        assert result["description"]["en"]["shortDescription"] == "A short description"
+        assert (
+            result["description"]["en"]["shortDescription"]
+            == "A short description"
+        )
         assert "longDescription" not in result["description"]["en"]
 
     def test_long_description(self):
@@ -59,13 +64,23 @@ class TestDescription:
 class TestLicense:
     def test_single_license(self):
         g = _base_graph()
-        g.add((REPO, SDO.license, URIRef("https://spdx.org/licenses/MIT.html")))
+        g.add(
+            (REPO, SDO.license, URIRef("https://spdx.org/licenses/MIT.html"))
+        )
         assert convert_to_publiccode(g)["legal"]["license"] == "MIT"
 
     def test_multiple_licenses(self):
         g = _base_graph()
-        g.add((REPO, SDO.license, URIRef("https://spdx.org/licenses/MIT.html")))
-        g.add((REPO, SDO.license, URIRef("https://spdx.org/licenses/Apache-2.0.html")))
+        g.add(
+            (REPO, SDO.license, URIRef("https://spdx.org/licenses/MIT.html"))
+        )
+        g.add(
+            (
+                REPO,
+                SDO.license,
+                URIRef("https://spdx.org/licenses/Apache-2.0.html"),
+            )
+        )
         license_str = convert_to_publiccode(g)["legal"]["license"]
         assert set(license_str.split(",")) == {"MIT", "Apache-2.0"}
 
@@ -81,18 +96,26 @@ class TestVersion:
 
     def test_release_date_from_date_published(self):
         g = _base_graph()
-        g.add((REPO, SDO.datePublished, Literal("2024-03-15", datatype=XSD.date)))
+        g.add(
+            (REPO, SDO.datePublished, Literal("2024-03-15", datatype=XSD.date))
+        )
         assert convert_to_publiccode(g)["releaseDate"] == "2024-03-15"
 
     def test_release_date_falls_back_to_date_modified(self):
         g = _base_graph()
-        g.add((REPO, SDO.dateModified, Literal("2024-06-01", datatype=XSD.date)))
+        g.add(
+            (REPO, SDO.dateModified, Literal("2024-06-01", datatype=XSD.date))
+        )
         assert convert_to_publiccode(g)["releaseDate"] == "2024-06-01"
 
     def test_release_date_prefers_date_published(self):
         g = _base_graph()
-        g.add((REPO, SDO.datePublished, Literal("2024-03-15", datatype=XSD.date)))
-        g.add((REPO, SDO.dateModified, Literal("2024-06-01", datatype=XSD.date)))
+        g.add(
+            (REPO, SDO.datePublished, Literal("2024-03-15", datatype=XSD.date))
+        )
+        g.add(
+            (REPO, SDO.dateModified, Literal("2024-06-01", datatype=XSD.date))
+        )
         assert convert_to_publiccode(g)["releaseDate"] == "2024-03-15"
 
 
@@ -140,9 +163,13 @@ class TestFullGraph:
     def test_all_fields(self):
         g = _base_graph()
         g.add((REPO, SDO.description, Literal("A decent project description")))
-        g.add((REPO, SDO.license, URIRef("https://spdx.org/licenses/MIT.html")))
+        g.add(
+            (REPO, SDO.license, URIRef("https://spdx.org/licenses/MIT.html"))
+        )
         g.add((REPO, SDO.version, Literal("2.0.0")))
-        g.add((REPO, SDO.datePublished, Literal("2024-01-01", datatype=XSD.date)))
+        g.add(
+            (REPO, SDO.datePublished, Literal("2024-01-01", datatype=XSD.date))
+        )
         person = URIRef("https://example.com/alice")
         g.add((REPO, SDO.author, person))
         g.add((person, SDO.name, Literal("Alice")))
@@ -152,7 +179,10 @@ class TestFullGraph:
         assert result["name"] == "my-project"
         assert result["softwareVersion"] == "2.0.0"
         assert result["releaseDate"] == "2024-01-01"
-        assert result["description"]["en"]["shortDescription"] == "A decent project description"
+        assert (
+            result["description"]["en"]["shortDescription"]
+            == "A decent project description"
+        )
         assert result["legal"]["license"] == "MIT"
         assert result["maintenance"]["type"] == "internal"
         assert result["maintenance"]["contacts"][0] == {

@@ -69,7 +69,9 @@ class _PublicCodeConverter:
             result["softwareVersion"] = version
 
         # Prefer datePublished, fall back to dateModified
-        release_date = self._get(SDO.datePublished) or self._get(SDO.dateModified)
+        release_date = self._get(SDO.datePublished) or self._get(
+            SDO.dateModified
+        )
         if release_date:
             result["releaseDate"] = release_date[:10]
 
