@@ -17,8 +17,7 @@
 """Parse metadata from publiccode.yml files (v0.5.0 standard)."""
 
 import yaml
-from rdflib import Graph, Literal, URIRef
-from rdflib.namespace import RDF
+from rdflib import Graph, Literal, RDF, URIRef
 
 from gimie import logger
 from gimie.graph.namespaces import SDO
