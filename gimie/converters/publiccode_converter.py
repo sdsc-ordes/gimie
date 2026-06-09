@@ -1,3 +1,5 @@
+from typing import Any
+
 from rdflib import Graph, RDF, URIRef
 from gimie.graph.namespaces import SDO
 
@@ -13,9 +15,9 @@ class _PublicCodeConverter:
         self._g = g
         self._subject = subject
 
-    def _get(self, predicate: URIRef) -> str:
+    def _get(self, predicate: URIRef) -> str | None:
         val = self._g.value(self._subject, predicate)
-        return str(val) if val else ""
+        return str(val) if val else None
 
     def _licenses(self) -> str | None:
         """Comma-separated SPDX identifiers, or None if no licenses found.
@@ -41,7 +43,7 @@ class _PublicCodeConverter:
                 contacts.append(contact)
         return contacts
 
-    def _maintenance(self) -> dict:
+    def _maintenance(self) -> dict | None:
         """Returns a publiccode maintenance dict.
 
         Uses schema:author for type 'internal', schema:contributor for
@@ -55,44 +57,37 @@ class _PublicCodeConverter:
         if contacts:
             return {"type": "community", "contacts": contacts}
 
-        return {}
+        return None
 
-    def convert(self) -> dict:
-        result: dict = {
-            "publiccodeYmlVersion": "0.5.0",
-            "name": self._get(SDO.name).split("/")[-1],
-            "url": str(self._subject),
-        }
-
-        version = self._get(SDO.version)
-        if version:
-            result["softwareVersion"] = version
-
-        # Prefer datePublished, fall back to dateModified
-        release_date = self._get(SDO.datePublished) or self._get(
-            SDO.dateModified
-        )
-        if release_date:
-            result["releaseDate"] = release_date[:10]
+    def convert(self) -> dict[str, Any]:
+        name = self._get(SDO.name)
+        if not name:
+            raise ValueError("SoftwareSourceCode has no schema:name")
 
         desc = self._get(SDO.description)
-        en_desc: dict = {}
-        if len(desc) > _SHORT_DESC_MAX:
-            en_desc["longDescription"] = desc
-        elif len(desc) >= _SHORT_DESC_MIN:
-            en_desc["shortDescription"] = desc
-        if en_desc:
-            result["description"] = {"en": en_desc}
+        en_desc = {}
+        if desc is not None:
+            if len(desc) > _SHORT_DESC_MAX:
+                en_desc["longDescription"] = desc
+            elif len(desc) >= _SHORT_DESC_MIN:
+                en_desc["shortDescription"] = desc
 
+        version = self._get(SDO.version)
+        release_date = self._get(SDO.datePublished) or self._get(SDO.dateModified)
         license_str = self._licenses()
-        if license_str:
-            result["legal"] = {"license": license_str}
-
         maintenance = self._maintenance()
-        if maintenance:
-            result["maintenance"] = maintenance
 
-        return result
+        return {
+            "publiccodeYmlVersion": "0.5.0",
+            "name": name.split("/")[-1],
+            "url": str(self._subject),
+            **( {"softwareVersion": version} if version else {} ),
+            **( {"releaseDate": release_date[:10]} if release_date and len(release_date) >= 10 else {} ),
+            **( {"description": {"en": en_desc}} if en_desc else {} ),
+            **( {"legal": {"license": license_str}} if license_str else {} ),
+            **( {"maintenance": maintenance} if maintenance else {} ),
+        }
+    
 
 
 def convert_to_publiccode(g: Graph) -> dict:
