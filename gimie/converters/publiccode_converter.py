@@ -73,7 +73,9 @@ class _PublicCodeConverter:
                 en_desc["shortDescription"] = desc
 
         version = self._get(SDO.version)
-        release_date = self._get(SDO.datePublished) or self._get(SDO.dateModified)
+        release_date = self._get(SDO.datePublished) or self._get(
+            SDO.dateModified
+        )
         license_str = self._licenses()
         maintenance = self._maintenance()
 
@@ -81,13 +83,16 @@ class _PublicCodeConverter:
             "publiccodeYmlVersion": "0.5.0",
             "name": name.split("/")[-1],
             "url": str(self._subject),
-            **( {"softwareVersion": version} if version else {} ),
-            **( {"releaseDate": release_date[:10]} if release_date and len(release_date) >= 10 else {} ),
-            **( {"description": {"en": en_desc}} if en_desc else {} ),
-            **( {"legal": {"license": license_str}} if license_str else {} ),
-            **( {"maintenance": maintenance} if maintenance else {} ),
+            **({"softwareVersion": version} if version else {}),
+            **(
+                {"releaseDate": release_date[:10]}
+                if release_date and len(release_date) >= 10
+                else {}
+            ),
+            **({"description": {"en": en_desc}} if en_desc else {}),
+            **({"legal": {"license": license_str}} if license_str else {}),
+            **({"maintenance": maintenance} if maintenance else {}),
         }
-    
 
 
 def convert_to_publiccode(g: Graph) -> dict:
