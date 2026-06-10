@@ -130,7 +130,10 @@ class TestMaintenance:
         assert result["maintenance"]["contacts"] == [{"name": "Alice"}]
 
     def test_no_authors_defaults_to_none_type(self):
-        assert convert_to_publiccode(_base_graph())["maintenance"]["type"] == "none"
+        assert (
+            convert_to_publiccode(_base_graph())["maintenance"]["type"]
+            == "none"
+        )
 
     def test_contact_with_email(self):
         g = _base_graph()

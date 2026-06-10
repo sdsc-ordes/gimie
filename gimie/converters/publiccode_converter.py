@@ -68,7 +68,9 @@ class PublicCodeConverter(Converter):
         )
         if not release_date:
             return {}
-        return {"releaseDate": str(datetime.fromisoformat(release_date).date())}
+        return {
+            "releaseDate": str(datetime.fromisoformat(release_date).date())
+        }
 
     def _description(self) -> dict:
         desc = self._get(SDO.description)
