@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -24,15 +25,13 @@ class PublicCodeConverter(Converter):
         val = self.g.value(self._subject, predicate)
         return str(val) if val else None
 
-    def _licenses(self) -> str | None:
-        """Comma-separated SPDX identifiers, or None if no licenses found.
-        Converts SPDX URLs (e.g. https://spdx.org/licenses/MIT.html) to bare ids (e.g. MIT).
-        """
+    def _licenses(self) -> dict:
+        """Converts SPDX URLs (e.g. https://spdx.org/licenses/MIT.html) to bare ids (e.g. MIT)."""
         licenses = [
             Path(urlparse(str(lic)).path).stem
             for lic in self.g.objects(self._subject, SDO.license)
         ]
-        return ",".join(licenses) if licenses else None
+        return {"legal": {"license": ",".join(licenses)}} if licenses else {}
 
     def _contacts(self, predicate: URIRef) -> list[dict]:
         contacts = []
@@ -48,7 +47,7 @@ class PublicCodeConverter(Converter):
                 contacts.append(contact)
         return contacts
 
-    def _maintenance(self) -> dict | None:
+    def _maintenance(self) -> dict:
         """Returns a publiccode maintenance dict.
 
         Uses schema:author for type 'internal', schema:contributor for
@@ -56,51 +55,53 @@ class PublicCodeConverter(Converter):
         """
         contacts = self._contacts(SDO.author)
         if contacts:
-            return {"type": "internal", "contacts": contacts}
+            return {"maintenance": {"type": "internal", "contacts": contacts}}
 
         contacts = self._contacts(SDO.contributor)
         if contacts:
-            return {"type": "community", "contacts": contacts}
+            return {"maintenance": {"type": "community", "contacts": contacts}}
 
-        return None
+        return {}
 
-    def _description(self) -> dict | None:
+    def _version(self) -> dict:
+        version = self._get(SDO.version)
+        return {"softwareVersion": version} if version else {}
+
+    def _release_date(self) -> dict:
+        release_date = self._get(SDO.datePublished) or self._get(
+            SDO.dateModified
+        )
+        if not release_date:
+            return {}
+        return {"releaseDate": str(datetime.fromisoformat(release_date).date())}
+
+    def _description(self) -> dict:
         desc = self._get(SDO.description)
         if desc is None:
-            return None
+            return {}
         if len(desc) > _SHORT_DESC_MAX:
-            return {"en": {"longDescription": desc}}
+            return {"description": {"en": {"longDescription": desc}}}
         if len(desc) >= _SHORT_DESC_MIN:
-            return {"en": {"shortDescription": desc}}
-        return None
+            return {"description": {"en": {"shortDescription": desc}}}
+        return {}
 
     def convert(self) -> dict[str, Any]:
         name = self._get(SDO.name)
         if not name:
             raise ValueError(f"{self._subject} has no schema:name")
 
-        version = self._get(SDO.version)
-        release_date = self._get(SDO.datePublished) or self._get(
-            SDO.dateModified
+        return (
+            {
+                "publiccodeYmlVersion": "0.5.0",
+                "name": name.split("/")[-1],
+                "url": str(self._subject),
+            }
+            | self._version()
+            | self._release_date()
+            | self._description()
+            | self._licenses()
+            | self._maintenance()
         )
-        description = self._description()
-        license_str = self._licenses()
-        maintenance = self._maintenance()
-
-        return {
-            "publiccodeYmlVersion": "0.5.0",
-            "name": name.split("/")[-1],
-            "url": str(self._subject),
-            **({"softwareVersion": version} if version else {}),
-            **(
-                {"releaseDate": release_date[:10]}
-                if release_date and len(release_date) >= 10
-                else {}
-            ),
-            **({"description": description} if description else {}),
-            **({"legal": {"license": license_str}} if license_str else {}),
-            **({"maintenance": maintenance} if maintenance else {}),
-        }
 
 
 def convert_to_publiccode(g: Graph) -> dict:
