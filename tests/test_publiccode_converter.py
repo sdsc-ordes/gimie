@@ -25,7 +25,7 @@ class TestMinimal:
         result = convert_to_publiccode(_base_graph())
         assert "description" not in result
         assert "legal" not in result
-        assert "maintenance" not in result
+        assert result["maintenance"] == {"type": "none"}
         assert "softwareVersion" not in result
         assert "releaseDate" not in result
 
@@ -129,22 +129,8 @@ class TestMaintenance:
         assert result["maintenance"]["type"] == "internal"
         assert result["maintenance"]["contacts"] == [{"name": "Alice"}]
 
-    def test_community_type_from_contributors(self):
-        g = _base_graph()
-        person = URIRef("https://example.com/bob")
-        g.add((REPO, SDO.contributor, person))
-        g.add((person, SDO.name, Literal("Bob")))
-        assert convert_to_publiccode(g)["maintenance"]["type"] == "community"
-
-    def test_authors_take_priority_over_contributors(self):
-        g = _base_graph()
-        author = URIRef("https://example.com/alice")
-        g.add((REPO, SDO.author, author))
-        g.add((author, SDO.name, Literal("Alice")))
-        contributor = URIRef("https://example.com/bob")
-        g.add((REPO, SDO.contributor, contributor))
-        g.add((contributor, SDO.name, Literal("Bob")))
-        assert convert_to_publiccode(g)["maintenance"]["type"] == "internal"
+    def test_no_authors_defaults_to_none_type(self):
+        assert convert_to_publiccode(_base_graph())["maintenance"]["type"] == "none"
 
     def test_contact_with_email(self):
         g = _base_graph()
@@ -154,9 +140,6 @@ class TestMaintenance:
         g.add((person, SDO.email, Literal("alice@example.com")))
         contact = convert_to_publiccode(g)["maintenance"]["contacts"][0]
         assert contact["email"] == "alice@example.com"
-
-    def test_no_people_omits_maintenance(self):
-        assert "maintenance" not in convert_to_publiccode(_base_graph())
 
 
 class TestFullGraph:

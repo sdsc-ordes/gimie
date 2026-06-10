@@ -50,18 +50,13 @@ class PublicCodeConverter(Converter):
     def _maintenance(self) -> dict:
         """Returns a publiccode maintenance dict.
 
-        Uses schema:author for type 'internal', schema:contributor for
-        type 'community'. Only these two types are currently handled.
+        Defaults to type 'internal' when contacts are found, 'none' otherwise.
+        The type cannot be reliably inferred from repository metadata alone.
         """
         contacts = self._contacts(SDO.author)
         if contacts:
             return {"maintenance": {"type": "internal", "contacts": contacts}}
-
-        contacts = self._contacts(SDO.contributor)
-        if contacts:
-            return {"maintenance": {"type": "community", "contacts": contacts}}
-
-        return {}
+        return {"maintenance": {"type": "none"}}
 
     def _version(self) -> dict:
         version = self._get(SDO.version)
