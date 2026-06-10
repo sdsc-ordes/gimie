@@ -61,7 +61,7 @@ def test_get_is_based_on_list():
 
 
 def test_get_is_based_on_missing():
-    assert get_publiccode_is_based_on({"name": "test"}) is None
+    assert get_publiccode_is_based_on({"name": "test"}) == []
 
 
 def test_get_contacts():
@@ -93,7 +93,7 @@ def test_get_contacts():
 
 
 def test_get_contacts_missing():
-    assert get_publiccode_contacts({"name": "test"}) is None
+    assert get_publiccode_contacts({"name": "test"}) == []
 
 
 def test_parse_builds_graph():
