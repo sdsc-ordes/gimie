@@ -38,32 +38,30 @@ class PublicCodeParser(Parser):
         is_based_on = get_publiccode_is_based_on(pc)
         contacts = get_publiccode_contacts(pc)
 
-        if is_based_on:
-            for url in is_based_on:
-                graph.add((self.subject, SDO.isBasedOn, URIRef(url)))
+        for url in is_based_on:
+            graph.add((self.subject, SDO.isBasedOn, URIRef(url)))
 
-        if contacts:
-            for contact in contacts:
-                uid = sanitize_identifier(str(contact["name"]))
-                person_uri = URIRef(f"{self.subject}/{uid}")
+        for contact in contacts:
+            uid = sanitize_identifier(str(contact["name"]))
+            person_uri = URIRef(f"{self.subject}/{uid}")
 
-                graph.add((self.subject, SDO.author, person_uri))
-                graph.add((person_uri, RDF.type, SDO.Person))
-                graph.add((person_uri, SDO.name, Literal(contact["name"])))
-                graph.add((person_uri, SDO.identifier, Literal(uid)))
+            graph.add((self.subject, SDO.author, person_uri))
+            graph.add((person_uri, RDF.type, SDO.Person))
+            graph.add((person_uri, SDO.name, Literal(contact["name"])))
+            graph.add((person_uri, SDO.identifier, Literal(uid)))
 
-                if contact.get("email") is not None:
-                    graph.add(
-                        (person_uri, SDO.email, Literal(contact["email"]))
+            if contact.get("email") is not None:
+                graph.add(
+                    (person_uri, SDO.email, Literal(contact["email"]))
+                )
+            if contact.get("affiliation") is not None:
+                graph.add(
+                    (
+                        person_uri,
+                        SDO.affiliation,
+                        Literal(contact["affiliation"]),
                     )
-                if contact.get("affiliation") is not None:
-                    graph.add(
-                        (
-                            person_uri,
-                            SDO.affiliation,
-                            Literal(contact["affiliation"]),
-                        )
-                    )
+                )
 
         return graph
 
@@ -85,35 +83,37 @@ def _parse_yaml(data: bytes) -> dict | None:
     return pc
 
 
-def get_publiccode_is_based_on(pc: dict) -> list[str] | None:
-    """Return isBasedOn URLs from a parsed publiccode.yml dict, or None.
+def get_publiccode_is_based_on(pc: dict) -> list[str]:
+    """Return isBasedOn URLs from a parsed publiccode.yml dict.
 
     >>> get_publiccode_is_based_on({"isBasedOn": "https://github.com/org/upstream"})
     ['https://github.com/org/upstream']
     >>> get_publiccode_is_based_on({"name": "test"})
+    []
     """
     is_based_on = pc.get("isBasedOn")
     if not is_based_on:
-        return None
+        return []
 
     urls = is_based_on if isinstance(is_based_on, list) else [is_based_on]
     return [str(url) for url in urls]
 
 
-def get_publiccode_contacts(pc: dict) -> list[dict[str, str | None]] | None:
-    """Return maintenance contacts from a parsed publiccode.yml dict, or None.
+def get_publiccode_contacts(pc: dict) -> list[dict[str, str | None]]:
+    """Return maintenance contacts from a parsed publiccode.yml dict.
 
     >>> get_publiccode_contacts({"maintenance": {"contacts": [{"name": "Jane Doe", "email": "jane@example.org"}]}})
     [{'name': 'Jane Doe', 'email': 'jane@example.org', 'affiliation': None}]
     >>> get_publiccode_contacts({"name": "test"})
+    []
     """
     maintenance = pc.get("maintenance")
     if not isinstance(maintenance, dict):
-        return None
+        return []
 
     contacts = maintenance.get("contacts")
     if not isinstance(contacts, list):
-        return None
+        return []
 
     result = []
     for contact in contacts:
@@ -127,4 +127,4 @@ def get_publiccode_contacts(pc: dict) -> list[dict[str, str | None]] | None:
         entry["affiliation"] = contact.get("affiliation")
         result.append(entry)
 
-    return result if result else None
+    return result
