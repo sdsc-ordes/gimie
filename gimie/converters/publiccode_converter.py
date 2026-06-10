@@ -65,7 +65,7 @@ class PublicCodeConverter(Converter):
         return None
 
     def _description(self) -> dict | None:
-        desc = self.get(SDO.description)
+        desc = self._get(SDO.description)
         if desc is None:
             return None
         if len(desc) > _SHORT_DESC_MAX:
@@ -75,12 +75,12 @@ class PublicCodeConverter(Converter):
         return None
 
     def convert(self) -> dict[str, Any]:
-        name = self.get(SDO.name)
+        name = self._get(SDO.name)
         if not name:
             raise ValueError(f"{self._subject} has no schema:name")
 
-        version = self.get(SDO.version)
-        release_date = self.get(SDO.datePublished) or self.get(
+        version = self._get(SDO.version)
+        release_date = self._get(SDO.datePublished) or self._get(
             SDO.dateModified
         )
         description = self._description()
