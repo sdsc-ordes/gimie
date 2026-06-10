@@ -31,7 +31,7 @@ class TestMinimal:
 
     def test_no_software_source_code_raises(self):
         with pytest.raises(
-            ValueError, match="No SoftwareSourceCode node found"
+            ValueError, match="No node of type"
         ):
             convert_to_publiccode(Graph())
 
