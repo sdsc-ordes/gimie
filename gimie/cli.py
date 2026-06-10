@@ -98,7 +98,6 @@ def data(
     """Extract linked metadata from a Git repository at the target URL.
 
     The output is sent to stdout, and turtle is used as the default serialization format.
-    Use --to publiccode to output a publiccode.yml document instead.
     """
     parser_names = list_default_parsers()
     if exclude_parser:
@@ -108,11 +107,15 @@ def data(
     proj = Project(url, base_url=base_url, parser_names=parser_names)
     repo_meta = proj.extract()
 
-    if to == OutputFormatChoice.publiccode:
-        publiccode = convert_to_publiccode(repo_meta)
-        print(yaml.dump(publiccode, default_flow_style=False, sort_keys=False))
-    else:
-        print(repo_meta.serialize(format=format.value))
+    match to:
+        case OutputFormatChoice.publiccode:
+            publiccode = convert_to_publiccode(repo_meta)
+            output = yaml.dump(publiccode, default_flow_style=False, sort_keys=False)
+        case OutputFormatChoice.rdf:
+            output = repo_meta.serialize(format=format.value)
+        case _:
+            raise ValueError(f"Unknown output format: {to}")
+    print(output)
 
 
 @app.command()
