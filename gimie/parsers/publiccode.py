@@ -51,9 +51,7 @@ class PublicCodeParser(Parser):
             graph.add((person_uri, SDO.identifier, Literal(uid)))
 
             if contact.get("email") is not None:
-                graph.add(
-                    (person_uri, SDO.email, Literal(contact["email"]))
-                )
+                graph.add((person_uri, SDO.email, Literal(contact["email"])))
             if contact.get("affiliation") is not None:
                 graph.add(
                     (

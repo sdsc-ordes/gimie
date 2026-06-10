@@ -110,7 +110,9 @@ def data(
     match to:
         case OutputFormatChoice.publiccode:
             publiccode = convert_to_publiccode(repo_meta)
-            output = yaml.dump(publiccode, default_flow_style=False, sort_keys=False)
+            output = yaml.dump(
+                publiccode, default_flow_style=False, sort_keys=False
+            )
         case OutputFormatChoice.rdf:
             output = repo_meta.serialize(format=format.value)
         case _:

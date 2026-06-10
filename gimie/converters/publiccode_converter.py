@@ -15,7 +15,9 @@ class PublicCodeConverter(Converter):
         super().__init__(g)
         subject = next(g.subjects(RDF.type, SDO.SoftwareSourceCode), None)
         if subject is None:
-            raise ValueError(f"No node of type {SDO.SoftwareSourceCode} found in graph")
+            raise ValueError(
+                f"No node of type {SDO.SoftwareSourceCode} found in graph"
+            )
         self._subject = subject
 
     def _get(self, predicate: URIRef) -> str | None:
