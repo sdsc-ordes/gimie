@@ -30,9 +30,7 @@ class TestMinimal:
         assert "releaseDate" not in result
 
     def test_no_software_source_code_raises(self):
-        with pytest.raises(
-            ValueError, match="No node of type"
-        ):
+        with pytest.raises(ValueError, match="No node of type"):
             convert_to_publiccode(Graph())
 
 
