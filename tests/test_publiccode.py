@@ -17,6 +17,7 @@ def parser():
     """A PublicCodeParser bound to the test subject."""
     return PublicCodeParser(subject=SUBJECT)
 
+
 FULL_PUBLICCODE = b"""
 publiccodeYmlVersion: "0.5"
 name: example-app

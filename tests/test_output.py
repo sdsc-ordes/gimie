@@ -21,6 +21,7 @@ from rdflib import Graph
 
 from gimie.project import Project
 
+
 @pytest.fixture(scope="module")
 def output_ttl():
     """Serialized RDF output extracted from the gimie repository."""
