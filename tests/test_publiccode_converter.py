@@ -29,55 +29,47 @@ class TestMinimal:
 
 
 class TestDescription:
-    def test_short_description(self):
+    @pytest.mark.parametrize(
+        "text,expected",
+        [
+            (
+                "A short description",
+                {"en": {"shortDescription": "A short description"}},
+            ),
+            ("A" * 200, {"en": {"longDescription": "A" * 200}}),
+            ("tiny", None),
+        ],
+        ids=["short", "long", "too-short-omitted"],
+    )
+    def test_description(self, text, expected):
         g = _base_graph()
-        g.add((REPO, SDO.description, Literal("A short description")))
-        result = convert_to_publiccode(g)
-        assert (
-            result["description"]["en"]["shortDescription"]
-            == "A short description"
-        )
-        assert "longDescription" not in result["description"]["en"]
-
-    def test_long_description(self):
-        g = _base_graph()
-        long_text = "A" * 200
-        g.add((REPO, SDO.description, Literal(long_text)))
-        result = convert_to_publiccode(g)
-        assert result["description"]["en"]["longDescription"] == long_text
-        assert "shortDescription" not in result["description"]["en"]
-
-    def test_too_short_excluded(self):
-        g = _base_graph()
-        g.add((REPO, SDO.description, Literal("tiny")))
-        assert "description" not in convert_to_publiccode(g)
+        g.add((REPO, SDO.description, Literal(text)))
+        assert convert_to_publiccode(g).get("description") == expected
 
 
 class TestLicense:
-    def test_single_license(self):
+    @pytest.mark.parametrize(
+        "license_ids,expected",
+        [
+            (["MIT"], {"MIT"}),
+            (["MIT", "Apache-2.0"], {"MIT", "Apache-2.0"}),
+            ([], None),
+        ],
+        ids=["single", "multiple", "none"],
+    )
+    def test_license(self, license_ids, expected):
         g = _base_graph()
-        g.add(
-            (REPO, SDO.license, URIRef("https://spdx.org/licenses/MIT.html"))
-        )
-        assert convert_to_publiccode(g)["legal"]["license"] == "MIT"
-
-    def test_multiple_licenses(self):
-        g = _base_graph()
-        g.add(
-            (REPO, SDO.license, URIRef("https://spdx.org/licenses/MIT.html"))
-        )
-        g.add(
-            (
-                REPO,
-                SDO.license,
-                URIRef("https://spdx.org/licenses/Apache-2.0.html"),
+        for lic in license_ids:
+            g.add(
+                (
+                    REPO,
+                    SDO.license,
+                    URIRef(f"https://spdx.org/licenses/{lic}.html"),
+                )
             )
-        )
-        license_str = convert_to_publiccode(g)["legal"]["license"]
-        assert set(license_str.split(",")) == {"MIT", "Apache-2.0"}
-
-    def test_no_license_omits_legal(self):
-        assert "legal" not in convert_to_publiccode(_base_graph())
+        legal = convert_to_publiccode(g).get("legal")
+        found = set(legal["license"].split(",")) if legal else None
+        assert found == expected
 
 
 class TestVersion:
