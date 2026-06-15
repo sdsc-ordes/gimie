@@ -15,19 +15,13 @@ def _base_graph():
 
 
 class TestMinimal:
-    def test_required_fields(self):
-        result = convert_to_publiccode(_base_graph())
-        assert result["publiccodeYmlVersion"] == "0.5.0"
-        assert result["name"] == "my-project"
-        assert result["url"] == str(REPO)
-
-    def test_optional_fields_absent_when_no_data(self):
-        result = convert_to_publiccode(_base_graph())
-        assert "description" not in result
-        assert "legal" not in result
-        assert result["maintenance"] == {"type": "none"}
-        assert "softwareVersion" not in result
-        assert "releaseDate" not in result
+    def test_required_fields_only(self):
+        assert convert_to_publiccode(_base_graph()) == {
+            "publiccodeYmlVersion": "0.5.0",
+            "name": "my-project",
+            "url": str(REPO),
+            "maintenance": {"type": "none"},
+        }
 
     def test_no_software_source_code_raises(self):
         with pytest.raises(ValueError, match="No node of type"):
@@ -92,29 +86,23 @@ class TestVersion:
         g.add((REPO, SDO.version, Literal("1.2.3")))
         assert convert_to_publiccode(g)["softwareVersion"] == "1.2.3"
 
-    def test_release_date_from_date_published(self):
+    @pytest.mark.parametrize(
+        "dates,expected",
+        [
+            ({"datePublished": "2024-03-15"}, "2024-03-15"),
+            ({"dateModified": "2024-06-01"}, "2024-06-01"),
+            (
+                {"datePublished": "2024-03-15", "dateModified": "2024-06-01"},
+                "2024-03-15",
+            ),
+        ],
+        ids=["published-only", "modified-only", "prefers-published"],
+    )
+    def test_release_date(self, dates, expected):
         g = _base_graph()
-        g.add(
-            (REPO, SDO.datePublished, Literal("2024-03-15", datatype=XSD.date))
-        )
-        assert convert_to_publiccode(g)["releaseDate"] == "2024-03-15"
-
-    def test_release_date_falls_back_to_date_modified(self):
-        g = _base_graph()
-        g.add(
-            (REPO, SDO.dateModified, Literal("2024-06-01", datatype=XSD.date))
-        )
-        assert convert_to_publiccode(g)["releaseDate"] == "2024-06-01"
-
-    def test_release_date_prefers_date_published(self):
-        g = _base_graph()
-        g.add(
-            (REPO, SDO.datePublished, Literal("2024-03-15", datatype=XSD.date))
-        )
-        g.add(
-            (REPO, SDO.dateModified, Literal("2024-06-01", datatype=XSD.date))
-        )
-        assert convert_to_publiccode(g)["releaseDate"] == "2024-03-15"
+        for predicate, value in dates.items():
+            g.add((REPO, SDO[predicate], Literal(value, datatype=XSD.date)))
+        assert convert_to_publiccode(g)["releaseDate"] == expected
 
 
 class TestMaintenance:
@@ -159,17 +147,18 @@ class TestFullGraph:
         g.add((person, SDO.name, Literal("Alice")))
         g.add((person, SDO.email, Literal("alice@example.com")))
 
-        result = convert_to_publiccode(g)
-        assert result["name"] == "my-project"
-        assert result["softwareVersion"] == "2.0.0"
-        assert result["releaseDate"] == "2024-01-01"
-        assert (
-            result["description"]["en"]["shortDescription"]
-            == "A decent project description"
-        )
-        assert result["legal"]["license"] == "MIT"
-        assert result["maintenance"]["type"] == "internal"
-        assert result["maintenance"]["contacts"][0] == {
-            "name": "Alice",
-            "email": "alice@example.com",
+        assert convert_to_publiccode(g) == {
+            "publiccodeYmlVersion": "0.5.0",
+            "name": "my-project",
+            "url": str(REPO),
+            "softwareVersion": "2.0.0",
+            "releaseDate": "2024-01-01",
+            "description": {
+                "en": {"shortDescription": "A decent project description"}
+            },
+            "legal": {"license": "MIT"},
+            "maintenance": {
+                "type": "internal",
+                "contacts": [{"name": "Alice", "email": "alice@example.com"}],
+            },
         }
