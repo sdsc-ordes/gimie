@@ -1,3 +1,4 @@
+import pytest
 from rdflib import URIRef, Literal
 from rdflib.namespace import RDF
 
@@ -9,6 +10,12 @@ from gimie.parsers.publiccode import (
 )
 
 SUBJECT = "https://example.org/repo"
+
+
+@pytest.fixture
+def parser():
+    """A PublicCodeParser bound to the test subject."""
+    return PublicCodeParser(subject=SUBJECT)
 
 FULL_PUBLICCODE = b"""
 publiccodeYmlVersion: "0.5"
@@ -48,20 +55,23 @@ localisation:
 """
 
 
-def test_get_is_based_on():
-    assert get_publiccode_is_based_on(
-        {"isBasedOn": "https://github.com/org/upstream"}
-    ) == ["https://github.com/org/upstream"]
-
-
-def test_get_is_based_on_list():
-    assert get_publiccode_is_based_on(
-        {"isBasedOn": ["https://a.com", "https://b.com"]}
-    ) == ["https://a.com", "https://b.com"]
-
-
-def test_get_is_based_on_missing():
-    assert get_publiccode_is_based_on({"name": "test"}) == []
+@pytest.mark.parametrize(
+    "data,expected",
+    [
+        (
+            {"isBasedOn": "https://github.com/org/upstream"},
+            ["https://github.com/org/upstream"],
+        ),
+        (
+            {"isBasedOn": ["https://a.com", "https://b.com"]},
+            ["https://a.com", "https://b.com"],
+        ),
+        ({"name": "test"}, []),
+    ],
+    ids=["single", "list", "missing"],
+)
+def test_get_is_based_on(data, expected):
+    assert get_publiccode_is_based_on(data) == expected
 
 
 def test_get_contacts():
@@ -96,8 +106,8 @@ def test_get_contacts_missing():
     assert get_publiccode_contacts({"name": "test"}) == []
 
 
-def test_parse_builds_graph():
-    graph = PublicCodeParser(subject=SUBJECT).parse(FULL_PUBLICCODE)
+def test_parse_builds_graph(parser):
+    graph = parser.parse(FULL_PUBLICCODE)
 
     assert URIRef("https://github.com/org/upstream") in list(
         graph.objects(URIRef(SUBJECT), SDO.isBasedOn)
@@ -117,11 +127,11 @@ def test_parse_builds_graph():
     assert not list(graph.objects(john_uri, SDO.email))
 
 
-def test_parse_invalid_yaml():
-    graph = PublicCodeParser(subject=SUBJECT).parse(b"{{invalid yaml")
+def test_parse_invalid_yaml(parser):
+    graph = parser.parse(b"{{invalid yaml")
     assert len(graph) == 0
 
 
-def test_parse_empty():
-    graph = PublicCodeParser(subject=SUBJECT).parse(b"")
+def test_parse_empty(parser):
+    graph = parser.parse(b"")
     assert len(graph) == 0

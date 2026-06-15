@@ -21,14 +21,17 @@ from rdflib import Graph
 
 from gimie.project import Project
 
-OUT_TTL = (
-    Project("https://github.com/sdsc-ordes/gimie", git_provider="github")
-    .extract()
-    .serialize(format="ttl")
-)
+@pytest.fixture(scope="module")
+def output_ttl():
+    """Serialized RDF output extracted from the gimie repository."""
+    return (
+        Project("https://github.com/sdsc-ordes/gimie", git_provider="github")
+        .extract()
+        .serialize(format="ttl")
+    )
 
 
-def test_validate_output_is_linked_data():
+def test_validate_output_is_linked_data(output_ttl):
     """Is output valid RDF?"""
-    g = Graph().parse(format="ttl", data=OUT_TTL)
+    g = Graph().parse(format="ttl", data=output_ttl)
     assert g is not None
