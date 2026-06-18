@@ -14,25 +14,31 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Test the gimie output"""
+"""Abstract for graph converters."""
 
-import pytest
+from abc import ABC, abstractmethod
+from typing import Any
+
 from rdflib import Graph
 
-from gimie.project import Project
 
+class Converter(ABC):
+    """Converter is an Abstract Base Class. It is only meant
+    to define a standard interface for all graph converters.
 
-@pytest.fixture(scope="module")
-def output_ttl():
-    """Serialized RDF output extracted from the gimie repository."""
-    return (
-        Project("https://github.com/sdsc-ordes/gimie", git_provider="github")
-        .extract()
-        .serialize(format="ttl")
-    )
+    All subclasses must implement convert(). A converter transforms
+    an RDF graph into a specialized serialization format.
 
+    Parameters
+    ----------
+    g:
+        The RDF graph to convert.
+    """
 
-def test_validate_output_is_linked_data(output_ttl):
-    """Is output valid RDF?"""
-    g = Graph().parse(format="ttl", data=output_ttl)
-    assert g is not None
+    def __init__(self, g: Graph):
+        self.g = g
+
+    @abstractmethod
+    def convert(self) -> Any:
+        """Convert the RDF graph to the target format."""
+        ...

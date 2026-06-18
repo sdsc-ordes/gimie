@@ -21,8 +21,10 @@ from typing import List, Optional
 
 import click
 import typer
+import yaml
 
 from gimie import __version__
+from gimie.converters.publiccode_converter import convert_to_publiccode
 from gimie.parsers import get_parser, list_default_parsers, list_parsers
 from gimie.project import Project
 
@@ -40,6 +42,11 @@ class RDFFormatChoice(str, Enum):
     ttl = "ttl"
     jsonld = "json-ld"
     nt = "nt"
+
+
+class OutputFormatChoice(str, Enum):
+    rdf = "rdf"
+    publiccode = "publiccode"
 
 
 def version_callback(value: bool):
@@ -75,6 +82,12 @@ def data(
         "-X",
         help="Exclude selected parser.",
     ),
+    to: OutputFormatChoice = typer.Option(
+        OutputFormatChoice.rdf,
+        "--to",
+        show_choices=True,
+        help="Output format: 'rdf' for RDF serialization, 'publiccode' for publiccode.yml.",
+    ),
     version: Optional[bool] = typer.Option(
         None,
         "--version",
@@ -93,7 +106,18 @@ def data(
         parser_names = set([parser for parser in include_parser])
     proj = Project(url, base_url=base_url, parser_names=parser_names)
     repo_meta = proj.extract()
-    print(repo_meta.serialize(format=format.value))
+
+    match to:
+        case OutputFormatChoice.publiccode:
+            publiccode = convert_to_publiccode(repo_meta)
+            output = yaml.dump(
+                publiccode, default_flow_style=False, sort_keys=False
+            )
+        case OutputFormatChoice.rdf:
+            output = repo_meta.serialize(format=format.value)
+        case _:
+            raise ValueError(f"Unknown output format: {to}")
+    print(output)
 
 
 @app.command()

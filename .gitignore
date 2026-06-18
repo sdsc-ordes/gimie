@@ -139,3 +139,8 @@ dmypy.json
 .vscode/
 .devcontainer.json
 .devcontainer/
+
+# Agent guidelines (imported locally, not committed)
+.agents/
+AGENTS.md
+CLAUDE.md

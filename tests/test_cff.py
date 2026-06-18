@@ -5,6 +5,12 @@ from rdflib import URIRef, Literal
 import pytest
 
 
+@pytest.fixture
+def cff_parser():
+    """A CffParser bound to an example subject."""
+    return CffParser(subject=URIRef("https://example.org/"))
+
+
 def test_parse_cff():
     cff_file = LocalResource("CITATION.cff")
     with open(cff_file.path, "rb") as f:
@@ -50,19 +56,18 @@ def test_parse_cff():
         given-names: John
     """),
     ],
+    ids=[
+        "no-authors-no-doi",
+        "malformed-yaml",
+        "non-canonical-orcids",
+        "author-without-orcid",
+    ],
 )
-def test_broken_cff(cff_file):
-    assert (
-        len(
-            CffParser(subject=URIRef("https://example.org/")).parse(
-                data=cff_file
-            )
-        )
-        == 0
-    )
+def test_broken_cff(cff_parser, cff_file):
+    assert len(cff_parser.parse(data=cff_file)) == 0
 
 
-def test_parse_doi():
+def test_parse_doi(cff_parser):
     cff_file = b"""
     cff-version: 1.2.0
     message: If you use this software, please cite it using these metadata.
@@ -73,11 +78,7 @@ def test_parse_doi():
     - type: doi
       value: 10.21105/joss.01274
     """
-    parsed_dois = list(
-        CffParser(subject=URIRef("https://example.org/"))
-        .parse(data=cff_file)
-        .objects()
-    )
+    parsed_dois = list(cff_parser.parse(data=cff_file).objects())
     expected_dois = [
         URIRef("https://doi.org/10.5281/zenodo.3555620"),
         URIRef("https://doi.org/10.21105/joss.01274"),
