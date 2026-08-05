@@ -1,0 +1,29 @@
+gimie.converters package
+========================
+
+Submodules
+----------
+
+gimie.converters.abstract module
+--------------------------------
+
+.. automodule:: gimie.converters.abstract
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+gimie.converters.publiccode\_converter module
+---------------------------------------------
+
+.. automodule:: gimie.converters.publiccode_converter
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: gimie.converters
+   :members:
+   :show-inheritance:
+   :undoc-members:
