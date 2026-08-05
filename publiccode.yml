@@ -1,7 +1,7 @@
 publiccodeYmlVersion: 0.5.0
 name: gimie
 url: https://github.com/sdsc-ordes/gimie
-softwareVersion: 0.7.2
+softwareVersion: 0.8.0
 platforms:
   - windows
   - mac
