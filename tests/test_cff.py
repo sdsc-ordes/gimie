@@ -22,11 +22,14 @@ def test_parse_cff():
 @pytest.mark.parametrize(
     "cff_file",
     [
-        (b"""
+        (
+            b"""
     cff-version: 1.2.0
     message: "This is a CFF devoid authors or DOI"
-    """),
-        (b"""
+    """
+        ),
+        (
+            b"""
     cff-version: 1.2.0
     title: gimie :
     authors:
@@ -36,8 +39,10 @@ def test_parse_cff():
     given-names:
     Jane
         orcid: 0000-0001-2345-6789
-    """),
-        (b"""
+    """
+        ),
+        (
+            b"""
     cff-version: 1.2.0
     title: gimie
     authors:
@@ -47,14 +52,17 @@ def test_parse_cff():
       - family-names: Smith
         given-names: Jane
         orcid: http://www.orcid.org/0000-0001-2345-6789
-    """),
-        (b"""
+    """
+        ),
+        (
+            b"""
     cff-version: 1.2.0
     title: gimie
     authors:
       - family-names: Doe
         given-names: John
-    """),
+    """
+        ),
     ],
     ids=[
         "no-authors-no-doi",
