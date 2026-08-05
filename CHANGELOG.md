@@ -1,6 +1,15 @@
 Notable changes introduced in gimie releases are documented in this file
 
 
+## [0.8.0] - 2026-08-05
+
+### Features
+- Add Nix flake and update development instructions in README (#131)
+- Add SHACL validation tools and update documentation for RDF (#132)
+- add publiccode.yml parser (#136)
+- publiccode converter (#139)
+
+
 ## [0.7.2] - 2024-12-18
 
 ### Bug Fixes
